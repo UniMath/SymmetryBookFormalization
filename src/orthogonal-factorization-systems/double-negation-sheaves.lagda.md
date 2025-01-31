@@ -83,7 +83,7 @@ is-double-negation-sheaf-is-contr is-contr-A P =
 module _
   {l : Level} {A : UU l}
   (is-prop-A : is-prop A)
-  (is-¬¬sheaf-A : is-double-negation-sheaf l A)
+  (is-¬¬-sheaf-A : is-double-negation-sheaf l A)
   where
 
   compute-is-double-negation-sheaf-is-prop : A ≃ (¬ A → A)
@@ -91,12 +91,12 @@ module _
     ( left-unit-law-product-is-contr
       ( is-proof-irrelevant-is-prop (is-prop-function-type is-prop-A) id)) ∘e
     ( equiv-universal-property-coproduct A) ∘e
-    ( _ , is-¬¬sheaf-A (is-decidable-prop-Irrefutable-Prop (A , is-prop-A)))
+    ( _ , is-¬¬-sheaf-A (is-decidable-prop-Irrefutable-Prop (A , is-prop-A)))
 
   is-double-negation-stable-is-double-negation-sheaf-is-prop :
     is-double-negation-stable (A , is-prop-A)
   is-double-negation-stable-is-double-negation-sheaf-is-prop ¬¬a =
-    map-inv-is-equiv (is-¬¬sheaf-A (A , is-prop-A , ¬¬a)) id
+    map-inv-is-equiv (is-¬¬-sheaf-A (A , is-prop-A , ¬¬a)) id
 ```
 
 ### Double negation stable propositions are double negation sheaves

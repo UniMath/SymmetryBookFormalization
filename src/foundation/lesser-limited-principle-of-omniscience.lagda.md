@@ -13,17 +13,20 @@ open import elementary-number-theory.parity-natural-numbers
 open import foundation.booleans
 open import foundation.dependent-pair-types
 open import foundation.disjunction
+open import foundation.negation
 open import foundation.universal-quantification
 open import foundation.universe-levels
 
+open import foundation-core.decidable-propositions
 open import foundation-core.fibers-of-maps
+open import foundation-core.function-types
 open import foundation-core.propositions
 open import foundation-core.sets
 ```
 
 </details>
 
-## Statement
+## Idea
 
 The {{#concept "lesser limited principle of omniscience" Agda=LLPO}} (LLPO)
 asserts that for any [sequence](foundation.sequences.md) of
@@ -31,9 +34,13 @@ asserts that for any [sequence](foundation.sequences.md) of
 [at most one](foundation-core.propositions.md) `n`, then either `f n` is false
 for all even `n` or `f n` is false for all odd `n`.
 
+## Definitions
+
+### The small lesser limited principle of omniscience
+
 ```agda
-prop-LLPO : Prop lzero
-prop-LLPO =
+prop-bool-LLPO : Prop lzero
+prop-bool-LLPO =
   ∀'
     ( ℕ → bool)
     ( λ f →
@@ -43,11 +50,47 @@ prop-LLPO =
           ( ∀' ℕ (λ n → function-Prop (is-even-ℕ n) (is-false-Prop (f n))))
           ( ∀' ℕ (λ n → function-Prop (is-odd-ℕ n) (is-false-Prop (f n))))))
 
-LLPO : UU lzero
-LLPO = type-Prop prop-LLPO
+bool-LLPO : UU lzero
+bool-LLPO = type-Prop prop-bool-LLPO
 
-is-prop-LLPO : is-prop LLPO
-is-prop-LLPO = is-prop-type-Prop prop-LLPO
+is-prop-bool-LLPO : is-prop bool-LLPO
+is-prop-bool-LLPO = is-prop-type-Prop prop-bool-LLPO
+```
+
+### The lesser limited principle of omniscience with respect to a universe level
+
+```agda
+prop-level-LLPO : (l : Level) → Prop (lsuc l)
+prop-level-LLPO l =
+  ∀'
+    ( ℕ → Decidable-Prop l)
+    ( λ f →
+      function-Prop
+        ( is-prop (Σ ℕ (type-Decidable-Prop ∘ f)))
+        ( disjunction-Prop
+          ( ∀' ℕ
+            ( λ n →
+              function-Prop
+                ( is-even-ℕ n)
+                ( neg-Prop (prop-Decidable-Prop (f n)))))
+          ( ∀' ℕ
+            ( λ n →
+              function-Prop
+                ( is-odd-ℕ n)
+                ( neg-Prop (prop-Decidable-Prop (f n)))))))
+
+level-LLPO : (l : Level) → UU (lsuc l)
+level-LLPO l = type-Prop (prop-level-LLPO l)
+
+is-prop-level-LLPO : {l : Level} → is-prop (level-LLPO l)
+is-prop-level-LLPO {l} = is-prop-type-Prop (prop-level-LLPO l)
+```
+
+### The lesser limited principle of omniscience
+
+```agda
+LLPO : UUω
+LLPO = {l : Level} → level-LLPO l
 ```
 
 ## See also

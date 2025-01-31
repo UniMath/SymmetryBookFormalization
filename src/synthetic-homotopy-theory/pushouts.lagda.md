@@ -175,7 +175,20 @@ module _
         ( c)
         ( compute-inl-dependent-cogap)
         ( compute-inr-dependent-cogap)
+```
 
+For reference, the unfolded type signature for `compute-glue-dependent-cogap` is
+as follows:
+
+```text
+  (s : S) →
+  ( apd dependent-cogap (glue-pushout f g s) ∙
+    compute-inr-dependent-cogap (g s)) ＝
+  ( ap (tr P (glue-pushout f g s)) (compute-inl-dependent-cogap (f s)) ∙
+    coherence-square-dependent-cocone f g (cocone-pushout f g) P c s)
+```
+
+```agda
   htpy-compute-dependent-cogap :
     htpy-dependent-cocone f g
       ( cocone-pushout f g)

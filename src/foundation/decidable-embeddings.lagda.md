@@ -54,7 +54,7 @@ if it is an [embedding](foundation-core.embeddings.md) and its
 Equivalently, a decidable embedding is a map whose fibers are
 [decidable propositions](foundation-core.decidable-propositions.md). We refer to
 this condition as being a
-{{#concept "decidably propositional map" Disambiguation="of types" Agda=is-decidable-prop-map}}.
+{{#concept "decidable propositional map" Disambiguation="of types" Agda=is-decidable-prop-map}}.
 
 ## Definitions
 
@@ -81,7 +81,7 @@ is-injective-is-decidable-emb :
 is-injective-is-decidable-emb = is-injective-is-emb ∘ is-emb-is-decidable-emb
 ```
 
-### Decidably propositional maps
+### Decidable propositional maps
 
 ```agda
 module _
@@ -139,6 +139,11 @@ module _
     is-decidable-map map-decidable-emb
   is-decidable-map-map-decidable-emb =
     is-decidable-map-is-decidable-emb is-decidable-emb-map-decidable-emb
+
+  is-injective-map-decidable-emb :
+    is-injective map-decidable-emb
+  is-injective-map-decidable-emb =
+    is-injective-is-decidable-emb is-decidable-emb-map-decidable-emb
 
   emb-decidable-emb : X ↪ Y
   emb-decidable-emb = map-decidable-emb , is-emb-map-decidable-emb

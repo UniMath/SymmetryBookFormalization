@@ -9,6 +9,7 @@ open import foundation-core.decidable-propositions public
 <details><summary>Imports</summary>
 
 ```agda
+open import foundation.0-connected-types
 open import foundation.action-on-identifications-functions
 open import foundation.booleans
 open import foundation.decidable-types

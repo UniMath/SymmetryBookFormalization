@@ -361,6 +361,10 @@ module _
   is-equiv-unit-trunc-is-contr : is-contr A → is-equiv unit-trunc
   is-equiv-unit-trunc-is-contr c =
     is-equiv-unit-trunc (A , is-trunc-is-contr k c)
+
+  is-contr-type-trunc : is-contr A → is-contr (type-trunc k A)
+  is-contr-type-trunc H =
+    is-contr-is-equiv' A unit-trunc (is-equiv-unit-trunc-is-contr H) H
 ```
 
 ### Truncation is idempotent

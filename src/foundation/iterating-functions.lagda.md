@@ -2,6 +2,8 @@
 
 ```agda
 module foundation.iterating-functions where
+
+open import foundation-core.iterating-functions public
 ```
 
 <details><summary>Imports</summary>
@@ -17,10 +19,12 @@ open import foundation.action-on-higher-identifications-functions
 open import foundation.action-on-identifications-functions
 open import foundation.dependent-pair-types
 open import foundation.function-extensionality
+open import foundation.subtypes
 open import foundation.universe-levels
 
 open import foundation-core.commuting-squares-of-maps
 open import foundation-core.endomorphisms
+open import foundation-core.function-types
 open import foundation-core.homotopies
 open import foundation-core.identity-types
 open import foundation-core.sets
@@ -32,70 +36,11 @@ open import group-theory.monoid-actions
 
 ## Idea
 
-Any map `f : X → X` can be iterated by repeatedly applying `f`
-
-## Definition
-
-### Iterating functions
-
-```agda
-module _
-  {l : Level} {X : UU l}
-  where
-
-  iterate : ℕ → (X → X) → (X → X)
-  iterate zero-ℕ f x = x
-  iterate (succ-ℕ k) f x = f (iterate k f x)
-
-  iterate' : ℕ → (X → X) → (X → X)
-  iterate' zero-ℕ f x = x
-  iterate' (succ-ℕ k) f x = iterate' k f (f x)
-```
-
-### Homotopies of iterating functions
-
-```agda
-module _
-  {l1 l2 : Level} {A : UU l1} {B : UU l2} (s : A → A) (t : B → B)
-  where
-
-  coherence-square-iterate :
-    {f : A → B} (H : coherence-square-maps f s t f) →
-    (n : ℕ) → coherence-square-maps f (iterate n s) (iterate n t) f
-  coherence-square-iterate {f} H zero-ℕ x = refl
-  coherence-square-iterate {f} H (succ-ℕ n) =
-    pasting-vertical-coherence-square-maps
-      ( f)
-      ( iterate n s)
-      ( iterate n t)
-      ( f)
-      ( s)
-      ( t)
-      ( f)
-      ( coherence-square-iterate H n)
-      ( H)
-```
+Any map `f : X → X` can be
+{{#concept "iterated" Disambiguation="endo map of types"}} by repeatedly
+applying `f`.
 
 ## Properties
-
-### The two definitions of iterating are homotopic
-
-```agda
-module _
-  {l : Level} {X : UU l}
-  where
-
-  reassociate-iterate-succ-ℕ :
-    (k : ℕ) (f : X → X) (x : X) → iterate (succ-ℕ k) f x ＝ iterate k f (f x)
-  reassociate-iterate-succ-ℕ zero-ℕ f x = refl
-  reassociate-iterate-succ-ℕ (succ-ℕ k) f x =
-    ap f (reassociate-iterate-succ-ℕ k f x)
-
-  reassociate-iterate : (k : ℕ) (f : X → X) → iterate k f ~ iterate' k f
-  reassociate-iterate zero-ℕ f x = refl
-  reassociate-iterate (succ-ℕ k) f x =
-    reassociate-iterate-succ-ℕ k f x ∙ reassociate-iterate k f (f x)
-```
 
 ### For any map `f : X → X`, iterating `f` defines a monoid action of ℕ on `X`
 

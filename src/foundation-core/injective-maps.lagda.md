@@ -127,7 +127,7 @@ module _
   where
 
   is-equiv-is-injective : {f : A → B} → section f → is-injective f → is-equiv f
-  is-equiv-is-injective {f} (pair g G) H =
+  is-equiv-is-injective {f} (g , G) H =
     is-equiv-is-invertible g G (λ x → H (G (f x)))
 ```
 

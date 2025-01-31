@@ -270,6 +270,7 @@ open import foundation.locally-small-types public
 open import foundation.logical-equivalences public
 open import foundation.maps-in-global-subuniverses public
 open import foundation.maps-in-subuniverses public
+open import foundation.maps-with-hilbert-epsilon-operators public
 open import foundation.maybe public
 open import foundation.mere-embeddings public
 open import foundation.mere-equality public
@@ -316,6 +317,7 @@ open import foundation.path-split-maps public
 open import foundation.path-split-type-families public
 open import foundation.perfect-images public
 open import foundation.permutations-spans-families-of-types public
+open import foundation.pi-0-trivial-maps public
 open import foundation.pi-decompositions public
 open import foundation.pi-decompositions-subuniverse public
 open import foundation.pointed-torsorial-type-families public

@@ -20,6 +20,7 @@ open import foundation-core.homotopies
 open import foundation-core.identity-types
 open import foundation-core.retractions
 open import foundation-core.sections
+open import foundation-core.torsorial-type-families
 ```
 
 </details>
@@ -132,6 +133,18 @@ module _
     is-contr-map-is-equiv : is-equiv f → is-contr-map f
     is-contr-map-is-equiv =
       is-contr-map-is-coherently-invertible ∘ is-coherently-invertible-is-equiv
+```
+
+### The identity function is contractible
+
+```agda
+module _
+  {l1 : Level} {A : UU l1}
+  where
+
+  abstract
+    is-contr-map-id : is-contr-map (id {A = A})
+    is-contr-map-id = is-torsorial-Id'
 ```
 
 ## See also

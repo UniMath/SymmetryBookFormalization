@@ -55,6 +55,8 @@ open import foundation.universe-levels
 
 open import lists.lists
 
+open import logic.propositionally-decidable-types
+
 open import univalent-combinatorics.2-element-decidable-subtypes
 open import univalent-combinatorics.2-element-types
 open import univalent-combinatorics.counting
@@ -481,7 +483,6 @@ module _
           ( prop-equivalence-relation same-orbits-permutation a b))
         ( λ h →
           is-decidable-trunc-Prop-is-merely-decidable
-            ( Σ ℕ (λ k → Id (iterate k (map-equiv f) a) b))
             ( unit-trunc-Prop
               ( is-decidable-iterate-is-decidable-bounded h a b
                 ( is-decidable-bounded-Σ-ℕ n

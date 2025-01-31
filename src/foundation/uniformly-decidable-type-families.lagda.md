@@ -9,13 +9,17 @@ module foundation.uniformly-decidable-type-families where
 ```agda
 open import foundation.contractible-types
 open import foundation.coproduct-types
+open import foundation.decidable-propositions
 open import foundation.decidable-types
 open import foundation.dependent-pair-types
 open import foundation.equality-coproduct-types
+open import foundation.functoriality-coproduct-types
 open import foundation.inhabited-types
+open import foundation.mere-equality
 open import foundation.negation
 open import foundation.propositional-truncations
 open import foundation.propositions
+open import foundation.transport-along-identifications
 open import foundation.truncated-types
 open import foundation.truncation-levels
 open import foundation.type-arithmetic-empty-type
@@ -28,6 +32,8 @@ open import foundation-core.equivalences
 open import foundation-core.function-types
 open import foundation-core.homotopies
 open import foundation-core.identity-types
+
+open import logic.propositionally-decidable-types
 ```
 
 </details>
@@ -63,7 +69,7 @@ is-decidable-is-uniformly-decidable-family (inl f) x = inl (f x)
 is-decidable-is-uniformly-decidable-family (inr g) x = inr (g x)
 ```
 
-### The uniform decidability predicate on a family of truncated types
+### The uniform decidability predicate on a family of contractible types
 
 ```agda
 module _
@@ -172,4 +178,52 @@ module _
   is-trunc-is-uniformly-decidable-family-is-inhabited-base
     ( succ-𝕋 (succ-𝕋 k)) H _ =
     is-trunc-succ-succ-is-uniformly-decidable-family k H
+```
+
+### A family of decidable propositions over a π₀-trivial decidable base are uniformly decidable
+
+```agda
+module _
+  {l1 l2 : Level} {A : UU l1} (B : A → Decidable-Prop l2)
+  (H : all-elements-merely-equal A)
+  where
+
+  abstract
+    is-uniformly-decidable-family-all-elements-merely-equal-base :
+      is-decidable A →
+      is-uniformly-decidable-family (type-Decidable-Prop ∘ B)
+    is-uniformly-decidable-family-all-elements-merely-equal-base (inl a) =
+      rec-coproduct
+        ( λ b →
+          inl
+            ( λ x →
+              rec-trunc-Prop
+                ( prop-Decidable-Prop (B x))
+                ( λ p → tr (type-Decidable-Prop ∘ B) p b)
+                ( H a x)))
+        ( λ nb →
+          inr
+            ( λ x b →
+              rec-trunc-Prop
+                ( empty-Prop)
+                ( λ p → nb (tr (type-Decidable-Prop ∘ B) p b))
+                ( H x a)))
+        ( is-decidable-Decidable-Prop (B a))
+    is-uniformly-decidable-family-all-elements-merely-equal-base (inr na) =
+      inr (ex-falso ∘ na)
+
+  abstract
+    is-uniformly-decidable-family-all-elements-merely-equal-base' :
+      is-inhabited-or-empty A →
+      is-uniformly-decidable-family (type-Decidable-Prop ∘ B)
+    is-uniformly-decidable-family-all-elements-merely-equal-base' (inl |a|) =
+      rec-trunc-Prop
+        ( is-uniformly-decidable-family (type-Decidable-Prop ∘ B) ,
+          is-prop-is-uniformly-decidable-family-is-inhabited-base
+            ( is-prop-type-Decidable-Prop ∘ B)
+            ( |a|))
+        ( is-uniformly-decidable-family-all-elements-merely-equal-base ∘ inl)
+        ( |a|)
+    is-uniformly-decidable-family-all-elements-merely-equal-base' (inr na) =
+      is-uniformly-decidable-family-all-elements-merely-equal-base (inr na)
 ```

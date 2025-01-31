@@ -131,7 +131,7 @@ module _
         ( preserves-comp-map-trunc k (map-inv-equiv e) (map-equiv e)) ∙h
         ( htpy-trunc (is-retraction-map-inv-equiv e) ∙h id-map-trunc k))
 
-  equiv-trunc : (type-trunc k A ≃ type-trunc k B)
+  equiv-trunc : type-trunc k A ≃ type-trunc k B
   pr1 equiv-trunc = map-equiv-trunc
   pr2 equiv-trunc = is-equiv-map-equiv-trunc
 ```

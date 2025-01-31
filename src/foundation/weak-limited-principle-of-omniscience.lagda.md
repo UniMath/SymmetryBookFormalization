@@ -31,15 +31,34 @@ restricted form of the
 [law of excluded middle](foundation.law-of-excluded-middle.md).
 
 ```agda
-prop-WLPO : Prop lzero
-prop-WLPO =
+prop-bool-WLPO : Prop lzero
+prop-bool-WLPO =
   ∀' (ℕ → bool) (λ f → is-decidable-Prop (∀' ℕ (λ n → is-true-Prop (f n))))
 
-WLPO : UU lzero
-WLPO = type-Prop prop-WLPO
+bool-WLPO : UU lzero
+bool-WLPO = type-Prop prop-bool-WLPO
 
-is-prop-WLPO : is-prop WLPO
-is-prop-WLPO = is-prop-type-Prop prop-WLPO
+is-prop-bool-WLPO : is-prop bool-WLPO
+is-prop-bool-WLPO = is-prop-type-Prop prop-bool-WLPO
+```
+
+```agda
+prop-level-WLPO : (l : Level) → Prop (lsuc l)
+prop-level-WLPO l =
+  ∀'
+    ( ℕ → Decidable-Prop l)
+    ( λ f → is-decidable-Prop (∀' ℕ (λ n → prop-Decidable-Prop (f n))))
+
+level-WLPO : (l : Level) → UU (lsuc l)
+level-WLPO l = type-Prop (prop-level-WLPO l)
+
+is-prop-level-WLPO : {l : Level} → is-prop (level-WLPO l)
+is-prop-level-WLPO {l} = is-prop-type-Prop (prop-level-WLPO l)
+```
+
+```agda
+WLPO : UUω
+WLPO = {l : Level} → level-WLPO l
 ```
 
 ## See also
