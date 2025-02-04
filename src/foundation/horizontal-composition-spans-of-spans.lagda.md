@@ -57,18 +57,20 @@ span of spans
       |    ↖            ∧
       |    α₀ ×_B β₀    |
       ∨            ↘    |
-      A <---------- G₀ ×_B I₀.
+      A <---------- G₀ ×_B I₀
 ```
 
+from the available data.
+
 **Note.** There are four equivalent, but judgmentally different choices of
-spanning type `α₀ ×_B β₀` of the horizontal composite. We pick
+spanning type `α₀ ×_B β₀` of the horizontal composite. We pick the composites
 
 ```text
-  α₀ ×_B β₀ ------> I₀
-      | ⌟           |
-      |             |
-      ∨             ∨
-      F₀ ---------> B
+  α₀ ×_B β₀ ------> β₀
+      | ⌟           ↓
+      |             I₀
+      ∨             ↓
+      α₀ --> F₀ --> B
 ```
 
 as this choice avoids inversions of coherences as part of the construction,

@@ -31,6 +31,7 @@ open import globular-types.fibers-globular-maps public
 open import globular-types.globular-equivalences public
 open import globular-types.globular-maps public
 open import globular-types.globular-types public
+open import globular-types.homotopies-globular-maps public
 open import globular-types.large-colax-reflexive-globular-maps public
 open import globular-types.large-colax-transitive-globular-maps public
 open import globular-types.large-globular-maps public

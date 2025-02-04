@@ -157,3 +157,8 @@ comp-globular-map g f =
       ( 1-cell-globular-map-globular-map g)
       ( 1-cell-globular-map-globular-map f)
 ```
+
+## See also
+
+- The dependent counterpart to globular maps is
+  [sections of dependent globular types](type-theories.sections-dependent-globular-types.md)

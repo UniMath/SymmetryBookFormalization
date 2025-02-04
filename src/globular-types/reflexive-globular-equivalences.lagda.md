@@ -72,12 +72,12 @@ record
   0-cell-equiv-reflexive-globular-equiv :
     0-cell-Reflexive-Globular-Type G ≃ 0-cell-Reflexive-Globular-Type H
   0-cell-equiv-reflexive-globular-equiv =
-    0-cell-equiv-globular-equiv globular-equiv-reflexive-globular-equiv
+    0-cell-globular-equiv globular-equiv-reflexive-globular-equiv
 
   0-cell-reflexive-globular-equiv :
     0-cell-Reflexive-Globular-Type G → 0-cell-Reflexive-Globular-Type H
   0-cell-reflexive-globular-equiv =
-    0-cell-globular-equiv globular-equiv-reflexive-globular-equiv
+    0-cell-map-globular-equiv globular-equiv-reflexive-globular-equiv
 
   1-cell-equiv-reflexive-globular-equiv :
     {x y : 0-cell-Reflexive-Globular-Type G} →
@@ -95,7 +95,7 @@ record
       ( 0-cell-reflexive-globular-equiv x)
       ( 0-cell-reflexive-globular-equiv y)
   1-cell-reflexive-globular-equiv =
-    1-cell-globular-equiv globular-equiv-reflexive-globular-equiv
+    1-cell-map-globular-equiv globular-equiv-reflexive-globular-equiv
 
   1-cell-globular-equiv-reflexive-globular-equiv :
     {x y : 0-cell-Reflexive-Globular-Type G} →
