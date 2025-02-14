@@ -29,6 +29,9 @@ open import foundation.arithmetic-law-coproduct-and-sigma-decompositions public
 open import foundation.arithmetic-law-product-and-pi-decompositions public
 open import foundation.automorphisms public
 open import foundation.axiom-of-choice public
+open import foundation.axiom-of-countable-choice public
+open import foundation.axiom-of-dependent-choice public
+open import foundation.axiom-of-weak-countable-choice public
 open import foundation.bands public
 open import foundation.base-changes-span-diagrams public
 open import foundation.bicomposition-functions public
@@ -495,6 +498,7 @@ open import foundation.unordered-tuples-of-types public
 open import foundation.vectors-set-quotients public
 open import foundation.vertical-composition-spans-of-spans public
 open import foundation.weak-function-extensionality public
+open import foundation.weak-law-of-excluded-middle public
 open import foundation.weak-limited-principle-of-omniscience public
 open import foundation.weakly-constant-maps public
 open import foundation.whiskering-higher-homotopies-composition public

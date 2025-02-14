@@ -8,17 +8,21 @@ module foundation.lesser-limited-principle-of-omniscience where
 
 ```agda
 open import elementary-number-theory.natural-numbers
-open import elementary-number-theory.parity-natural-numbers
 
-open import foundation.booleans
+open import foundation.cartesian-product-types
+open import foundation.conjunction
+open import foundation.coproduct-types
+open import foundation.decidable-subtypes
 open import foundation.dependent-pair-types
 open import foundation.disjunction
-open import foundation.universal-quantification
+open import foundation.empty-types
+open import foundation.function-types
+open import foundation.inhabited-types
+open import foundation.negation
+open import foundation.propositional-truncations
+open import foundation.propositions
 open import foundation.universe-levels
-
-open import foundation-core.fibers-of-maps
-open import foundation-core.propositions
-open import foundation-core.sets
+open import foundation.weak-limited-principle-of-omniscience
 ```
 
 </details>
@@ -26,36 +30,54 @@ open import foundation-core.sets
 ## Statement
 
 The {{#concept "lesser limited principle of omniscience" Agda=LLPO}} (LLPO)
-asserts that for any [sequence](foundation.sequences.md) of
-[booleans](foundation.booleans.md) `f : ℕ → bool` such that `f n` is true for
-[at most one](foundation-core.propositions.md) `n`, then either `f n` is false
-for all even `n` or `f n` is false for all odd `n`.
+asserts that any pair of [decidable subtypes](foundation.decidable-subtypes.md)
+of the [natural numbers](elementary-number-theory.natural-numbers.md) such that
+it is not true that both are [inhabited](foundation.inhabited-types.md), either
+the first is [empty](foundation.empty-types.md) or the second is empty.
+
+### Instances of LLPO
 
 ```agda
-prop-LLPO : Prop lzero
-prop-LLPO =
-  ∀'
-    ( ℕ → bool)
-    ( λ f →
-      function-Prop
-        ( is-prop (Σ ℕ (λ n → is-true (f n))))
-        ( disjunction-Prop
-          ( ∀' ℕ (λ n → function-Prop (is-even-ℕ n) (is-false-Prop (f n))))
-          ( ∀' ℕ (λ n → function-Prop (is-odd-ℕ n) (is-false-Prop (f n))))))
+instance-LLPO-Prop :
+  {l1 l2 : Level} →
+  (S : decidable-subtype l1 ℕ) (T : decidable-subtype l2 ℕ) →
+  ¬
+    ( is-inhabited (type-decidable-subtype S) ×
+      is-inhabited (type-decidable-subtype T)) →
+  Prop (l1 ⊔ l2)
+instance-LLPO-Prop S T not-both =
+  ¬' (is-inhabited-Prop (type-decidable-subtype S)) ∨
+  ¬' (is-inhabited-Prop (type-decidable-subtype T))
 
-LLPO : UU lzero
-LLPO = type-Prop prop-LLPO
-
-is-prop-LLPO : is-prop LLPO
-is-prop-LLPO = is-prop-type-Prop prop-LLPO
+instance-LLPO :
+  {l1 l2 : Level} →
+  (S : decidable-subtype l1 ℕ) (T : decidable-subtype l2 ℕ) →
+  ¬
+    ( is-inhabited (type-decidable-subtype S) ×
+      is-inhabited (type-decidable-subtype T)) →
+  UU (l1 ⊔ l2)
+instance-LLPO S T not-both = type-Prop (instance-LLPO-Prop S T not-both)
 ```
 
-## See also
+### The lesser limited principle of omniscience
 
-- [The principle of omniscience](foundation.principle-of-omniscience.md)
-- [The limited principle of omniscience](foundation.limited-principle-of-omniscience.md)
-- [The weak limited principle of omniscience](foundation.weak-limited-principle-of-omniscience.md)
-- [Markov's principle](logic.markovs-principle.md)
+```agda
+level-LLPO : (l1 l2 : Level) → UU (lsuc (l1 ⊔ l2))
+level-LLPO l1 l2 =
+  (S : decidable-subtype l1 ℕ) (T : decidable-subtype l2 ℕ) →
+  (H :
+    ¬
+      ( is-inhabited (type-decidable-subtype S) ×
+        is-inhabited (type-decidable-subtype T))) →
+  instance-LLPO S T H
+
+LLPO : UUω
+LLPO = {l1 l2 : Level} → level-LLPO l1 l2
+```
+
+## Table of choice principles
+
+{{#include tables/choice-principles.md}}
 
 ## External links
 

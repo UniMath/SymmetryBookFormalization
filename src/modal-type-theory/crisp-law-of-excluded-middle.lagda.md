@@ -45,9 +45,9 @@ pr1 (pr2 (decidable-prop-Crisp-Prop lem P)) = is-prop-type-Prop P
 pr2 (pr2 (decidable-prop-Crisp-Prop lem P)) = lem P
 ```
 
-## See also
+## Table of choice principles
 
-- [The law of excluded middle](foundation.law-of-excluded-middle.md)
+{{#include tables/choice-principles.md}}
 
 ## References
 

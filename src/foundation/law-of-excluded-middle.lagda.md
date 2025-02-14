@@ -7,13 +7,12 @@ module foundation.law-of-excluded-middle where
 <details><summary>Imports</summary>
 
 ```agda
+open import foundation.decidable-propositions
 open import foundation.decidable-types
 open import foundation.dependent-pair-types
+open import foundation.negation
+open import foundation.propositions
 open import foundation.universe-levels
-
-open import foundation-core.decidable-propositions
-open import foundation-core.negation
-open import foundation-core.propositions
 
 open import univalent-combinatorics.2-element-types
 ```
@@ -30,11 +29,14 @@ asserts that any [proposition](foundation-core.propositions.md) `P` is
 ## Definition
 
 ```agda
-LEM : (l : Level) → UU (lsuc l)
-LEM l = (P : Prop l) → is-decidable (type-Prop P)
+level-LEM : (l : Level) → UU (lsuc l)
+level-LEM l = (P : Prop l) → is-decidable (type-Prop P)
 
-prop-LEM : (l : Level) → Prop (lsuc l)
-prop-LEM l = Π-Prop (Prop l) (is-decidable-Prop)
+level-prop-LEM : (l : Level) → Prop (lsuc l)
+level-prop-LEM l = Π-Prop (Prop l) (is-decidable-Prop)
+
+LEM : UUω
+LEM = {l : Level} → level-LEM l
 ```
 
 ## Properties
@@ -43,7 +45,7 @@ prop-LEM l = Π-Prop (Prop l) (is-decidable-Prop)
 
 ```agda
 decidable-prop-Prop :
-  {l : Level} → LEM l → Prop l → Decidable-Prop l
+  {l : Level} → level-LEM l → Prop l → Decidable-Prop l
 pr1 (decidable-prop-Prop lem P) = type-Prop P
 pr1 (pr2 (decidable-prop-Prop lem P)) = is-prop-type-Prop P
 pr2 (pr2 (decidable-prop-Prop lem P)) = lem P
@@ -58,3 +60,11 @@ abstract
   no-global-decidability {l} d =
     is-not-decidable-type-2-Element-Type (λ X → d (pr1 X))
 ```
+
+## Table of choice principles
+
+{{#include tables/choice-principles.md}}
+
+## External links
+
+- [Excluded middle](https://ncatlab.org/nlab/show/excluded+middle) at nLab

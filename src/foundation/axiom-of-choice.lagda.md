@@ -58,12 +58,12 @@ instance-choice-Set :
   {l1 l2 : Level} (A : Set l1) → (type-Set A → Set l2) → UU (l1 ⊔ l2)
 instance-choice-Set A B = instance-choice (type-Set A) (type-Set ∘ B)
 
-level-AC-Set : (l1 l2 : Level) → UU (lsuc l1 ⊔ lsuc l2)
-level-AC-Set l1 l2 =
+level-axiom-of-choice-Set : (l1 l2 : Level) → UU (lsuc l1 ⊔ lsuc l2)
+level-axiom-of-choice-Set l1 l2 =
   (A : Set l1) (B : type-Set A → Set l2) → instance-choice-Set A B
 
-AC-Set : UUω
-AC-Set = {l1 l2 : Level} → level-AC-Set l1 l2
+axiom-of-choice-Set : UUω
+axiom-of-choice-Set = {l1 l2 : Level} → level-axiom-of-choice-Set l1 l2
 ```
 
 ### The axiom of choice
@@ -73,12 +73,12 @@ instance-choice₀ :
   {l1 l2 : Level} (A : Set l1) → (type-Set A → UU l2) → UU (l1 ⊔ l2)
 instance-choice₀ A = instance-choice (type-Set A)
 
-level-AC0 : (l1 l2 : Level) → UU (lsuc l1 ⊔ lsuc l2)
-level-AC0 l1 l2 =
+level-axiom-of-choice : (l1 l2 : Level) → UU (lsuc l1 ⊔ lsuc l2)
+level-axiom-of-choice l1 l2 =
   (A : Set l1) (B : type-Set A → UU l2) → instance-choice₀ A B
 
-AC0 : UUω
-AC0 = {l1 l2 : Level} → level-AC0 l1 l2
+axiom-of-choice : UUω
+axiom-of-choice = {l1 l2 : Level} → level-axiom-of-choice l1 l2
 ```
 
 ## Properties
@@ -86,10 +86,10 @@ AC0 = {l1 l2 : Level} → level-AC0 l1 l2
 ### Every type is set-projective if and only if the axiom of choice holds
 
 ```agda
-is-set-projective-AC0 :
-  {l1 l2 l3 : Level} → level-AC0 l2 (l1 ⊔ l2) →
+is-set-projective-axiom-of-choice :
+  {l1 l2 l3 : Level} → level-axiom-of-choice l2 (l1 ⊔ l2) →
   (X : UU l3) → is-set-projective l1 l2 X
-is-set-projective-AC0 ac X A B f h =
+is-set-projective-axiom-of-choice ac X A B f h =
   map-trunc-Prop
     ( ( map-Σ
         ( λ g → ((map-surjection f) ∘ g) ＝ h)
@@ -98,11 +98,11 @@ is-set-projective-AC0 ac X A B f h =
       ( section-is-split-surjective (map-surjection f)))
     ( ac B (fiber (map-surjection f)) (is-surjective-map-surjection f))
 
-AC0-is-set-projective :
+axiom-of-choice-is-set-projective :
   {l1 l2 : Level} →
   ({l : Level} (X : UU l) → is-set-projective (l1 ⊔ l2) l1 X) →
-  level-AC0 l1 l2
-AC0-is-set-projective H A B K =
+  level-axiom-of-choice l1 l2
+axiom-of-choice-is-set-projective H A B K =
   map-trunc-Prop
     ( map-equiv (equiv-Π-section-pr1 {B = B}) ∘ tot (λ g → htpy-eq))
     ( H ( type-Set A)
@@ -116,6 +116,10 @@ AC0-is-set-projective H A B K =
 
 - [Diaconescu's theorem](foundation.diaconescus-theorem.md), which states that
   the axiom of choice implies the law of excluded middle.
+
+## Table of choice principles
+
+{{#include tables/choice-principles.md}}
 
 ## References
 

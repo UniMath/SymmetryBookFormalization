@@ -9,20 +9,13 @@ module foundation.limited-principle-of-omniscience where
 ```agda
 open import elementary-number-theory.natural-numbers
 
-open import foundation.booleans
-open import foundation.coproduct-types
-open import foundation.dependent-pair-types
-open import foundation.disjunction
-open import foundation.existential-quantification
-open import foundation.negation
-open import foundation.universal-quantification
+open import foundation.decidable-propositions
+open import foundation.decidable-subtypes
+open import foundation.principle-of-omniscience
+open import foundation.propositional-truncations
+open import foundation.propositions
+open import foundation.subtypes
 open import foundation.universe-levels
-
-open import foundation-core.identity-types
-open import foundation-core.propositions
-open import foundation-core.sets
-
-open import univalent-combinatorics.standard-finite-types
 ```
 
 </details>
@@ -31,44 +24,34 @@ open import univalent-combinatorics.standard-finite-types
 
 The
 {{#concept "limited principle of omniscience" WDID=Q6549544 WD="limited principle of omniscience" Agda=LPO}}
-(LPO) asserts that for every [sequence](foundation.sequences.md) `f : ℕ → bool`
-there either [exists](foundation.existential-quantification.md) an `n` such that
-`f n` is true, [or](foundation.disjunction.md) `f n` is false for all `n`.
+(LPO) asserts that every [decidable subtype](foundation.decidable-subtypes.md)
+of the [natural numbers](elementary-number-theory.natural-numbers.md) is either
+[inhabited](foundation.inhabited-types.md) or
+[empty](foundation.empty-types.md).
+
+### Instances of LPO
 
 ```agda
-LPO : UU lzero
-LPO =
-  (f : ℕ → bool) →
-  ( exists ℕ (λ n → is-true-Prop (f n))) +
-  ( for-all ℕ (λ n → is-false-Prop (f n)))
+instance-LPO-Prop : {l : Level} → decidable-subtype l ℕ → Prop l
+instance-LPO-Prop S = is-decidable-Prop (trunc-Prop (type-decidable-subtype S))
+
+instance-LPO : {l : Level} → decidable-subtype l ℕ → UU l
+instance-LPO S = type-Prop (instance-LPO-Prop S)
 ```
 
-## Properties
-
-### The limited principle of omniscience is a proposition
+### The limited principle of omniscience
 
 ```agda
-is-prop-LPO : is-prop LPO
-is-prop-LPO =
-  is-prop-Π
-    ( λ f →
-      is-prop-coproduct
-        ( elim-exists
-          ( ¬' ∀' ℕ (λ n → is-false-Prop (f n)))
-          ( λ n t h → not-is-false-is-true (f n) t (h n)))
-        ( is-prop-exists ℕ (λ n → is-true-Prop (f n)))
-        ( is-prop-for-all-Prop ℕ (λ n → is-false-Prop (f n))))
+level-LPO : (l : Level) → UU (lsuc l)
+level-LPO l = (S : decidable-subtype l ℕ) → instance-LPO S
 
-prop-LPO : Prop lzero
-prop-LPO = LPO , is-prop-LPO
+LPO : UUω
+LPO = {l : Level} → level-LPO l
 ```
 
-## See also
+## Table of choice principles
 
-- [The principle of omniscience](foundation.principle-of-omniscience.md)
-- [The lesser limited principle of omniscience](foundation.lesser-limited-principle-of-omniscience.md)
-- [The weak limited principle of omniscience](foundation.weak-limited-principle-of-omniscience.md)
-- [Markov's principle](logic.markovs-principle.md)
+{{#include tables/choice-principles.md}}
 
 ## External links
 

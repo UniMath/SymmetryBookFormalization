@@ -9,38 +9,81 @@ module foundation.weak-limited-principle-of-omniscience where
 ```agda
 open import elementary-number-theory.natural-numbers
 
-open import foundation.booleans
-open import foundation.disjunction
-open import foundation.negation
-open import foundation.universal-quantification
+open import foundation.coproduct-types
+open import foundation.decidable-propositions
+open import foundation.decidable-subtypes
+open import foundation.empty-types
+open import foundation.function-types
+open import foundation.inhabited-types
+open import foundation.limited-principle-of-omniscience
+open import foundation.propositional-truncations
+open import foundation.propositions
 open import foundation.universe-levels
+open import foundation.weak-law-of-excluded-middle
 
-open import foundation-core.decidable-propositions
-open import foundation-core.propositions
-open import foundation-core.sets
+open import logic.de-morgan-types
 ```
 
 </details>
 
 ## Statement
 
-The {{#concept "weak limited principle of omniscience"}} (WLPO) asserts that for
-any [sequence](foundation.sequences.md) `f : ℕ → bool` either `f n` is true for
-all `n : ℕ` or it is [not](foundation-core.negation.md). In particular, it is a
-restricted form of the
-[law of excluded middle](foundation.law-of-excluded-middle.md).
+The {{#concept "weak limited principle of omniscience"}} (WLPO) asserts that
+every [decidable subtype](foundation.decidable-subtypes.md) of the
+[natural numbers](elementary-number-theory.natural-numbers.md) is either
+[empty](foundation.empty-types.md) or it is not.
+
+### Particular instances of the weak limited principle of omniscience
 
 ```agda
-prop-WLPO : Prop lzero
-prop-WLPO =
-  ∀' (ℕ → bool) (λ f → is-decidable-Prop (∀' ℕ (λ n → is-true-Prop (f n))))
+instance-WLPO-Prop : {l : Level} → decidable-subtype l ℕ → Prop l
+instance-WLPO-Prop S =
+  is-decidable-Prop (is-empty-Prop (type-decidable-subtype S))
 
-WLPO : UU lzero
-WLPO = type-Prop prop-WLPO
-
-is-prop-WLPO : is-prop WLPO
-is-prop-WLPO = is-prop-type-Prop prop-WLPO
+instance-WLPO : {l : Level} → decidable-subtype l ℕ → UU l
+instance-WLPO S = type-Prop (instance-WLPO-Prop S)
 ```
+
+### The weak limited principle of omniscience
+
+```agda
+level-WLPO : (l : Level) → UU (lsuc l)
+level-WLPO l = (S : decidable-subtype l ℕ) → instance-WLPO S
+
+WLPO : UUω
+WLPO = {l : Level} → level-WLPO l
+```
+
+## Properties
+
+### The limited principle of omniscience implies the weak limited principle of omniscience
+
+```agda
+level-WLPO-LPO : {l : Level} → level-LPO l → level-WLPO l
+level-WLPO-LPO l-lpo S with l-lpo S
+... | inl inhabited-S =
+  inr (λ empty-S → rec-trunc-Prop empty-Prop empty-S inhabited-S)
+... | inr not-inhabited-S = inl (not-inhabited-S ∘ unit-trunc-Prop)
+
+WLPO-LPO : LPO → WLPO
+WLPO-LPO lpo = level-WLPO-LPO lpo
+```
+
+### The weak law of excluded middle implies the weak limited principle of omniscience
+
+```agda
+level-WLPO-WLEM : {l : Level} → level-WLEM l → level-WLPO l
+level-WLPO-WLEM wlem S with wlem (is-inhabited-Prop (type-decidable-subtype S))
+... | inl ¬S = inl (λ s → ¬S (unit-trunc-Prop s))
+... | inr ¬¬S = inr (λ ¬S → ¬¬S (rec-trunc-Prop empty-Prop ¬S))
+
+WLPO-WLEM : WLEM → WLPO
+WLPO-WLEM wlem = level-WLPO-WLEM wlem
+```
+
+## Table of choice principles
+
+{{#include tables/choice-principles.md}}
 
 ## See also
 

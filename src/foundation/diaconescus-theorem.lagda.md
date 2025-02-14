@@ -80,7 +80,7 @@ instance-theorem-Diaconescu P ac-P =
     ( ac-P is-surjective-map-surjection-bool-suspension)
 
 theorem-Diaconescu :
-  {l : Level} → level-AC0 l l → LEM l
+  {l : Level} → level-axiom-of-choice l l → level-LEM l
 theorem-Diaconescu ac P =
   instance-theorem-Diaconescu P
     ( ac (suspension-set-Prop P) (fiber map-surjection-bool-suspension))

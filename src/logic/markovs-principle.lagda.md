@@ -71,12 +71,9 @@ markovs-principle-upwards-closed-structure :
 markovs-principle-upwards-closed-structure P H q = (0 , λ x → q (ind-ℕ x H))
 ```
 
-## See also
+## Table of choice principles
 
-- [The principle of omniscience](foundation.principle-of-omniscience.md)
-- [The limited principle of omniscience](foundation.limited-principle-of-omniscience.md)
-- [The lesser limited principle of omniscience](foundation.lesser-limited-principle-of-omniscience.md)
-- [The weak limited principle of omniscience](foundation.weak-limited-principle-of-omniscience.md)
+{{#include tables/choice-principles.md}}
 
 ## External links
 
