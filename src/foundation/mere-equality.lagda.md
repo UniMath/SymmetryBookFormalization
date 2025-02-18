@@ -50,10 +50,11 @@ module _
 ### Reflexivity
 
 ```agda
-abstract
-  refl-mere-eq :
-    {l : Level} {A : UU l} → is-reflexive (mere-eq {l} {A})
-  refl-mere-eq _ = unit-trunc-Prop refl
+refl-mere-eq : {l : Level} {A : UU l} → is-reflexive (mere-eq {l} {A})
+refl-mere-eq a = unit-trunc-Prop refl
+
+mere-eq-eq : {l : Level} {A : UU l} {x y : A} → x ＝ y → mere-eq x y
+mere-eq-eq {x = x} refl = refl-mere-eq x
 ```
 
 ### Symmetry

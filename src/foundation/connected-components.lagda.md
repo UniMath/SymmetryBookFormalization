@@ -10,6 +10,7 @@ module foundation.connected-components where
 open import foundation.0-connected-types
 open import foundation.dependent-pair-types
 open import foundation.logical-equivalences
+open import foundation.mere-equality
 open import foundation.propositional-truncations
 open import foundation.propositions
 open import foundation.universe-levels
@@ -29,8 +30,10 @@ open import structured-types.pointed-types
 
 ## Idea
 
-The **connected component** of a type `A` at an element `a : A` is the type of
-all `x : A` that are [merely equal](foundation.mere-equality.md) to `a`.
+The
+{{#concept "connected component" Disambiguation="of a type" WD="connected component" WDID=Q91050456 Agda=connected-component}}
+of a type `A` at an element `a : A` is the type of all `x : A` that are
+[merely equal](foundation.mere-equality.md) to `a`.
 
 The [subtype](foundation-core.subtypes.md) of elements merely equal to `a` is
 also the least subtype of `A` containing `a`. In other words, if a subtype
@@ -59,25 +62,22 @@ module _
   where
 
   connected-component : UU l
-  connected-component =
-    Σ A (λ x → type-trunc-Prop (x ＝ a))
+  connected-component = Σ A (λ x → mere-eq x a)
 
   point-connected-component : connected-component
   pr1 point-connected-component = a
   pr2 point-connected-component = unit-trunc-Prop refl
 
-  connected-component-Pointed-Type : Pointed-Type l
-  pr1 connected-component-Pointed-Type = connected-component
-  pr2 connected-component-Pointed-Type = point-connected-component
+  connected-component-pointed-type : Pointed-Type l
+  pr1 connected-component-pointed-type = connected-component
+  pr2 connected-component-pointed-type = point-connected-component
 
-  value-connected-component :
-    connected-component → A
+  value-connected-component : connected-component → A
   value-connected-component X = pr1 X
 
   abstract
     mere-equality-connected-component :
-      (X : connected-component) →
-      type-trunc-Prop (value-connected-component X ＝ a)
+      (X : connected-component) → mere-eq (value-connected-component X) a
     mere-equality-connected-component X = pr2 X
 ```
 
@@ -92,20 +92,20 @@ abstract
     is-0-connected (connected-component A a)
   is-0-connected-connected-component A a =
     is-0-connected-mere-eq
-      ( a , unit-trunc-Prop refl)
+      ( a , refl-mere-eq a)
       ( λ (x , p) →
         apply-universal-property-trunc-Prop
           ( p)
-          ( trunc-Prop ((a , unit-trunc-Prop refl) ＝ (x , p)))
+          ( mere-eq-Prop (a , refl-mere-eq a) (x , p))
           ( λ p' →
-            unit-trunc-Prop
+            mere-eq-eq
               ( eq-pair-Σ
                 ( inv p')
                 ( all-elements-equal-type-trunc-Prop _ p))))
 
 connected-component-∞-Group :
   {l : Level} (A : UU l) (a : A) → ∞-Group l
-pr1 (connected-component-∞-Group A a) = connected-component-Pointed-Type A a
+pr1 (connected-component-∞-Group A a) = connected-component-pointed-type A a
 pr2 (connected-component-∞-Group A a) = is-0-connected-connected-component A a
 ```
 
@@ -116,5 +116,5 @@ is-trunc-connected-component :
   {l : Level} {k : 𝕋} (A : UU l) (a : A) →
   is-trunc (succ-𝕋 k) A → is-trunc (succ-𝕋 k) (connected-component A a)
 is-trunc-connected-component {l} {k} A a H =
-  is-trunc-Σ H (λ x → is-trunc-is-prop k is-prop-type-trunc-Prop)
+  is-trunc-Σ H (λ x → is-trunc-is-prop k (is-prop-mere-eq x a))
 ```
