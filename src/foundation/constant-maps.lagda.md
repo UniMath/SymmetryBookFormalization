@@ -70,9 +70,21 @@ module _
 ### Computing the fibers of point inclusions
 
 ```agda
-compute-fiber-point :
-  {l : Level} {A : UU l} (x y : A) → fiber (point x) y ≃ (x ＝ y)
-compute-fiber-point x y = left-unit-law-product
+module _
+  {l : Level} {A : UU l} (x y : A)
+  where
+
+  compute-fiber-point : fiber (point x) y ≃ (x ＝ y)
+  compute-fiber-point = left-unit-law-product
+
+  map-compute-fiber-point : fiber (point x) y → (x ＝ y)
+  map-compute-fiber-point = map-equiv compute-fiber-point
+
+  map-inv-compute-fiber-point : (x ＝ y) → fiber (point x) y
+  map-inv-compute-fiber-point = map-inv-equiv compute-fiber-point
+
+  is-equiv-map-compute-fiber-point : is-equiv map-compute-fiber-point
+  is-equiv-map-compute-fiber-point = is-equiv-map-equiv compute-fiber-point
 ```
 
 ### A type is `k+1`-truncated if and only if all point inclusions are `k`-truncated maps

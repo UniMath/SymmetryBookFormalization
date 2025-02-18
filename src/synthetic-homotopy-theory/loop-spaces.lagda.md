@@ -7,9 +7,12 @@ module synthetic-homotopy-theory.loop-spaces where
 <details><summary>Imports</summary>
 
 ```agda
+open import foundation.cones-over-cospan-diagrams
 open import foundation.dependent-pair-types
 open import foundation.equivalences
 open import foundation.identity-types
+open import foundation.pullbacks
+open import foundation.unit-type
 open import foundation.universe-levels
 
 open import structured-types.h-spaces
@@ -23,10 +26,12 @@ open import structured-types.wild-quasigroups
 
 ## Idea
 
-The **loop space** of a [pointed type](structured-types.pointed-types.md) `A` is
-the pointed type of self-[identifications](foundation-core.identity-types.md) of
-the base point of `A`. The loop space comes equipped with a group-like structure
-induced by the groupoidal-like structure on identifications.
+The
+{{#concept "loop space" Disambiguation="of a pointed type" WD="loop space" WDID=Q2066070 Agda=Ω}}
+of a [pointed type](structured-types.pointed-types.md) `A` is the pointed type
+of self-[identifications](foundation-core.identity-types.md) of the base point
+of `A`. The loop space comes equipped with a group-like structure induced by the
+groupoidal-like structure on identifications.
 
 ## Table of files directly related to loop spaces
 
@@ -42,7 +47,7 @@ module _
   where
 
   type-Ω : UU l
-  type-Ω = Id (point-Pointed-Type A) (point-Pointed-Type A)
+  type-Ω = (point-Pointed-Type A ＝ point-Pointed-Type A)
 
   refl-Ω : type-Ω
   refl-Ω = refl
@@ -186,4 +191,47 @@ module _
     equiv-concat' (point-Pointed-Type A) (inv p)
   pr2 pointed-equiv-loop-pointed-identity =
     right-inv p
+```
+
+### The loop space as a pullback
+
+The loop space of `A` is the pullback
+
+```text
+  Ω A ------> *
+   | ⌟        |
+   |          |
+   ∨          ∨
+   * -------> A
+```
+
+in the category of pointed types. Equivalently, it is the pullback of types
+
+```text
+  Ω A ------> *
+   | ⌟        |
+   |          | a
+   ∨          ∨
+   * -------> A
+        a
+```
+
+where `a` is the base point of `A`.
+
+```agda
+module _
+  {l : Level} (A : Pointed-Type l)
+  where
+
+  cone-type-Ω :
+    cone (point-point-Pointed-Type A) (point-point-Pointed-Type A) (type-Ω A)
+  cone-type-Ω = cone-Id (point-Pointed-Type A) (point-Pointed-Type A)
+
+  is-pullback-type-Ω :
+    is-pullback
+      ( point-point-Pointed-Type A)
+      ( point-point-Pointed-Type A)
+      ( cone-type-Ω)
+  is-pullback-type-Ω =
+    is-pullback-Id (point-Pointed-Type A) (point-Pointed-Type A)
 ```

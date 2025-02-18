@@ -50,8 +50,7 @@ module _
   where
 
   fiber-inclusion : (x : A) → B x → Σ A B
-  pr1 (fiber-inclusion x y) = x
-  pr2 (fiber-inclusion x y) = y
+  fiber-inclusion x y = (x , y)
 
   fiber-fiber-inclusion :
     (a : A) (t : Σ A B) → fiber (fiber-inclusion a) t ≃ (a ＝ pr1 t)

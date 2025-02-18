@@ -8,6 +8,7 @@ module structured-types.pointed-types where
 
 ```agda
 open import foundation.dependent-pair-types
+open import foundation.unit-type
 open import foundation.universe-levels
 ```
 
@@ -15,7 +16,8 @@ open import foundation.universe-levels
 
 ## Idea
 
-A **pointed type** is a type `A` equipped with an element `a : A`.
+A {{#concept "pointed type" WD="pointed space" WDID=Q1419329 Agda=Pointed-Type}}
+is a type `A` [equipped](foundation.structure.md) with an element `a : A`.
 
 ## Definition
 
@@ -34,6 +36,9 @@ module _
 
   point-Pointed-Type : type-Pointed-Type
   point-Pointed-Type = pr2 A
+
+  point-point-Pointed-Type : unit → type-Pointed-Type
+  point-point-Pointed-Type = point point-Pointed-Type
 ```
 
 ### Evaluation at the base point
