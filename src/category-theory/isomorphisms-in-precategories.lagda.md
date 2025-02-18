@@ -8,6 +8,8 @@ module category-theory.isomorphisms-in-precategories where
 
 ```agda
 open import category-theory.precategories
+open import category-theory.retractions-in-precategories
+open import category-theory.sections-in-precategories
 
 open import foundation.action-on-identifications-functions
 open import foundation.cartesian-product-types
@@ -22,6 +24,7 @@ open import foundation.retractions
 open import foundation.sections
 open import foundation.sets
 open import foundation.subtypes
+open import foundation.transport-along-identifications
 open import foundation.universe-levels
 ```
 
@@ -29,49 +32,111 @@ open import foundation.universe-levels
 
 ## Idea
 
-An **isomorphism** in a [precategory](category-theory.precategories.md) `C` is a
-morphism `f : x → y` in `C` for which there exists a morphism `g : y → x` such
-that `f ∘ g ＝ id` and `g ∘ f ＝ id`.
+An {{#concept "isomorphism" Disambiguation="precategory" Agda=iso-Precategory}}
+in a [precategory](category-theory.precategories.md) `C` is a
+morphism `f : x → y` in `C` which has a [section](category-theory.sections-in-precategories.md) and a [retraction](category-theory.retractions-in-precategories.md). In other words, an isomorphism is a morphism `f : x → y` for which there is a morphism `g : y → x` equipped with an identification
+
+```text
+  f ∘ g ＝ id,
+```
+
+and a morphism `h : y → x` equipped with an identification
+
+```text
+  h ∘ f ＝ id.
+```
+
+This definition of isomorphisms follows a general pattern in agda-unimath, where we will always define isomorphisms in this manner.
 
 ## Definitions
 
 ### The predicate of being an isomorphism in a precategory
 
 ```agda
-is-iso-Precategory :
-  {l1 l2 : Level}
-  (C : Precategory l1 l2)
-  {x y : obj-Precategory C}
-  (f : hom-Precategory C x y) →
-  UU l2
-is-iso-Precategory C {x} {y} f =
-  Σ ( hom-Precategory C y x)
-    ( λ g →
-      ( comp-hom-Precategory C f g ＝ id-hom-Precategory C) ×
-      ( comp-hom-Precategory C g f ＝ id-hom-Precategory C))
+module _
+  {l1 l2 : Level} (C : Precategory l1 l2)
+  {x y : obj-Precategory C} (f : hom-Precategory C x y)
+  where
+  
+  is-iso-Precategory : UU l2
+  is-iso-Precategory =
+    section-hom-Precategory C f × retraction-hom-Precategory C f
 
 module _
-  {l1 l2 : Level}
-  (C : Precategory l1 l2)
-  {x y : obj-Precategory C}
-  {f : hom-Precategory C x y}
+  {l1 l2 : Level} (C : Precategory l1 l2)
+  {x y : obj-Precategory C} {f : hom-Precategory C x y}
+  (H : is-iso-Precategory C f)
   where
 
-  hom-inv-is-iso-Precategory :
-    is-iso-Precategory C f → hom-Precategory C y x
-  hom-inv-is-iso-Precategory = pr1
+  section-is-iso-Precategory : section-hom-Precategory C f
+  section-is-iso-Precategory = pr1 H
+
+  hom-section-is-iso-Precategory : hom-Precategory C y x
+  hom-section-is-iso-Precategory =
+    hom-section-hom-Precategory C f section-is-iso-Precategory
+
+  is-section-section-is-iso-Precategory :
+    is-section-hom-Precategory C f hom-section-is-iso-Precategory
+  is-section-section-is-iso-Precategory =
+    is-section-section-hom-Precategory C f section-is-iso-Precategory
+
+  retraction-is-iso-Precategory : retraction-hom-Precategory C f
+  retraction-is-iso-Precategory = pr2 H
+
+  hom-retraction-is-iso-Precategory : hom-Precategory C y x
+  hom-retraction-is-iso-Precategory =
+    hom-retraction-hom-Precategory C f retraction-is-iso-Precategory
+
+  is-retraction-retraction-is-iso-Precategory :
+    is-retraction-hom-Precategory C f hom-retraction-is-iso-Precategory
+  is-retraction-retraction-is-iso-Precategory =
+    is-retraction-retraction-hom-Precategory C f retraction-is-iso-Precategory
+
+  hom-inv-is-iso-Precategory : hom-Precategory C y x
+  hom-inv-is-iso-Precategory = hom-section-is-iso-Precategory
 
   is-section-hom-inv-is-iso-Precategory :
-    (H : is-iso-Precategory C f) →
-    comp-hom-Precategory C f (hom-inv-is-iso-Precategory H) ＝
-    id-hom-Precategory C
-  is-section-hom-inv-is-iso-Precategory = pr1 ∘ pr2
+    is-section-hom-Precategory C f hom-inv-is-iso-Precategory
+  is-section-hom-inv-is-iso-Precategory = is-section-section-is-iso-Precategory
+
+  eq-hom-retraction-hom-section-is-iso-Precategory :
+    hom-section-is-iso-Precategory ＝ hom-retraction-is-iso-Precategory
+  eq-hom-retraction-hom-section-is-iso-Precategory =
+    equational-reasoning
+      hom-section-is-iso-Precategory
+      ＝ comp-hom-Precategory C
+          ( id-hom-Precategory C)
+          ( hom-section-is-iso-Precategory)
+        by
+        inv (left-unit-law-comp-hom-Precategory C _)
+      ＝ comp-hom-Precategory C
+          ( comp-hom-Precategory C hom-retraction-is-iso-Precategory f)
+          ( hom-section-is-iso-Precategory)
+        by
+        inv
+          ( ap
+            ( λ g → comp-hom-Precategory C g _)
+            ( is-retraction-retraction-is-iso-Precategory))
+      ＝ comp-hom-Precategory C
+          ( hom-retraction-is-iso-Precategory)
+          ( comp-hom-Precategory C f hom-section-is-iso-Precategory)
+        by associative-comp-hom-Precategory C _ _ _
+      ＝ comp-hom-Precategory C
+          ( hom-retraction-is-iso-Precategory)
+          ( id-hom-Precategory C)
+        by
+        ap (comp-hom-Precategory C _) is-section-section-is-iso-Precategory
+      ＝ hom-retraction-is-iso-Precategory
+        by
+        right-unit-law-comp-hom-Precategory C _
 
   is-retraction-hom-inv-is-iso-Precategory :
-    (H : is-iso-Precategory C f) →
-    comp-hom-Precategory C (hom-inv-is-iso-Precategory H) f ＝
-    id-hom-Precategory C
-  is-retraction-hom-inv-is-iso-Precategory = pr2 ∘ pr2
+    is-retraction-hom-Precategory C f hom-inv-is-iso-Precategory
+  is-retraction-hom-inv-is-iso-Precategory =
+    tr
+      ( is-retraction-hom-Precategory C f)
+      ( inv eq-hom-retraction-hom-section-is-iso-Precategory)
+      ( is-retraction-retraction-is-iso-Precategory)
 ```
 
 ### Isomorphisms in a precategory
@@ -138,11 +203,13 @@ module _
   {x : obj-Precategory C}
   where
 
-  is-iso-id-hom-Precategory :
-    is-iso-Precategory C (id-hom-Precategory C {x})
-  pr1 is-iso-id-hom-Precategory = id-hom-Precategory C
+  is-iso-id-hom-Precategory : is-iso-Precategory C (id-hom-Precategory C {x})
+  pr1 (pr1 is-iso-id-hom-Precategory) =
+    id-hom-Precategory C
+  pr2 (pr1 is-iso-id-hom-Precategory) =
+    right-unit-law-comp-hom-Precategory C (id-hom-Precategory C)
   pr1 (pr2 is-iso-id-hom-Precategory) =
-    left-unit-law-comp-hom-Precategory C (id-hom-Precategory C)
+    id-hom-Precategory C
   pr2 (pr2 is-iso-id-hom-Precategory) =
     left-unit-law-comp-hom-Precategory C (id-hom-Precategory C)
 
@@ -198,7 +265,7 @@ module _
     (f : hom-Precategory C x y)
     (H K : is-iso-Precategory C f) → H ＝ K
   all-elements-equal-is-iso-Precategory f
-    (g , p , q) (g' , p' , q') =
+    ((g , p) , (h , q)) ((g' , p') , (h' , q')) =
     eq-type-subtype
       ( λ g →
         product-Prop
