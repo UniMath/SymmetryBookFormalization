@@ -7,6 +7,7 @@ module foundation.booleans where
 <details><summary>Imports</summary>
 
 ```agda
+open import foundation.apartness-relations
 open import foundation.decidable-equality
 open import foundation.decidable-types
 open import foundation.dependent-pair-types
@@ -14,11 +15,14 @@ open import foundation.discrete-types
 open import foundation.involutions
 open import foundation.negated-equality
 open import foundation.raising-universe-levels
+open import foundation.tight-apartness-relations
 open import foundation.unit-type
 open import foundation.universe-levels
 
 open import foundation-core.constant-maps
 open import foundation-core.coproduct-types
+open import foundation-core.decidable-propositions
+open import foundation-core.double-negation-stable-equality
 open import foundation-core.empty-types
 open import foundation-core.equivalences
 open import foundation-core.function-types
@@ -38,8 +42,8 @@ open import univalent-combinatorics.standard-finite-types
 
 ## Idea
 
-The type of **booleans** is a
-[2-element type](univalent-combinatorics.2-element-types.md) with elements
+The type of {{#concept "booleans" WD="Boolean domain" WDID=Q3269980 Agda=bool}}
+is a [2-element type](univalent-combinatorics.2-element-types.md) with elements
 `true false : bool`, which is used for reasoning with
 [decidable propositions](foundation-core.decidable-propositions.md).
 
@@ -144,34 +148,20 @@ neq-false-true-bool ()
 
 neq-true-false-bool : true ≠ false
 neq-true-false-bool ()
+
+is-decidable-Eq-bool : {x y : bool} → is-decidable (Eq-bool x y)
+is-decidable-Eq-bool {true} {true} = inl star
+is-decidable-Eq-bool {true} {false} = inr id
+is-decidable-Eq-bool {false} {true} = inr id
+is-decidable-Eq-bool {false} {false} = inl star
 ```
 
-## Structure
-
-### The boolean operators
+### The standard interpretation of booleans as decidable propositions
 
 ```agda
-neg-bool : bool → bool
-neg-bool true = false
-neg-bool false = true
-
-conjunction-bool : bool → bool → bool
-conjunction-bool true true = true
-conjunction-bool true false = false
-conjunction-bool false true = false
-conjunction-bool false false = false
-
-disjunction-bool : bool → bool → bool
-disjunction-bool true true = true
-disjunction-bool true false = true
-disjunction-bool false true = true
-disjunction-bool false false = false
-
-implication-bool : bool → bool → bool
-implication-bool true true = true
-implication-bool true false = false
-implication-bool false true = true
-implication-bool false false = true
+decidable-prop-bool : bool → Decidable-Prop lzero
+decidable-prop-bool true = unit-Decidable-Prop
+decidable-prop-bool false = empty-Decidable-Prop
 ```
 
 ## Properties
@@ -210,6 +200,19 @@ has-decidable-equality-bool false false = inl refl
 
 bool-Discrete-Type : Discrete-Type lzero
 bool-Discrete-Type = bool , has-decidable-equality-bool
+
+has-double-negation-stable-equality-bool :
+  has-double-negation-stable-equality bool
+has-double-negation-stable-equality-bool x y =
+  double-negation-elim-is-decidable (has-decidable-equality-bool x y)
+```
+
+### The booleans have a tight apartness relation
+
+```agda
+bool-Type-With-Tight-Apartness : Type-With-Tight-Apartness lzero lzero
+bool-Type-With-Tight-Apartness =
+  type-with-tight-apartness-Discrete-Type bool-Discrete-Type
 ```
 
 ### The "is true" predicate on booleans
@@ -222,7 +225,14 @@ is-prop-is-true : (b : bool) → is-prop (is-true b)
 is-prop-is-true b = is-set-bool b true
 
 is-true-Prop : bool → Prop lzero
-is-true-Prop b = is-true b , is-prop-is-true b
+is-true-Prop b = (is-true b , is-prop-is-true b)
+
+is-decidable-prop-is-true : (b : bool) → is-decidable-prop (is-true b)
+is-decidable-prop-is-true b =
+  ( is-prop-is-true b , has-decidable-equality-bool b true)
+
+is-true-Decidable-Prop : bool → Decidable-Prop lzero
+is-true-Decidable-Prop b = (is-true b , is-decidable-prop-is-true b)
 ```
 
 ### The "is false" predicate on booleans
@@ -236,18 +246,43 @@ is-prop-is-false b = is-set-bool b false
 
 is-false-Prop : bool → Prop lzero
 is-false-Prop b = is-false b , is-prop-is-false b
+
+is-decidable-prop-is-false : (b : bool) → is-decidable-prop (is-false b)
+is-decidable-prop-is-false b =
+  ( is-prop-is-false b , has-decidable-equality-bool b false)
+
+is-false-Decidable-Prop : bool → Decidable-Prop lzero
+is-false-Decidable-Prop b = (is-false b , is-decidable-prop-is-false b)
 ```
 
 ### A boolean cannot be both true and false
 
 ```agda
-not-is-false-is-true : (x : bool) → is-true x → ¬ (is-false x)
-not-is-false-is-true true t ()
-not-is-false-is-true false () f
+is-not-false-is-true : (x : bool) → is-true x → ¬ (is-false x)
+is-not-false-is-true true t ()
+is-not-false-is-true false () f
 
-not-is-true-is-false : (x : bool) → is-false x → ¬ (is-true x)
-not-is-true-is-false true () f
-not-is-true-is-false false t ()
+is-not-true-is-false : (x : bool) → is-false x → ¬ (is-true x)
+is-not-true-is-false true () f
+is-not-true-is-false false t ()
+
+is-false-is-not-true : (x : bool) → ¬ (is-true x) → is-false x
+is-false-is-not-true true np = ex-falso (np refl)
+is-false-is-not-true false np = refl
+
+is-true-is-not-false : (x : bool) → ¬ (is-false x) → is-true x
+is-true-is-not-false true np = refl
+is-true-is-not-false false np = ex-falso (np refl)
+
+contrapositive-is-true-bool :
+  {x y : bool} → (is-true x → is-true y) → is-false y → is-false x
+contrapositive-is-true-bool {x} f refl =
+  is-false-is-not-true x (neq-false-true-bool ∘ f)
+
+contrapositive-is-false-bool :
+  {x y : bool} → (is-false x → is-false y) → is-true y → is-true x
+contrapositive-is-false-bool {x} f refl =
+  is-true-is-not-false x (neq-true-false-bool ∘ f)
 ```
 
 ### The type of booleans is equivalent to `Fin 2`
@@ -296,37 +331,6 @@ number-of-elements-bool =
 bool-Finite-Type : Finite-Type lzero
 pr1 bool-Finite-Type = bool
 pr2 bool-Finite-Type = is-finite-bool
-```
-
-### Boolean negation has no fixed points
-
-```agda
-neq-neg-bool : (b : bool) → b ≠ neg-bool b
-neq-neg-bool true ()
-neq-neg-bool false ()
-
-neq-neg-bool' : (b : bool) → neg-bool b ≠ b
-neq-neg-bool' b = neq-neg-bool b ∘ inv
-```
-
-### Boolean negation is an involution
-
-```agda
-is-involution-neg-bool : is-involution neg-bool
-is-involution-neg-bool true = refl
-is-involution-neg-bool false = refl
-```
-
-### Boolean negation is an equivalence
-
-```agda
-abstract
-  is-equiv-neg-bool : is-equiv neg-bool
-  is-equiv-neg-bool = is-equiv-is-involution is-involution-neg-bool
-
-equiv-neg-bool : bool ≃ bool
-pr1 equiv-neg-bool = neg-bool
-pr2 equiv-neg-bool = is-equiv-neg-bool
 ```
 
 ### The constant function `const bool b` is not an equivalence

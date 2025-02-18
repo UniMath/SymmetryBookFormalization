@@ -33,6 +33,8 @@ open import foundation-core.empty-types
 open import foundation-core.fibers-of-maps
 open import foundation-core.propositions
 
+open import logic.propositionally-decidable-types
+
 open import set-theory.countable-sets
 open import set-theory.infinite-sets
 open import set-theory.uncountable-sets

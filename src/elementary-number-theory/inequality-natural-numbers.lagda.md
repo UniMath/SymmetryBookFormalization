@@ -182,13 +182,16 @@ cases-order-three-elements-ℕ x y z =
 
 order-three-elements-ℕ :
   (x y z : ℕ) → cases-order-three-elements-ℕ x y z
-order-three-elements-ℕ zero-ℕ zero-ℕ zero-ℕ = inl (inl (pair star star))
-order-three-elements-ℕ zero-ℕ zero-ℕ (succ-ℕ z) = inl (inl (pair star star))
-order-three-elements-ℕ zero-ℕ (succ-ℕ y) zero-ℕ = inl (inr (pair star star))
+order-three-elements-ℕ zero-ℕ zero-ℕ zero-ℕ =
+  inl (inl (star , star))
+order-three-elements-ℕ zero-ℕ zero-ℕ (succ-ℕ z) =
+  inl (inl (star , star))
+order-three-elements-ℕ zero-ℕ (succ-ℕ y) zero-ℕ =
+  inl (inr (star , star))
 order-three-elements-ℕ zero-ℕ (succ-ℕ y) (succ-ℕ z) =
   inl (map-coproduct (pair star) (pair star) (linear-leq-ℕ y z))
 order-three-elements-ℕ (succ-ℕ x) zero-ℕ zero-ℕ =
-  inr (inl (inl (pair star star)))
+  inr (inl (inl (star , star)))
 order-three-elements-ℕ (succ-ℕ x) zero-ℕ (succ-ℕ z) =
   inr (inl (map-coproduct (pair star) (pair star) (linear-leq-ℕ z x)))
 order-three-elements-ℕ (succ-ℕ x) (succ-ℕ y) zero-ℕ =
@@ -362,8 +365,8 @@ leq-add-ℕ' m n =
 
 ```agda
 subtraction-leq-ℕ : (n m : ℕ) → n ≤-ℕ m → Σ ℕ (λ l → l +ℕ n ＝ m)
-subtraction-leq-ℕ zero-ℕ m p = pair m refl
-subtraction-leq-ℕ (succ-ℕ n) (succ-ℕ m) p = pair (pr1 P) (ap succ-ℕ (pr2 P))
+subtraction-leq-ℕ zero-ℕ m p = (m , refl)
+subtraction-leq-ℕ (succ-ℕ n) (succ-ℕ m) p = (pr1 P , ap succ-ℕ (pr2 P))
   where
   P : Σ ℕ (λ l' → l' +ℕ n ＝ m)
   P = subtraction-leq-ℕ n m p
@@ -450,12 +453,12 @@ leq-mul-ℕ' k x =
 leq-mul-is-nonzero-ℕ :
   (k x : ℕ) → is-nonzero-ℕ k → x ≤-ℕ (x *ℕ k)
 leq-mul-is-nonzero-ℕ k x H with is-successor-is-nonzero-ℕ H
-... | pair l refl = leq-mul-ℕ l x
+... | (l , refl) = leq-mul-ℕ l x
 
 leq-mul-is-nonzero-ℕ' :
   (k x : ℕ) → is-nonzero-ℕ k → x ≤-ℕ (k *ℕ x)
 leq-mul-is-nonzero-ℕ' k x H with is-successor-is-nonzero-ℕ H
-... | pair l refl = leq-mul-ℕ' l x
+... | (l , refl) = leq-mul-ℕ' l x
 ```
 
 ## See also

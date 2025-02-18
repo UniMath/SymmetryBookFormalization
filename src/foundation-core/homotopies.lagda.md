@@ -347,8 +347,7 @@ module _
   {H H' : f ~ g}
   where
 
-  ap-inv-htpy :
-    H ~ H' → inv-htpy H ~ inv-htpy H'
+  ap-inv-htpy : H ~ H' → inv-htpy H ~ inv-htpy H'
   ap-inv-htpy K x = ap inv (K x)
 ```
 

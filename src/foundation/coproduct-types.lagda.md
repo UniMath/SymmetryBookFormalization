@@ -17,6 +17,7 @@ open import foundation.subuniverses
 open import foundation.unit-type
 open import foundation.universe-levels
 
+open import foundation-core.constant-maps
 open import foundation-core.contractible-types
 open import foundation-core.empty-types
 open import foundation-core.equivalences
@@ -26,6 +27,8 @@ open import foundation-core.identity-types
 open import foundation-core.injective-maps
 open import foundation-core.negation
 open import foundation-core.propositions
+open import foundation-core.retractions
+open import foundation-core.retracts-of-types
 ```
 
 </details>
@@ -224,4 +227,24 @@ pr1 (coproduct-Prop P Q H) =
   type-Prop P + type-Prop Q
 pr2 (coproduct-Prop P Q H) =
   is-prop-coproduct H (is-prop-type-Prop P) (is-prop-type-Prop Q)
+```
+
+### If a summand has an element, then that summand is a retract of the coproduct
+
+```agda
+module _
+  {l1 l2 : Level} {A : UU l1} {B : UU l2}
+  where
+
+  retraction-inl : A → retraction (inl {A = A} {B})
+  retraction-inl a = (rec-coproduct id (const B a) , refl-htpy)
+
+  retract-left-summand-coproduct : A → A retract-of (A + B)
+  retract-left-summand-coproduct a = (inl , retraction-inl a)
+
+  retraction-inr : B → retraction (inr {A = A} {B})
+  retraction-inr b = (rec-coproduct (const A b) id , refl-htpy)
+
+  retract-right-summand-coproduct : B → B retract-of (A + B)
+  retract-right-summand-coproduct b = (inr , retraction-inr b)
 ```

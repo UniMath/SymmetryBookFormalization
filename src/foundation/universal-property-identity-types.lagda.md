@@ -26,9 +26,9 @@ open import foundation-core.contractible-maps
 open import foundation-core.contractible-types
 open import foundation-core.families-of-equivalences
 open import foundation-core.fibers-of-maps
-open import foundation-core.function-types
 open import foundation-core.functoriality-dependent-pair-types
 open import foundation-core.homotopies
+open import foundation-core.injective-maps
 open import foundation-core.propositional-maps
 open import foundation-core.propositions
 open import foundation-core.torsorial-type-families

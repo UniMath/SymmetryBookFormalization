@@ -12,12 +12,14 @@ open import elementary-number-theory.natural-numbers
 
 open import foundation.action-on-identifications-functions
 open import foundation.dependent-pair-types
+open import foundation.double-negation-stable-equality
 open import foundation.function-extensionality
 open import foundation.function-types
 open import foundation.lawveres-fixed-point-theorem
 open import foundation.negation
 open import foundation.propositional-truncations
 open import foundation.sets
+open import foundation.tight-apartness-relations
 open import foundation.universe-levels
 
 open import foundation-core.empty-types
@@ -48,6 +50,31 @@ baire-space = ℕ → ℕ
 ```
 
 ## Properties
+
+### The Baire space has a tight apartness relation
+
+```agda
+tight-apartness-relation-baire-space :
+  Tight-Apartness-Relation lzero baire-space
+tight-apartness-relation-baire-space =
+  tight-apartness-relation-function-into-Type-With-Tight-Apartness
+    ℕ
+    ℕ-Type-With-Tight-Apartness
+
+baire-space-Type-With-Tight-Apartness : Type-With-Tight-Apartness lzero lzero
+baire-space-Type-With-Tight-Apartness =
+  function-into-Type-With-Tight-Apartness ℕ ℕ-Type-With-Tight-Apartness
+```
+
+### The Baire space has double negation stable equality
+
+```agda
+has-double-negation-stable-equality-baire-space :
+  has-double-negation-stable-equality baire-space
+has-double-negation-stable-equality-baire-space =
+  has-double-negation-stable-equality-type-Type-With-Tight-Apartness
+    baire-space-Type-With-Tight-Apartness
+```
 
 ### The Baire space is a set
 

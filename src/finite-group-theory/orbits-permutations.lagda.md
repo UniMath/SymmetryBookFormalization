@@ -55,6 +55,8 @@ open import foundation.universe-levels
 
 open import lists.lists
 
+open import logic.propositionally-decidable-types
+
 open import univalent-combinatorics.2-element-decidable-subtypes
 open import univalent-combinatorics.2-element-types
 open import univalent-combinatorics.counting

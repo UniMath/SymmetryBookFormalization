@@ -26,6 +26,8 @@ open import foundation.sets
 open import foundation.unit-type
 open import foundation.universe-levels
 
+open import logic.propositionally-decidable-types
+
 open import univalent-combinatorics.equality-standard-finite-types
 open import univalent-combinatorics.standard-finite-types
 ```
