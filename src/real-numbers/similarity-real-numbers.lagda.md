@@ -24,7 +24,6 @@ open import order-theory.large-posets
 open import order-theory.similarity-of-elements-large-posets
 
 open import real-numbers.dedekind-real-numbers
-open import real-numbers.inequality-real-numbers
 open import real-numbers.rational-real-numbers
 ```
 
@@ -43,7 +42,7 @@ differing universe levels.
 
 ```agda
 sim-prop-ℝ : {l1 l2 : Level} → ℝ l1 → ℝ l2 → Prop (l1 ⊔ l2)
-sim-prop-ℝ = sim-prop-Large-Poset ℝ-Large-Poset
+sim-prop-ℝ x y = sim-prop-subtype (lower-cut-ℝ x) (lower-cut-ℝ y)
 
 sim-ℝ : {l1 l2 : Level} → ℝ l1 → ℝ l2 → UU (l1 ⊔ l2)
 sim-ℝ x y = type-Prop (sim-prop-ℝ x y)
@@ -72,21 +71,23 @@ module _
 
   sim-upper-cut-iff-sim-ℝ :
     sim-subtype (upper-cut-ℝ x) (upper-cut-ℝ y) ↔ sim-ℝ x y
-  pr1 (pr1 sim-upper-cut-iff-sim-ℝ (ux⊆uy , uy⊆ux)) =
-    backward-implication (leq-iff-ℝ' x y) uy⊆ux
-  pr2 (pr1 sim-upper-cut-iff-sim-ℝ (ux⊆uy , uy⊆ux)) =
-    backward-implication (leq-iff-ℝ' y x) ux⊆uy
-  pr1 (pr2 sim-upper-cut-iff-sim-ℝ (lx⊆ly , ly⊆lx)) =
-    forward-implication (leq-iff-ℝ' y x) ly⊆lx
-  pr2 (pr2 sim-upper-cut-iff-sim-ℝ (lx⊆ly , ly⊆lx)) =
-    forward-implication (leq-iff-ℝ' x y) lx⊆ly
+  pr1 sim-upper-cut-iff-sim-ℝ = sim-lower-cut-sim-upper-cut-ℝ x y
+  pr2 sim-upper-cut-iff-sim-ℝ = sim-upper-cut-sim-lower-cut-ℝ x y
 ```
 
 ### Reflexivity
 
 ```agda
 refl-sim-ℝ : {l : Level} → (x : ℝ l) → sim-ℝ x x
-refl-sim-ℝ = refl-sim-Large-Poset ℝ-Large-Poset
+refl-sim-ℝ x = refl-sim-subtype (lower-cut-ℝ x)
+```
+
+### Symmetry
+
+```agda
+symmetric-sim-ℝ :
+  {l1 l2 : Level} → (x : ℝ l1) (y : ℝ l2) → sim-ℝ x y → sim-ℝ y x
+symmetric-sim-ℝ x y = symmetric-sim-subtype (lower-cut-ℝ x) (lower-cut-ℝ y)
 ```
 
 ### Transitivity
@@ -94,20 +95,17 @@ refl-sim-ℝ = refl-sim-Large-Poset ℝ-Large-Poset
 ```agda
 transitive-sim-ℝ :
   {l1 l2 l3 : Level} →
-  (x : ℝ l1) →
-  (y : ℝ l2) →
-  (z : ℝ l3) →
-  sim-ℝ y z →
-  sim-ℝ x y →
-  sim-ℝ x z
-transitive-sim-ℝ = transitive-sim-Large-Poset ℝ-Large-Poset
+  (x : ℝ l1) (y : ℝ l2) (z : ℝ l3) →
+  sim-ℝ y z → sim-ℝ x y → sim-ℝ x z
+transitive-sim-ℝ x y z =
+  transitive-sim-subtype (lower-cut-ℝ x) (lower-cut-ℝ y) (lower-cut-ℝ z)
 ```
 
 ### Similar real numbers in the same universe are equal
 
 ```agda
 eq-sim-ℝ : {l : Level} → (x y : ℝ l) → sim-ℝ x y → x ＝ y
-eq-sim-ℝ = eq-sim-Large-Poset ℝ-Large-Poset
+eq-sim-ℝ x y H = eq-eq-lower-cut-ℝ x y (antisymmetric-sim-subtype _ _ H)
 ```
 
 ### A rational real is similar to the canonical projection of its rational
