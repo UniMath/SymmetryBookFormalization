@@ -202,6 +202,11 @@ module _
         ( elim-exists Q)
 ```
 
+Note that since existential quantification is implemented using propositional
+truncation, the associated
+[`do` syntax](foundation.propositional-truncations.md#do-syntax) can be used to
+simplify deeply nested chains of `elim-exists`.
+
 ### The existential quantification satisfies the universal property of existential quantification
 
 ```agda
