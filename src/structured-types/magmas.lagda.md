@@ -52,13 +52,41 @@ is-unital-Magma M = is-unital (mul-Magma M)
 Unital-Magma : (l : Level) → UU (lsuc l)
 Unital-Magma l = Σ (Magma l) is-unital-Magma
 
-magma-Unital-Magma :
-  {l : Level} → Unital-Magma l → Magma l
-magma-Unital-Magma M = pr1 M
+module _
+  {l : Level} (M : Unital-Magma l)
+  where
 
-is-unital-magma-Unital-Magma :
-  {l : Level} (M : Unital-Magma l) → is-unital-Magma (magma-Unital-Magma M)
-is-unital-magma-Unital-Magma M = pr2 M
+  magma-Unital-Magma : Magma l
+  magma-Unital-Magma = pr1 M
+
+  type-Unital-Magma :
+    UU l
+  type-Unital-Magma =
+    type-Magma magma-Unital-Magma
+
+  mul-Unital-Magma :
+    (x y : type-Unital-Magma) → type-Unital-Magma
+  mul-Unital-Magma =
+    mul-Magma magma-Unital-Magma
+
+  is-unital-magma-Unital-Magma :
+    is-unital-Magma magma-Unital-Magma
+  is-unital-magma-Unital-Magma = pr2 M
+
+  unit-Unital-Magma :
+    type-Unital-Magma
+  unit-Unital-Magma =
+    pr1 is-unital-magma-Unital-Magma
+
+  left-unit-law-mul-Unital-Magma :
+    (x : type-Unital-Magma) → mul-Unital-Magma unit-Unital-Magma x ＝ x
+  left-unit-law-mul-Unital-Magma =
+    pr1 (pr2 is-unital-magma-Unital-Magma)
+
+  right-unit-law-mul-Unital-Magma :
+    (x : type-Unital-Magma) → mul-Unital-Magma x unit-Unital-Magma ＝ x
+  right-unit-law-mul-Unital-Magma =
+    pr2 (pr2 is-unital-magma-Unital-Magma)
 ```
 
 ### Semigroups

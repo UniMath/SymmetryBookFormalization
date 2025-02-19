@@ -16,6 +16,7 @@ open import foundation.propositions
 open import foundation.universe-levels
 
 open import ring-theory.ideals-semirings
+open import ring-theory.subsets-semirings
 ```
 
 </details>
@@ -103,7 +104,7 @@ module _
     is-ideal-subset-ideal-Semiring (semiring-Commutative-Semiring A) I
 
   is-additive-submonoid-ideal-Commutative-Semiring :
-    is-additive-submonoid-Semiring
+    is-additive-submonoid-subset-Semiring
       ( semiring-Commutative-Semiring A)
       ( subset-ideal-Commutative-Semiring)
   is-additive-submonoid-ideal-Commutative-Semiring =

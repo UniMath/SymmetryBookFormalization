@@ -147,8 +147,12 @@ module _
     normal-subgroup-Subgroup-Ab (ab-Ring R) subgroup-ideal-Ring
 
   left-ideal-ideal-Ring : left-ideal-Ring l2 R
-  pr1 left-ideal-ideal-Ring = subset-ideal-Ring
-  pr1 (pr2 left-ideal-ideal-Ring) = is-additive-subgroup-ideal-Ring
+  pr1 left-ideal-ideal-Ring =
+    subset-ideal-Ring
+  pr1 (pr1 (pr2 left-ideal-ideal-Ring)) =
+    contains-zero-ideal-Ring
+  pr2 (pr1 (pr2 left-ideal-ideal-Ring)) =
+    is-closed-under-addition-ideal-Ring
   pr2 (pr2 left-ideal-ideal-Ring) =
     is-closed-under-left-multiplication-ideal-Ring
 

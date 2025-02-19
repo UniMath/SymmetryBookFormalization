@@ -96,8 +96,10 @@ module _
 
   is-left-ideal-full-ideal-Ring :
     is-left-ideal-subset-Ring R subset-full-ideal-Ring
-  pr1 is-left-ideal-full-ideal-Ring =
-    is-additive-subgroup-full-ideal-Ring
+  pr1 (pr1 is-left-ideal-full-ideal-Ring) =
+    contains-zero-full-ideal-Ring
+  pr2 (pr1 is-left-ideal-full-ideal-Ring) {x} {y} =
+    is-closed-under-addition-full-ideal-Ring {x} {y}
   pr2 is-left-ideal-full-ideal-Ring =
     is-closed-under-left-multiplication-full-ideal-Ring
 

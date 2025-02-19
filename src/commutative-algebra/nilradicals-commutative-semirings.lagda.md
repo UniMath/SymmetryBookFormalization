@@ -52,12 +52,12 @@ is-closed-under-add-nilradical-Commutative-Semiring :
   {l : Level} (A : Commutative-Semiring l) →
   is-closed-under-addition-subset-Commutative-Semiring A
     ( subset-nilradical-Commutative-Semiring A)
-is-closed-under-add-nilradical-Commutative-Semiring A x y =
+is-closed-under-add-nilradical-Commutative-Semiring A =
   is-nilpotent-add-Semiring
     ( semiring-Commutative-Semiring A)
-    ( x)
-    ( y)
-    ( commutative-mul-Commutative-Semiring A x y)
+    ( _)
+    ( _)
+    ( commutative-mul-Commutative-Semiring A _ _)
 ```
 
 ### The nilradical is closed under multiplication with ring elements

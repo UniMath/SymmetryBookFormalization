@@ -48,10 +48,10 @@ module _
   is-closed-under-addition-intersection-ideal-Semiring :
     is-closed-under-addition-subset-Semiring R
       subset-intersection-ideal-Semiring
-  pr1 (is-closed-under-addition-intersection-ideal-Semiring x y H K) =
-    is-closed-under-addition-ideal-Semiring R A x y (pr1 H) (pr1 K)
-  pr2 (is-closed-under-addition-intersection-ideal-Semiring x y H K) =
-    is-closed-under-addition-ideal-Semiring R B x y (pr2 H) (pr2 K)
+  pr1 (is-closed-under-addition-intersection-ideal-Semiring H K) =
+    is-closed-under-addition-ideal-Semiring R A (pr1 H) (pr1 K)
+  pr2 (is-closed-under-addition-intersection-ideal-Semiring H K) =
+    is-closed-under-addition-ideal-Semiring R B (pr2 H) (pr2 K)
 
   is-closed-under-left-multiplication-intersection-ideal-Semiring :
     is-closed-under-left-multiplication-subset-Semiring R

@@ -39,6 +39,18 @@ power-Ring R = power-Semiring (semiring-Ring R)
 
 ## Properties
 
+### `0ⁿ⁺¹ ＝ 0`
+
+```agda
+module _
+  {l : Level} (R : Ring l)
+  where
+
+  power-zero-succ-Ring :
+    (n : ℕ) → power-Ring R (succ-ℕ n) (zero-Ring R) ＝ zero-Ring R
+  power-zero-succ-Ring = power-zero-succ-Semiring (semiring-Ring R)
+```
+
 ### `xⁿ⁺¹ = xⁿx` and `xⁿ⁺¹ ＝ xxⁿ`
 
 ```agda
