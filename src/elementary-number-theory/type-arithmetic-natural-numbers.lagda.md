@@ -9,14 +9,18 @@ module elementary-number-theory.type-arithmetic-natural-numbers where
 ```agda
 open import elementary-number-theory.addition-natural-numbers
 open import elementary-number-theory.divisibility-natural-numbers
+open import elementary-number-theory.equality-natural-numbers
 open import elementary-number-theory.integers
 open import elementary-number-theory.multiplication-natural-numbers
 open import elementary-number-theory.natural-numbers
 open import elementary-number-theory.parity-natural-numbers
-open import elementary-number-theory.powers-of-two
+open import elementary-number-theory.2-adic-decomposition
 
 open import foundation.action-on-identifications-functions
+open import foundation.commuting-triangles-of-maps
+open import foundation.contractible-maps
 open import foundation.dependent-pair-types
+open import foundation.embeddings
 open import foundation.function-types
 open import foundation.functoriality-cartesian-product-types
 open import foundation.functoriality-coproduct-types
@@ -167,32 +171,70 @@ equiv-iterated-coproduct-ℕ (succ-ℕ n) =
 
 ### The product `ℕ × ℕ` is equivalent to `ℕ`
 
+The [2-adic composition map](elementary-number-theory.2-adic-decomposition.md)
+$\mathbb{N}\times\mathbb{N} \to \mathbb{N}$ is an
+[embedding](foundation-core.embeddings.md) which fits in a
+[commuting triangle](foundation-core.commuting-triangles-of-maps.md)
+
+```text
+                  ℕ × ℕ -----> ℕ
+                      \       /
+  2-adic-composition-ℕ \     / succ-ℕ
+                        \   /
+                         ∨ ∨
+                          ℕ.
+```
+
+Since the [image](foundation.images.md) of the 2-adic composition function
+consists precisely of the
+[nonzero natural numbers](elementary-number-theory.nonzero-natural-numbers.md),
+the top map in this triangle is an equivalence.
+
 ```agda
-ℕ×ℕ≃ℕ : (ℕ × ℕ) ≃ ℕ
-ℕ×ℕ≃ℕ = pair pairing-map is-equiv-pairing-map
+pairing-equiv-ℕ : ℕ × ℕ ≃ ℕ
+pairing-equiv-ℕ =
+  equiv-domain-logical-equiv-fiber-emb
+    ( 2-adic-composition-emb-ℕ)
+    ( succ-emb-ℕ)
+    ( logical-equiv-fiber-2-adic-composition-fiber-succ-ℕ)
 
-map-ℕ-to-ℕ×ℕ : ℕ → ℕ × ℕ
-map-ℕ-to-ℕ×ℕ = map-inv-is-equiv (pr2 ℕ×ℕ≃ℕ)
+pairing-map-ℕ : ℕ × ℕ → ℕ
+pairing-map-ℕ = map-equiv pairing-equiv-ℕ
 
-is-equiv-map-ℕ-to-ℕ×ℕ : is-equiv map-ℕ-to-ℕ×ℕ
-is-equiv-map-ℕ-to-ℕ×ℕ = is-equiv-map-inv-is-equiv (pr2 ℕ×ℕ≃ℕ)
+map-inv-pairing-equiv-ℕ : ℕ → ℕ × ℕ
+map-inv-pairing-equiv-ℕ = map-inv-equiv pairing-equiv-ℕ
+
+is-equiv-map-inv-pairing-equiv-ℕ : is-equiv map-inv-pairing-equiv-ℕ
+is-equiv-map-inv-pairing-equiv-ℕ =
+  is-equiv-map-inv-equiv pairing-equiv-ℕ
+
+coherence-triangle-pairing-map-ℕ :
+  coherence-triangle-maps
+    ( λ x → 2-adic-composition-ℕ (pr1 x) (pr2 x))
+    ( succ-ℕ)
+    ( pairing-map-ℕ)
+coherence-triangle-pairing-map-ℕ =
+  coherence-triangle-equiv-domain-logical-equiv-fiber-emb
+    ( 2-adic-composition-emb-ℕ)
+    ( succ-emb-ℕ)
+    ( logical-equiv-fiber-2-adic-composition-fiber-succ-ℕ)
 ```
 
 ### The iterated coproduct `ℕ × ℕ × ... × ℕ` is equivalent to `ℕ` for any n
 
 ```agda
 equiv-iterated-product-ℕ :
-  (n : ℕ) → (iterate n (_×_ ℕ) ℕ) ≃ ℕ
+  (n : ℕ) → iterate n (ℕ ×_) ℕ ≃ ℕ
 equiv-iterated-product-ℕ zero-ℕ = id-equiv
 equiv-iterated-product-ℕ (succ-ℕ n) =
-  ( ℕ×ℕ≃ℕ) ∘e
+  ( pairing-equiv-ℕ) ∘e
     ( equiv-product id-equiv (equiv-iterated-product-ℕ n))
 ```
 
 ### The coproduct `(Fin n) + ℕ` is equivalent to `N` for any standard finite `Fin n`
 
 ```agda
-equiv-coproduct-Fin-ℕ : (n : ℕ) → ((Fin n) + ℕ) ≃ ℕ
+equiv-coproduct-Fin-ℕ : (n : ℕ) → Fin n + ℕ ≃ ℕ
 equiv-coproduct-Fin-ℕ zero-ℕ = left-unit-law-coproduct ℕ
 equiv-coproduct-Fin-ℕ (succ-ℕ n) =
   ( equiv-coproduct-Fin-ℕ n) ∘e
@@ -203,7 +245,7 @@ equiv-coproduct-Fin-ℕ (succ-ℕ n) =
 ### The product `(Fin n) × ℕ` is equivalent to `N` for any standard finite `Fin n` where n is nonzero
 
 ```agda
-equiv-product-Fin-ℕ : (n : ℕ) → ((Fin (succ-ℕ n)) × ℕ) ≃ ℕ
+equiv-product-Fin-ℕ : (n : ℕ) → Fin (succ-ℕ n) × ℕ ≃ ℕ
 equiv-product-Fin-ℕ zero-ℕ =
   ( left-unit-law-coproduct ℕ) ∘e
     ( ( equiv-coproduct (left-absorption-product ℕ) left-unit-law-product) ∘e

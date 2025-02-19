@@ -16,6 +16,7 @@ open import foundation.universe-levels
 
 open import group-theory.powers-of-elements-monoids
 
+open import ring-theory.homomorphisms-semirings
 open import ring-theory.semirings
 ```
 
@@ -46,6 +47,21 @@ module _
   power-one-Semiring :
     (n : ℕ) → power-Semiring R n (one-Semiring R) ＝ one-Semiring R
   power-one-Semiring = power-unit-Monoid (multiplicative-monoid-Semiring R)
+```
+
+### `0ⁿ⁺¹ ＝ 0`
+
+```agda
+module _
+  {l : Level} (R : Semiring l)
+  where
+
+  power-zero-succ-Semiring :
+    (n : ℕ) → power-Semiring R (succ-ℕ n) (zero-Semiring R) ＝ zero-Semiring R
+  power-zero-succ-Semiring zero-ℕ = refl
+  power-zero-succ-Semiring (succ-ℕ n) =
+    right-zero-law-mul-Semiring R
+      ( power-Semiring R (succ-ℕ n) (zero-Semiring R))
 ```
 
 ### `xⁿ⁺¹ = xⁿx`
@@ -144,4 +160,22 @@ module _
     (m n : ℕ) {x : type-Semiring R} →
     power-Semiring R (m *ℕ n) x ＝ power-Semiring R n (power-Semiring R m x)
   power-mul-Semiring = power-mul-Monoid (multiplicative-monoid-Semiring R)
+```
+
+### Homomorphisms of semirings preserve powers
+
+```agda
+module _
+  {l1 l2 : Level} (R : Semiring l1) (S : Semiring l2) (f : hom-Semiring R S)
+  where
+
+  preserves-powers-hom-Semiring :
+    (n : ℕ) (x : type-Semiring R) →
+    map-hom-Semiring R S f (power-Semiring R n x) ＝
+    power-Semiring S n (map-hom-Semiring R S f x)
+  preserves-powers-hom-Semiring =
+    preserves-powers-hom-Monoid
+      ( multiplicative-monoid-Semiring R)
+      ( multiplicative-monoid-Semiring S)
+      ( hom-multiplicative-monoid-hom-Semiring R S f)
 ```

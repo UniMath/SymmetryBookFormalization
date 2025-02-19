@@ -122,7 +122,7 @@ bezouts-lemma-eqn-to-int x y H =
                     ( minimal-positive-distance-y-coeff (abs-ℤ x) (abs-ℤ y) H)))
                 ( abs-ℤ y)))
           ( inv
-            ( multiplicative-abs-ℤ
+            ( distributive-abs-mul-ℤ
               ( int-ℕ (minimal-positive-distance-x-coeff (abs-ℤ x) (abs-ℤ y) H))
               ( x))))
     ＝ dist-ℕ
@@ -143,7 +143,7 @@ bezouts-lemma-eqn-to-int x y H =
                   ( minimal-positive-distance-x-coeff (abs-ℤ x) (abs-ℤ y) H))
                 ( x))))
           ( inv
-            ( multiplicative-abs-ℤ
+            ( distributive-abs-mul-ℤ
               ( int-ℕ (minimal-positive-distance-y-coeff (abs-ℤ x) (abs-ℤ y) H))
               ( y))))
 

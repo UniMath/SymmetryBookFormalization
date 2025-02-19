@@ -26,7 +26,21 @@ open import foundation.sets
 
 </details>
 
-## Definition
+## Idea
+
+The {{#concept "addition" Disambiguation="natural numbers" Agda=_+ℕ_}} operation
+on the [natural numbers](elementary-number-theory.natural-numbers.md) is a
+binary operation $m,n\mapsto m+n$ on the natural numbers given by $n$ times
+iteratively taking the successor of the number $m$.
+
+The notation $+$ for addition and $-$ for subtraction appeared first in print in
+1489 in _Behende und hüpsche Rechenung auff allen Kauffmanschafft_ by
+[Johannes Widmann](https://en.wikipedia.org/wiki/Johannes_Widmann), for example
+on page 327 of {{#cite Widmann1489}}.
+
+## Definitions
+
+### Addition on the natural numbers
 
 ```agda
 add-ℕ : ℕ → ℕ → ℕ
@@ -138,6 +152,25 @@ abstract
       associative-add-ℕ
 ```
 
+### Swapping iterated addition
+
+```agda
+abstract
+  right-swap-add-ℕ :
+    (x y z : ℕ) → (x +ℕ y) +ℕ z ＝ (x +ℕ z) +ℕ y
+  right-swap-add-ℕ x y z =
+    associative-add-ℕ x y z ∙
+    ap (add-ℕ x) (commutative-add-ℕ y z) ∙
+    inv (associative-add-ℕ x z y)
+
+  left-swap-add-ℕ :
+    (x y z : ℕ) → x +ℕ (y +ℕ z) ＝ y +ℕ (x +ℕ z)
+  left-swap-add-ℕ x y z =
+    inv (associative-add-ℕ x y z) ∙
+    ap (add-ℕ' z) (commutative-add-ℕ x y) ∙
+    associative-add-ℕ y x z
+```
+
 ### Addition by a fixed element on either side is injective
 
 ```agda
@@ -208,3 +241,7 @@ abstract
 
 - The commutative monoid of the natural numbers with addition is defined in
   [`monoid-of-natural-numbers-with-addition`](elementary-number-theory.monoid-of-natural-numbers-with-addition.md).
+
+## References
+
+{{#bibliography}}

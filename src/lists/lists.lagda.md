@@ -112,16 +112,6 @@ length-list : {l : Level} {A : UU l} → list A → ℕ
 length-list = fold-list 0 (λ a → succ-ℕ)
 ```
 
-### The elementhood predicate on lists
-
-```agda
-infix 6 _∈-list_
-
-data _∈-list_ {l : Level} {A : UU l} : A → list A → UU l where
-  is-head : (a : A) (l : list A) → a ∈-list (cons a l)
-  is-in-tail : (a x : A) (l : list A) → a ∈-list l → a ∈-list (cons x l)
-```
-
 ## Properties
 
 ### A list that uses cons is not nil
@@ -405,3 +395,7 @@ is-equiv-map-algebra-list A =
     ( is-section-map-inv-algebra-list A)
     ( is-retraction-map-inv-algebra-list A)
 ```
+
+## See also
+
+- [The elementhood relation on lists](lists.elementhood-relation-lists.md)

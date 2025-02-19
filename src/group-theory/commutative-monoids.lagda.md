@@ -19,6 +19,8 @@ open import foundation.universe-levels
 
 open import group-theory.monoids
 open import group-theory.semigroups
+
+open import structured-types.magmas
 ```
 
 </details>
@@ -65,6 +67,10 @@ module _
 
   monoid-Commutative-Monoid : Monoid l
   monoid-Commutative-Monoid = pr1 M
+
+  unital-magma-Commutative-Monoid : Unital-Magma l
+  unital-magma-Commutative-Monoid =
+    unital-magma-Monoid monoid-Commutative-Monoid
 
   semigroup-Commutative-Monoid : Semigroup l
   semigroup-Commutative-Monoid = semigroup-Monoid monoid-Commutative-Monoid

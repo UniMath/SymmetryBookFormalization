@@ -19,6 +19,7 @@ open import foundation.injective-maps
 open import foundation.propositions
 open import foundation.sets
 open import foundation.subtypes
+open import foundation.transport-along-identifications
 open import foundation.universe-levels
 
 open import group-theory.monoids
@@ -289,9 +290,34 @@ module _
     left-unit-law-mul-Monoid M (unit-Monoid M)
   pr2 (pr2 is-invertible-element-unit-Monoid) =
     left-unit-law-mul-Monoid M (unit-Monoid M)
+
+  is-invertible-element-is-unit-Monoid :
+    (x : type-Monoid M) → unit-Monoid M ＝ x →
+    is-invertible-element-Monoid M x
+  is-invertible-element-is-unit-Monoid .(unit-Monoid M) refl =
+    is-invertible-element-unit-Monoid
 ```
 
-### Invertible elements are closed under multiplication
+### The inverse of an invertible element is invertible
+
+```agda
+module _
+  {l : Level} (M : Monoid l)
+  where
+
+  is-invertible-element-inv-is-invertible-element-Monoid :
+    {x : type-Monoid M} (H : is-invertible-element-Monoid M x) →
+    is-invertible-element-Monoid M (inv-is-invertible-element-Monoid M H)
+  pr1 (is-invertible-element-inv-is-invertible-element-Monoid {x} H) = x
+  pr1 (pr2 (is-invertible-element-inv-is-invertible-element-Monoid H)) =
+    is-left-inverse-inv-is-invertible-element-Monoid M H
+  pr2 (pr2 (is-invertible-element-inv-is-invertible-element-Monoid H)) =
+    is-right-inverse-inv-is-invertible-element-Monoid M H
+```
+
+### If two of the three elements `x`, `y`, and `xy` are invertible, then so is the third
+
+#### Invertible elements are closed under multiplication
 
 ```agda
 module _
@@ -349,21 +375,52 @@ module _
         ( is-left-invertible-is-invertible-element-Monoid M y K))
 ```
 
-### The inverse of an invertible element is invertible
+#### If `y` and `xy` are invertible, then so is `x`
 
 ```agda
 module _
-  {l : Level} (M : Monoid l)
+  {l : Level} (M : Monoid l) (x y : type-Monoid M)
   where
 
-  is-invertible-element-inv-is-invertible-element-Monoid :
-    {x : type-Monoid M} (H : is-invertible-element-Monoid M x) →
-    is-invertible-element-Monoid M (inv-is-invertible-element-Monoid M H)
-  pr1 (is-invertible-element-inv-is-invertible-element-Monoid {x} H) = x
-  pr1 (pr2 (is-invertible-element-inv-is-invertible-element-Monoid H)) =
-    is-left-inverse-inv-is-invertible-element-Monoid M H
-  pr2 (pr2 (is-invertible-element-inv-is-invertible-element-Monoid H)) =
-    is-right-inverse-inv-is-invertible-element-Monoid M H
+  is-invertible-element-left-factor-Monoid :
+    is-invertible-element-Monoid M y →
+    is-invertible-element-Monoid M (mul-Monoid M x y) →
+    is-invertible-element-Monoid M x
+  is-invertible-element-left-factor-Monoid H@(y' , Ly , Ry) K =
+    tr
+      ( is-invertible-element-Monoid M)
+      ( associative-mul-Monoid M x y y' ∙
+        ap (mul-Monoid M x) Ly ∙
+        right-unit-law-mul-Monoid M x)
+      ( is-invertible-element-mul-Monoid M
+        ( mul-Monoid M x y)
+        ( y')
+        ( K)
+        ( is-invertible-element-inv-is-invertible-element-Monoid M H))
+```
+
+#### If `x` and `xy` are invertible, then so is `y`
+
+```agda
+module _
+  {l : Level} (M : Monoid l) (x y : type-Monoid M)
+  where
+
+  is-invertible-element-right-factor-Monoid :
+    is-invertible-element-Monoid M x →
+    is-invertible-element-Monoid M (mul-Monoid M x y) →
+    is-invertible-element-Monoid M y
+  is-invertible-element-right-factor-Monoid H@(x' , Lx , Rx) K =
+    tr
+      ( is-invertible-element-Monoid M)
+      ( inv (associative-mul-Monoid M x' x y) ∙
+        ap (mul-Monoid' M y) Rx ∙
+        left-unit-law-mul-Monoid M y)
+      ( is-invertible-element-mul-Monoid M
+        ( x')
+        ( mul-Monoid M x y)
+        ( is-invertible-element-inv-is-invertible-element-Monoid M H)
+        ( K))
 ```
 
 ### An element is invertible if and only if multiplying by it is an equivalence

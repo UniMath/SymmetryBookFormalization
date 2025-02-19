@@ -1290,10 +1290,10 @@ open import elementary-number-theory.modular-arithmetic-standard-finite-types us
 **Proposition 7.5.4.** A 3-for-2 property of congruences.
 
 ```agda
-open import elementary-number-theory.modular-arithmetic-standard-finite-types using
+open import elementary-number-theory.congruence-natural-numbers using
   ( congruence-add-ℕ -- x ≡ x' → y ≡ y' → (x + y ≡ x' + y')
-  ; cong-right-summand-ℕ -- x ≡ x' → (x + y ≡ x' + y') → y ≡ y'
-  ; cong-left-summand-ℕ -- y ≡ y' → (x + y ≡ x' + y') → x ≡ x'
+  ; congruence-right-summand-ℕ -- x ≡ x' → (x + y ≡ x' + y') → y ≡ y'
+  ; congruence-left-summand-ℕ -- y ≡ y' → (x + y ≡ x' + y') → x ≡ x'
   )
 ```
 

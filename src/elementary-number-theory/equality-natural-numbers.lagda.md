@@ -19,6 +19,7 @@ open import foundation.equivalences
 open import foundation.function-types
 open import foundation.fundamental-theorem-of-identity-types
 open import foundation.identity-types
+open import foundation.injective-maps
 open import foundation.propositions
 open import foundation.set-truncations
 open import foundation.sets
@@ -27,6 +28,7 @@ open import foundation.universe-levels
 
 open import foundation-core.decidable-propositions
 open import foundation-core.discrete-types
+open import foundation-core.embeddings
 open import foundation-core.torsorial-type-families
 ```
 
@@ -132,8 +134,8 @@ is-decidable-is-zero-ℕ n = has-decidable-equality-ℕ n zero-ℕ
 is-decidable-is-zero-ℕ' : (n : ℕ) → is-decidable (is-zero-ℕ' n)
 is-decidable-is-zero-ℕ' n = has-decidable-equality-ℕ zero-ℕ n
 
-is-decidable-is-nonzero-ℕ : (n : ℕ) → is-decidable (is-nonzero-ℕ n)
-is-decidable-is-nonzero-ℕ n =
+is-decidable-zero-is-nonzero-ℕ : (n : ℕ) → is-decidable (is-nonzero-ℕ n)
+is-decidable-zero-is-nonzero-ℕ n =
   is-decidable-neg (is-decidable-is-zero-ℕ n)
 
 is-decidable-is-one-ℕ : (n : ℕ) → is-decidable (is-one-ℕ n)
@@ -178,4 +180,12 @@ is-equiv-Eq-eq-ℕ {m} {n} =
 ```agda
 equiv-unit-trunc-ℕ-Set : ℕ ≃ type-trunc-Set ℕ
 equiv-unit-trunc-ℕ-Set = equiv-unit-trunc-Set ℕ-Set
+```
+
+### The successor embedding
+
+```agda
+succ-emb-ℕ : ℕ ↪ ℕ
+pr1 succ-emb-ℕ = succ-ℕ
+pr2 succ-emb-ℕ = is-emb-is-injective is-set-ℕ is-injective-succ-ℕ
 ```

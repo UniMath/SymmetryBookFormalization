@@ -8,6 +8,7 @@ module univalent-combinatorics.sequences-finite-types where
 
 ```agda
 open import elementary-number-theory.decidable-types
+open import elementary-number-theory.minimal-structured-natural-numbers
 open import elementary-number-theory.natural-numbers
 open import elementary-number-theory.strict-inequality-natural-numbers
 open import elementary-number-theory.well-ordering-principle-natural-numbers
@@ -135,7 +136,7 @@ minimal-element-repetition-of-values-sequence-Fin k f =
       is-decidable-strictly-bounded-Σ-ℕ' x
         ( λ y → f y ＝ f x)
         ( λ y → has-decidable-equality-Fin k (f y) (f x)))
-    ( v , u , H , p)
+    ( u , H , p)
   where
   r = ordered-repetition-of-values-sequence-Fin k f
   u = pr1 (pr1 r)

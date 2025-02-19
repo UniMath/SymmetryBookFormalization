@@ -144,29 +144,29 @@ equiv-product-iterated-product-lists (cons x p) q =
 
 ```agda
 permutation-iterated-product-Fin-Π :
-  {l : Level} (n : ℕ) (A : (Fin n → UU l)) (t : Permutation n) → UU l
+  {l : Level} (n : ℕ) (A : (Fin n → UU l)) (t : permutation n) → UU l
 permutation-iterated-product-Fin-Π n A t =
   iterated-product-Fin-Π n (A ∘ map-equiv t)
 
 equiv-permutation-iterated-product-Fin-Π :
-  {l : Level} (n : ℕ) (A : (Fin n → UU l)) (t : Permutation n) →
+  {l : Level} (n : ℕ) (A : (Fin n → UU l)) (t : permutation n) →
   permutation-iterated-product-Fin-Π n A t ≃ iterated-product-Fin-Π n A
 equiv-permutation-iterated-product-Fin-Π n A t =
   equiv-Π (λ z → A z) t (λ a → id-equiv)
 
 eq-permutation-iterated-product-Fin-Π :
-  {l : Level} (n : ℕ) (A : (Fin n → UU l)) (t : Permutation n) →
+  {l : Level} (n : ℕ) (A : (Fin n → UU l)) (t : permutation n) →
   permutation-iterated-product-Fin-Π n A t ＝ iterated-product-Fin-Π n A
 eq-permutation-iterated-product-Fin-Π n A t =
   eq-equiv (equiv-permutation-iterated-product-Fin-Π n A t)
 
 permutation-iterated-product-Fin-recursive :
-  {l : Level} (n : ℕ) (A : (Fin n → UU l)) (t : Permutation n) → UU l
+  {l : Level} (n : ℕ) (A : (Fin n → UU l)) (t : permutation n) → UU l
 permutation-iterated-product-Fin-recursive n A t =
   iterated-product-Fin-recursive n (A ∘ map-equiv t)
 
 equiv-permutation-iterated-product-Fin-recursive :
-  {l : Level} (n : ℕ) (A : (Fin n → UU l)) (t : Permutation n) →
+  {l : Level} (n : ℕ) (A : (Fin n → UU l)) (t : permutation n) →
   permutation-iterated-product-Fin-recursive n A t ≃
   iterated-product-Fin-recursive n A
 equiv-permutation-iterated-product-Fin-recursive n A t =
@@ -175,19 +175,19 @@ equiv-permutation-iterated-product-Fin-recursive n A t =
   ( equiv-iterated-product-Fin-recursive-Π n (A ∘ map-equiv t))
 
 eq-permutation-iterated-product-Fin-recursive :
-  {l : Level} (n : ℕ) (A : (Fin n → UU l)) (t : Permutation n) →
+  {l : Level} (n : ℕ) (A : (Fin n → UU l)) (t : permutation n) →
   permutation-iterated-product-Fin-recursive n A t ＝
   iterated-product-Fin-recursive n A
 eq-permutation-iterated-product-Fin-recursive n A t =
   eq-equiv (equiv-permutation-iterated-product-Fin-recursive n A t)
 
 permutation-iterated-product-lists :
-  {l : Level} (L : list (UU l)) (t : Permutation (length-list L)) → UU l
+  {l : Level} (L : list (UU l)) (t : permutation (length-list L)) → UU l
 permutation-iterated-product-lists L t =
   iterated-product-lists (permute-list L t)
 
 equiv-permutation-iterated-product-lists :
-  {l : Level} (L : list (UU l)) (t : Permutation (length-list L)) →
+  {l : Level} (L : list (UU l)) (t : permutation (length-list L)) →
   permutation-iterated-product-lists L t ≃
   iterated-product-lists L
 equiv-permutation-iterated-product-lists L t =
@@ -209,7 +209,7 @@ equiv-permutation-iterated-product-lists L t =
           ( equiv-iterated-product-Fin-recursive-lists (permute-list L t))))))
 
 eq-permutation-iterated-product-lists :
-  {l : Level} (L : list (UU l)) (t : Permutation (length-list L)) →
+  {l : Level} (L : list (UU l)) (t : permutation (length-list L)) →
   permutation-iterated-product-lists L t ＝
   iterated-product-lists L
 eq-permutation-iterated-product-lists L t =

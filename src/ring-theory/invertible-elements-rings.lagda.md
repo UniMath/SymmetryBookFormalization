@@ -221,7 +221,7 @@ module _
       ( multiplicative-monoid-Ring R)
 ```
 
-### Any invertible element of a monoid has a contractible type of right inverses
+### Any invertible element of a ring has a contractible type of right inverses
 
 ```agda
 module _
@@ -236,7 +236,7 @@ module _
       ( multiplicative-monoid-Ring R)
 ```
 
-### Any invertible element of a monoid has a contractible type of left inverses
+### Any invertible element of a ring has a contractible type of left inverses
 
 ```agda
 module _
@@ -251,7 +251,7 @@ module _
       ( multiplicative-monoid-Ring R)
 ```
 
-### The unit of a monoid is invertible
+### The unit of a ring is invertible
 
 ```agda
 module _
@@ -275,9 +275,18 @@ module _
   is-invertible-element-one-Ring =
     is-invertible-element-unit-Monoid
       ( multiplicative-monoid-Ring R)
+
+  is-invertible-element-is-one-Ring :
+    (x : type-Ring R) → one-Ring R ＝ x →
+    is-invertible-element-Ring R x
+  is-invertible-element-is-one-Ring =
+    is-invertible-element-is-unit-Monoid
+      ( multiplicative-monoid-Ring R)
 ```
 
-### Invertible elements are closed under multiplication
+### If two of the three elements `x`, `y`, and `xy` are invertible, then so is the third
+
+#### Invertible elements are closed under multiplication
 
 ```agda
 module _
@@ -310,6 +319,42 @@ module _
   is-invertible-element-mul-Ring =
     is-invertible-element-mul-Monoid
       ( multiplicative-monoid-Ring R)
+```
+
+#### If `y` and `xy` are invertible, then so is `x`
+
+```agda
+module _
+  {l : Level} (R : Ring l) (x y : type-Ring R)
+  where
+
+  is-invertible-element-left-factor-Ring :
+    is-invertible-element-Ring R y →
+    is-invertible-element-Ring R (mul-Ring R x y) →
+    is-invertible-element-Ring R x
+  is-invertible-element-left-factor-Ring =
+    is-invertible-element-left-factor-Monoid
+      ( multiplicative-monoid-Ring R)
+      ( x)
+      ( y)
+```
+
+#### If `x` and `xy` are invertible, then so is `y`
+
+```agda
+module _
+  {l : Level} (R : Ring l) (x y : type-Ring R)
+  where
+
+  is-invertible-element-right-factor-Ring :
+    is-invertible-element-Ring R x →
+    is-invertible-element-Ring R (mul-Ring R x y) →
+    is-invertible-element-Ring R y
+  is-invertible-element-right-factor-Ring =
+    is-invertible-element-right-factor-Monoid
+      ( multiplicative-monoid-Ring R)
+      ( x)
+      ( y)
 ```
 
 ### Invertible elements are closed under negatives

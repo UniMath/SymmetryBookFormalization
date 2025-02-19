@@ -9,6 +9,7 @@ module commutative-algebra.invertible-elements-commutative-rings where
 ```agda
 open import commutative-algebra.commutative-rings
 
+open import foundation.action-on-identifications-functions
 open import foundation.contractible-types
 open import foundation.dependent-pair-types
 open import foundation.identity-types
@@ -70,7 +71,7 @@ module _
       ( ring-Commutative-Ring A)
 ```
 
-### Aight invertible elements of commutative rings
+### Right invertible elements of commutative rings
 
 ```agda
 module _
@@ -241,7 +242,7 @@ module _
     is-invertible-element-inverse-Ring (ring-Commutative-Ring A)
 ```
 
-### Any invertible element of a monoid has a contractible type of right inverses
+### Any invertible element of a commutative ring has a contractible type of right inverses
 
 ```agda
 module _
@@ -255,7 +256,7 @@ module _
     is-contr-is-right-invertible-element-Ring (ring-Commutative-Ring A)
 ```
 
-### Any invertible element of a monoid has a contractible type of left inverses
+### Any invertible element of a commutative ring has a contractible type of left inverses
 
 ```agda
 module _
@@ -269,7 +270,7 @@ module _
     is-contr-is-left-invertible-Ring (ring-Commutative-Ring A)
 ```
 
-### The unit of a monoid is invertible
+### The unit of a commutative ring is invertible
 
 ```agda
 module _
@@ -290,9 +291,17 @@ module _
     is-invertible-element-Commutative-Ring A (one-Commutative-Ring A)
   is-invertible-element-one-Commutative-Ring =
     is-invertible-element-one-Ring (ring-Commutative-Ring A)
+
+  is-invertible-element-is-one-Commutative-Ring :
+    (x : type-Commutative-Ring A) → one-Commutative-Ring A ＝ x →
+    is-invertible-element-Commutative-Ring A x
+  is-invertible-element-is-one-Commutative-Ring =
+    is-invertible-element-is-one-Ring (ring-Commutative-Ring A)
 ```
 
-### Invertible elements are closed under multiplication
+### A product `xy` is invertible if and only if both `x` and `y` are invertible
+
+#### Invertible elements are closed under multiplication
 
 ```agda
 module _
@@ -322,6 +331,46 @@ module _
     is-invertible-element-Commutative-Ring A (mul-Commutative-Ring A x y)
   is-invertible-element-mul-Commutative-Ring =
     is-invertible-element-mul-Ring (ring-Commutative-Ring A)
+```
+
+#### If `xy` is invertible then so is `x`
+
+```agda
+module _
+  {l : Level} (A : Commutative-Ring l) (x y : type-Commutative-Ring A)
+  where
+
+  is-invertible-element-left-factor-Commutative-Ring :
+    is-invertible-element-Commutative-Ring A (mul-Commutative-Ring A x y) →
+    is-invertible-element-Commutative-Ring A x
+  pr1 (is-invertible-element-left-factor-Commutative-Ring (u , p , q)) =
+    mul-Commutative-Ring A y u
+  pr1 (pr2 (is-invertible-element-left-factor-Commutative-Ring (u , p , q))) =
+    inv (associative-mul-Commutative-Ring A x y u) ∙ p
+  pr2 (pr2 (is-invertible-element-left-factor-Commutative-Ring (u , p , q))) =
+    right-swap-mul-Commutative-Ring A y u x ∙
+    ap (mul-Commutative-Ring' A u) (commutative-mul-Commutative-Ring A y x) ∙
+    p
+```
+
+#### If `xy` is invertible then so is `y`
+
+```agda
+module _
+  {l : Level} (A : Commutative-Ring l) (x y : type-Commutative-Ring A)
+  where
+
+  is-invertible-element-right-factor-Commutative-Ring :
+    is-invertible-element-Commutative-Ring A (mul-Commutative-Ring A x y) →
+    is-invertible-element-Commutative-Ring A y
+  pr1 (is-invertible-element-right-factor-Commutative-Ring (u , p , q)) =
+    mul-Commutative-Ring A u x
+  pr1 (pr2 (is-invertible-element-right-factor-Commutative-Ring (u , p , q))) =
+    left-swap-mul-Commutative-Ring A y u x ∙
+    ap (mul-Commutative-Ring A u) (commutative-mul-Commutative-Ring A y x) ∙
+    q
+  pr2 (pr2 (is-invertible-element-right-factor-Commutative-Ring (u , p , q))) =
+    associative-mul-Commutative-Ring A u x y ∙ q
 ```
 
 ### The inverse of an invertible element is invertible

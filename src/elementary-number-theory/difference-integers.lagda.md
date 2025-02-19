@@ -27,15 +27,24 @@ are derived there.
 
 ## Definition
 
+### The difference of two integers
+
 ```agda
 diff-ℤ : ℤ → ℤ → ℤ
-diff-ℤ x y = x +ℤ (neg-ℤ y)
+diff-ℤ x y = x +ℤ neg-ℤ y
 
 infixl 36 _-ℤ_
 _-ℤ_ = diff-ℤ
 
 ap-diff-ℤ : {x x' y y' : ℤ} → x ＝ x' → y ＝ y' → x -ℤ y ＝ x' -ℤ y'
 ap-diff-ℤ p q = ap-binary diff-ℤ p q
+```
+
+### The difference of two integers with the negative integer on the left
+
+```agda
+left-diff-ℤ : ℤ → ℤ → ℤ
+left-diff-ℤ x y = neg-ℤ x +ℤ y
 ```
 
 ## Properties

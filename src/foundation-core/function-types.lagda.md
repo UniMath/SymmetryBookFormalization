@@ -14,7 +14,10 @@ open import foundation.universe-levels
 
 ## Idea
 
-Functions are primitive in Agda. Here we construct some basic functions
+A {{#concept "function"}} is a way of associating to each element $x$ of a domain type an element $f(x)$ of a type $B(x)$, which possibly depends on the input $x$. Functions are primitive in Agda. In this file we construct some basic functions.
+
+The term "function" was first coined by Leibniz, who used the term to describe quantities related to curves, such as slopes, tangents, and
+areas. The concept of functions was first given a precise definition by Euler {{#cite Euler1748}} in paragraph 4 of Chapter 1. Euler also introduced the now familiar notation $f(x)$ for functions.
 
 ## Examples
 

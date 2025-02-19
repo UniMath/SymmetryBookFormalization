@@ -118,13 +118,13 @@ module _
   (L : left-ideal-Ring l5 A)
   where
 
-  preserves-leq-product-left-ideal-Ring :
+  preserves-order-product-left-ideal-Ring :
     leq-left-ideal-Ring A I J →
     leq-left-ideal-Ring A K L →
     leq-left-ideal-Ring A
       ( product-left-ideal-Ring A I K)
       ( product-left-ideal-Ring A J L)
-  preserves-leq-product-left-ideal-Ring p q =
+  preserves-order-product-left-ideal-Ring p q =
     is-product-product-left-ideal-Ring A I K
       ( product-left-ideal-Ring A J L)
       ( λ x y u v →
@@ -139,21 +139,21 @@ module _
   (K : left-ideal-Ring l4 A)
   where
 
-  preserves-leq-left-product-left-ideal-Ring :
+  preserves-order-left-product-left-ideal-Ring :
     leq-left-ideal-Ring A I J →
     leq-left-ideal-Ring A
       ( product-left-ideal-Ring A I K)
       ( product-left-ideal-Ring A J K)
-  preserves-leq-left-product-left-ideal-Ring p =
-    preserves-leq-product-left-ideal-Ring A I J K K p
+  preserves-order-left-product-left-ideal-Ring p =
+    preserves-order-product-left-ideal-Ring A I J K K p
       ( refl-leq-left-ideal-Ring A K)
 
-  preserves-leq-right-product-left-ideal-Ring :
+  preserves-order-right-product-left-ideal-Ring :
     leq-left-ideal-Ring A J K →
     leq-left-ideal-Ring A
       ( product-left-ideal-Ring A I J)
       ( product-left-ideal-Ring A I K)
-  preserves-leq-right-product-left-ideal-Ring =
-    preserves-leq-product-left-ideal-Ring A I I J K
+  preserves-order-right-product-left-ideal-Ring =
+    preserves-order-product-left-ideal-Ring A I I J K
       ( refl-leq-left-ideal-Ring A I)
 ```

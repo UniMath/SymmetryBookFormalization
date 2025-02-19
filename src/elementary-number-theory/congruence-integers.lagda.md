@@ -16,6 +16,8 @@ open import elementary-number-theory.divisibility-integers
 open import elementary-number-theory.integers
 open import elementary-number-theory.multiplication-integers
 open import elementary-number-theory.natural-numbers
+open import elementary-number-theory.unit-integers
+open import elementary-number-theory.unit-similarity-integers
 
 open import foundation.action-on-identifications-functions
 open import foundation.binary-relations
@@ -57,23 +59,25 @@ is-discrete-cong-ℤ .zero-ℤ refl x y K =
   eq-diff-ℤ (is-zero-div-zero-ℤ (x -ℤ y) K)
 
 is-unit-cong-succ-ℤ : (k x : ℤ) → cong-ℤ k x (succ-ℤ x) → is-unit-ℤ k
-pr1 (is-unit-cong-succ-ℤ k x (pair y p)) = neg-ℤ y
-pr2 (is-unit-cong-succ-ℤ k x (pair y p)) =
-  ( left-negative-law-mul-ℤ y k) ∙
-  ( is-injective-neg-ℤ
-    ( ( neg-neg-ℤ (y *ℤ k)) ∙
-      ( ( p) ∙
-        ( ( ap (x +ℤ_) (neg-succ-ℤ x)) ∙
-          ( ( right-predecessor-law-add-ℤ x (neg-ℤ x)) ∙
-            ( ap pred-ℤ (right-inverse-law-add-ℤ x)))))))
+is-unit-cong-succ-ℤ k x (y , p) =
+  is-unit-div-one-ℤ k
+    ( neg-ℤ y ,
+      ( left-negative-law-mul-ℤ y k) ∙
+      ( is-injective-neg-ℤ
+        ( ( neg-neg-ℤ (y *ℤ k)) ∙
+          ( ( p) ∙
+            ( ( ap (x +ℤ_) (neg-succ-ℤ x)) ∙
+              ( ( right-predecessor-law-add-ℤ x (neg-ℤ x)) ∙
+                ( ap pred-ℤ (right-inverse-law-add-ℤ x))))))))
 
 is-unit-cong-pred-ℤ : (k x : ℤ) → cong-ℤ k x (pred-ℤ x) → is-unit-ℤ k
-pr1 (is-unit-cong-pred-ℤ k x (pair y p)) = y
-pr2 (is-unit-cong-pred-ℤ k x (pair y p)) =
-  ( p) ∙
-  ( ( ap (x +ℤ_) (neg-pred-ℤ x)) ∙
-    ( ( right-successor-law-add-ℤ x (neg-ℤ x)) ∙
-      ( ap succ-ℤ (right-inverse-law-add-ℤ x))))
+is-unit-cong-pred-ℤ k x (y , p) =
+  is-unit-div-one-ℤ k
+    ( y ,
+      ( p) ∙
+      ( ( ap (x +ℤ_) (neg-pred-ℤ x)) ∙
+        ( ( right-successor-law-add-ℤ x (neg-ℤ x)) ∙
+          ( ap succ-ℤ (right-inverse-law-add-ℤ x)))))
 
 refl-cong-ℤ : (k : ℤ) → is-reflexive (cong-ℤ k)
 pr1 (refl-cong-ℤ k x) = zero-ℤ

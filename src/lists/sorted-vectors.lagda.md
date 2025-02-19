@@ -201,7 +201,7 @@ module _
     (n : ℕ)
     (x : type-Decidable-Total-Order X)
     (fv : functional-vec (type-Decidable-Total-Order X) n)
-    (a : Permutation n) →
+    (a : permutation n) →
     is-least-element-functional-vec n x fv →
     is-least-element-functional-vec n x (fv ∘ map-equiv a)
   is-least-element-permute-functional-vec n x fv a p k =
@@ -247,7 +247,7 @@ module _
     {n : ℕ}
     (x : type-Decidable-Total-Order X)
     (v : vec (type-Decidable-Total-Order X) n)
-    (a : Permutation n) →
+    (a : permutation n) →
     is-least-element-vec x v →
     is-least-element-vec x (permute-vec n v a)
   is-least-element-permute-vec {n} x v a p =

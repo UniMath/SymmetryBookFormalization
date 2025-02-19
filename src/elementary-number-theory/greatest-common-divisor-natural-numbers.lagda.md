@@ -15,6 +15,7 @@ open import elementary-number-theory.equality-natural-numbers
 open import elementary-number-theory.euclidean-division-natural-numbers
 open import elementary-number-theory.inequality-natural-numbers
 open import elementary-number-theory.lower-bounds-natural-numbers
+open import elementary-number-theory.minimal-structured-natural-numbers
 open import elementary-number-theory.modular-arithmetic-standard-finite-types
 open import elementary-number-theory.multiplication-natural-numbers
 open import elementary-number-theory.natural-numbers
@@ -170,7 +171,7 @@ abstract
     well-ordering-principle-ℕ
       ( is-multiple-of-gcd-ℕ a b)
       ( is-decidable-is-multiple-of-gcd-ℕ a b)
-      ( pair (a +ℕ b) (sum-is-multiple-of-gcd-ℕ a b))
+      ( sum-is-multiple-of-gcd-ℕ a b)
 
 gcd-ℕ : ℕ → ℕ → ℕ
 gcd-ℕ a b = pr1 (GCD-ℕ a b)
@@ -364,8 +365,8 @@ preserves-is-common-divisor-mul-ℕ :
   is-common-divisor-ℕ (k *ℕ a) (k *ℕ b) (k *ℕ d)
 preserves-is-common-divisor-mul-ℕ k a b d =
   map-product
-    ( preserves-div-mul-ℕ k d a)
-    ( preserves-div-mul-ℕ k d b)
+    ( preserves-div-left-mul-ℕ k d a)
+    ( preserves-div-left-mul-ℕ k d b)
 
 reflects-is-common-divisor-mul-ℕ :
   (k a b d : ℕ) → is-nonzero-ℕ k →
@@ -373,8 +374,8 @@ reflects-is-common-divisor-mul-ℕ :
   is-common-divisor-ℕ a b d
 reflects-is-common-divisor-mul-ℕ k a b d H =
   map-product
-    ( reflects-div-mul-ℕ k d a H)
-    ( reflects-div-mul-ℕ k d b H)
+    ( reflects-div-left-mul-ℕ k d a H)
+    ( reflects-div-left-mul-ℕ k d b H)
 ```
 
 ### `gcd-ℕ 1 b ＝ 1`
@@ -423,54 +424,54 @@ is-id-is-gcd-zero-ℕ' {a} {x} H = is-id-is-gcd-zero-ℕ {a} {x}
 
 ```agda
 is-common-divisor-quotients-div-quotient-ℕ :
-  {a b d e n : ℕ} → is-nonzero-ℕ e → (H : is-common-divisor-ℕ a b d)
+  {a b d e n : ℕ} → (H : is-common-divisor-ℕ a b d)
   (K : div-ℕ e d) → div-ℕ n (quotient-div-ℕ e d K) →
   (M : is-common-divisor-ℕ a b e) →
   is-common-divisor-ℕ
     ( quotient-div-ℕ e a (pr1 M))
     ( quotient-div-ℕ e b (pr2 M))
     ( n)
-pr1 (is-common-divisor-quotients-div-quotient-ℕ nz H K L M) =
-  div-quotient-div-div-quotient-div-ℕ nz (pr1 H) K (pr1 M) L
-pr2 (is-common-divisor-quotients-div-quotient-ℕ nz H K L M) =
-  div-quotient-div-div-quotient-div-ℕ nz (pr2 H) K (pr2 M) L
+pr1 (is-common-divisor-quotients-div-quotient-ℕ H K L M) =
+  div-quotient-div-div-quotient-div-ℕ (pr1 H) K (pr1 M) L
+pr2 (is-common-divisor-quotients-div-quotient-ℕ H K L M) =
+  div-quotient-div-div-quotient-div-ℕ (pr2 H) K (pr2 M) L
 
 simplify-is-common-divisor-quotient-div-ℕ :
-  {a b d x : ℕ} → is-nonzero-ℕ d → (H : is-common-divisor-ℕ a b d) →
+  {a b d x : ℕ} (H : is-common-divisor-ℕ a b d) →
   is-common-divisor-ℕ
     ( quotient-div-ℕ d a (pr1 H))
     ( quotient-div-ℕ d b (pr2 H))
     ( x) ↔
   is-common-divisor-ℕ a b (x *ℕ d)
-pr1 (pr1 (simplify-is-common-divisor-quotient-div-ℕ nz H) K) =
-  forward-implication (simplify-div-quotient-div-ℕ nz (pr1 H)) (pr1 K)
-pr2 (pr1 (simplify-is-common-divisor-quotient-div-ℕ nz H) K) =
-  forward-implication (simplify-div-quotient-div-ℕ nz (pr2 H)) (pr2 K)
-pr1 (pr2 (simplify-is-common-divisor-quotient-div-ℕ nz H) K) =
-  backward-implication (simplify-div-quotient-div-ℕ nz (pr1 H)) (pr1 K)
-pr2 (pr2 (simplify-is-common-divisor-quotient-div-ℕ nz H) K) =
-  backward-implication (simplify-div-quotient-div-ℕ nz (pr2 H)) (pr2 K)
+pr1 (pr1 (simplify-is-common-divisor-quotient-div-ℕ H) K) =
+  forward-implication (simplify-div-quotient-div-ℕ' (pr1 H)) (pr1 K)
+pr2 (pr1 (simplify-is-common-divisor-quotient-div-ℕ H) K) =
+  forward-implication (simplify-div-quotient-div-ℕ' (pr2 H)) (pr2 K)
+pr1 (pr2 (simplify-is-common-divisor-quotient-div-ℕ H) K) =
+  backward-implication (simplify-div-quotient-div-ℕ' (pr1 H)) (pr1 K)
+pr2 (pr2 (simplify-is-common-divisor-quotient-div-ℕ H) K) =
+  backward-implication (simplify-div-quotient-div-ℕ' (pr2 H)) (pr2 K)
 ```
 
 ### The greatest common divisor of `a/d` and `b/d` is `gcd(a,b)/d`
 
 ```agda
 is-gcd-quotient-div-gcd-ℕ :
-  {a b d : ℕ} → is-nonzero-ℕ d → (H : is-common-divisor-ℕ a b d) →
+  {a b d : ℕ} (H : is-common-divisor-ℕ a b d) →
   is-gcd-ℕ
     ( quotient-div-ℕ d a (pr1 H))
     ( quotient-div-ℕ d b (pr2 H))
     ( quotient-div-ℕ d
       ( gcd-ℕ a b)
       ( div-gcd-is-common-divisor-ℕ a b d H))
-is-gcd-quotient-div-gcd-ℕ {a} {b} {d} nz H x =
+is-gcd-quotient-div-gcd-ℕ {a} {b} {d} H x =
   logical-equivalence-reasoning
     is-common-divisor-ℕ
       ( quotient-div-ℕ d a (pr1 H))
       ( quotient-div-ℕ d b (pr2 H))
       ( x)
     ↔ is-common-divisor-ℕ a b (x *ℕ d)
-      by simplify-is-common-divisor-quotient-div-ℕ nz H
+      by simplify-is-common-divisor-quotient-div-ℕ H
     ↔ div-ℕ (x *ℕ d) (gcd-ℕ a b)
       by is-gcd-gcd-ℕ a b (x *ℕ d)
     ↔ div-ℕ x
@@ -479,7 +480,7 @@ is-gcd-quotient-div-gcd-ℕ {a} {b} {d} nz H x =
           ( div-gcd-is-common-divisor-ℕ a b d H))
       by
       inv-iff
-        ( simplify-div-quotient-div-ℕ nz
+        ( simplify-div-quotient-div-ℕ'
           ( div-gcd-is-common-divisor-ℕ a b d H))
 ```
 

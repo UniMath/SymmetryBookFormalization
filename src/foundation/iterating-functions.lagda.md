@@ -148,10 +148,11 @@ module _
     (k l : ℕ) (f : X → X) (x : X) →
     iterate (exp-ℕ l k) f x ＝ iterate k (iterate l) f x
   iterate-exp-ℕ zero-ℕ l f x = refl
-  iterate-exp-ℕ (succ-ℕ k) l f x =
-    ( iterate-mul-ℕ (exp-ℕ l k) l f x) ∙
-    ( ( iterate-exp-ℕ k l (iterate l f) x) ∙
-      ( inv (htpy-eq (reassociate-iterate-succ-ℕ k (iterate l) f) x)))
+  iterate-exp-ℕ (succ-ℕ zero-ℕ) l f x = refl
+  iterate-exp-ℕ (succ-ℕ (succ-ℕ k)) l f x =
+    ( iterate-mul-ℕ (exp-ℕ l (succ-ℕ k)) l f x) ∙
+    ( ( iterate-exp-ℕ (succ-ℕ k) l (iterate l f) x) ∙
+      ( inv (htpy-eq (reassociate-iterate-succ-ℕ (succ-ℕ k) (iterate l) f) x)))
 
 module _
   {l : Level} (X : Set l)

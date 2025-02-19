@@ -459,12 +459,12 @@ module _
         ( unit-trunc-Prop
           ( pair
             ( map-maybe-product ∘
-              ( map-product (pr1 h) (pr1 h') ∘ map-ℕ-to-ℕ×ℕ))
+              ( map-product (pr1 h) (pr1 h') ∘ map-inv-pairing-equiv-ℕ))
             ( is-surjective-comp
               ( is-surjective-map-maybe-product)
               ( is-surjective-comp
                 ( is-surjective-map-product (pr2 h) (pr2 h'))
-                ( is-surjective-is-equiv (is-equiv-map-ℕ-to-ℕ×ℕ)))))))
+                ( is-surjective-is-equiv (is-equiv-map-inv-pairing-equiv-ℕ)))))))
 ```
 
 In particular, the sets ℕ + ℕ, ℕ × ℕ, and ℤ are countable.

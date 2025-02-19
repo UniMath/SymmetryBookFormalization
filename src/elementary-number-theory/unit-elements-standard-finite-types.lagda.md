@@ -68,7 +68,7 @@ pr2 (is-unit-neg-one-Fin {succ-ℕ k}) =
     ( concatenate-eq-cong-ℕ
       ( succ-ℕ (succ-ℕ k))
       { x3 = 1}
-      ( square-succ-ℕ k)
+      ( square-succ-ℕ' k)
       ( pair k
         ( ( commutative-mul-ℕ k (succ-ℕ (succ-ℕ k))) ∙
           ( inv (right-unit-law-dist-ℕ ((succ-ℕ (succ-ℕ k)) *ℕ k))))))

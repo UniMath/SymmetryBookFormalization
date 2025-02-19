@@ -58,7 +58,7 @@ module _
 
   permutation-list-is-sort-list :
     is-sort-list → (l : list (type-Decidable-Total-Order X)) →
-    Permutation (length-list l)
+    permutation (length-list l)
   permutation-list-is-sort-list S l =
     permutation-is-permutation-list f (is-permutation-list-is-sort-list S) l
 

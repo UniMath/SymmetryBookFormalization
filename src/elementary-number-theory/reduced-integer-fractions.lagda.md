@@ -19,6 +19,7 @@ open import elementary-number-theory.natural-numbers
 open import elementary-number-theory.positive-and-negative-integers
 open import elementary-number-theory.positive-integers
 open import elementary-number-theory.relatively-prime-integers
+open import elementary-number-theory.unit-similarity-integers
 
 open import foundation.action-on-identifications-functions
 open import foundation.coproduct-types
@@ -38,12 +39,17 @@ open import foundation.universe-levels
 
 ## Idea
 
-A reduced fraction is a fraction in which its numerator and denominator are
-coprime.
+A {{#concept "reduced fraction" Agda=is-reduced-fraction-ℤ}} is a
+[fraction](elementary-number-theory.integer-fractions.md) in which its numerator
+and denominator are
+[coprime](elementary-number-theory.relatively-prime-integers.md). In the module
+[`elementary-number-theory.rational-numbers`](elementary-number-theory.rational-numbers.md)
+we will define the type `ℚ` of rational numbers to be the type of reduced
+integer fractions.
 
 ## Definitions
 
-### Reduced fraction
+### The predicate of being a reduced fraction
 
 ```agda
 is-reduced-fraction-ℤ : fraction-ℤ → UU lzero
@@ -580,3 +586,7 @@ unique-reduce-fraction-ℤ x y H =
           ( eq-is-prop
             ( is-prop-is-positive-ℤ (int-reduce-denominator-fraction-ℤ y))))))
 ```
+
+## See also
+
+- [The type of rational numbers](elementary-number-theory.rational-numbers.md)

@@ -218,18 +218,30 @@ abstract
 ### Decidable propositions have a count
 
 ```agda
+count-is-decidable-prop :
+  {l : Level} {X : UU l} → is-decidable-prop X → count X
+count-is-decidable-prop (H , inl x) =
+  count-is-contr (is-proof-irrelevant-is-prop H x)
+count-is-decidable-prop (H , inr f) =
+  count-is-empty f
+
 count-is-decidable-Prop :
-    {l : Level} (P : Prop l) →
-    is-decidable (type-Prop P) → count (type-Prop P)
-count-is-decidable-Prop P (inl x) =
-  count-is-contr (is-proof-irrelevant-is-prop (is-prop-type-Prop P) x)
-count-is-decidable-Prop P (inr x) =
-  count-is-empty x
+  {l : Level} (P : Prop l) →
+  is-decidable (type-Prop P) → count (type-Prop P)
+count-is-decidable-Prop P d =
+  count-is-decidable-prop (is-prop-type-Prop P , d)
 ```
 
 ### Decidable propositions are finite
 
 ```agda
+abstract
+  is-finite-is-decidable-prop :
+    {l : Level} {X : UU l} →
+    is-decidable-prop X → is-finite X
+  is-finite-is-decidable-prop H =
+    is-finite-count (count-is-decidable-prop H)
+
 abstract
   is-finite-is-decidable-Prop :
     {l : Level} (P : Prop l) →
@@ -237,12 +249,13 @@ abstract
   is-finite-is-decidable-Prop P x =
     is-finite-count (count-is-decidable-Prop P x)
 
-is-finite-type-Decidable-Prop :
-  {l : Level} (P : Decidable-Prop l) → is-finite (type-Decidable-Prop P)
-is-finite-type-Decidable-Prop P =
-  is-finite-is-decidable-Prop
-    ( prop-Decidable-Prop P)
-    ( is-decidable-Decidable-Prop P)
+abstract
+  is-finite-type-Decidable-Prop :
+    {l : Level} (P : Decidable-Prop l) → is-finite (type-Decidable-Prop P)
+  is-finite-type-Decidable-Prop P =
+    is-finite-is-decidable-Prop
+      ( prop-Decidable-Prop P)
+      ( is-decidable-Decidable-Prop P)
 ```
 
 ### The type of decidable propositions of any universe level is finite

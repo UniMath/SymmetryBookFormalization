@@ -167,8 +167,8 @@ module _
   (p q p' q' : fraction-ℤ) (H : sim-fraction-ℤ p p') (K : sim-fraction-ℤ q q')
   where
 
-  preserves-leq-sim-fraction-ℤ : leq-fraction-ℤ p q → leq-fraction-ℤ p' q'
-  preserves-leq-sim-fraction-ℤ I =
+  leq-sim-fraction-ℤ : leq-fraction-ℤ p q → leq-fraction-ℤ p' q'
+  leq-sim-fraction-ℤ I =
     concatenate-sim-leq-fraction-ℤ p' p q'
       ( symmetric-sim-fraction-ℤ p p' H)
       ( concatenate-leq-sim-fraction-ℤ p q q' I K)

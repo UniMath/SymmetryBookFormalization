@@ -13,6 +13,7 @@ open import elementary-number-theory.integer-fractions
 open import elementary-number-theory.integers
 open import elementary-number-theory.multiplication-integers
 open import elementary-number-theory.multiplication-positive-and-negative-integers
+open import elementary-number-theory.positive-integers
 
 open import foundation.action-on-identifications-binary-functions
 open import foundation.action-on-identifications-functions
@@ -31,16 +32,36 @@ on the [integers](elementary-number-theory.integers.md) to
 the basic properties of multiplication on integer fraction only hold up to
 fraction similarity.
 
-## Definition
+## Definitions
+
+### Multiplication of integer fractions
 
 ```agda
+numerator-mul-fraction-ℤ :
+  (x y : fraction-ℤ) → ℤ
+numerator-mul-fraction-ℤ x y =
+  numerator-fraction-ℤ x *ℤ numerator-fraction-ℤ y
+
+positive-denominator-mul-fraction-ℤ :
+  (x y : fraction-ℤ) → positive-ℤ
+positive-denominator-mul-fraction-ℤ x y =
+  mul-positive-ℤ
+    ( positive-denominator-fraction-ℤ x)
+    ( positive-denominator-fraction-ℤ y)
+
+denominator-mul-fraction-ℤ :
+  (x y : fraction-ℤ) → ℤ
+denominator-mul-fraction-ℤ x y =
+  int-positive-ℤ (positive-denominator-mul-fraction-ℤ x y)
+
+is-positive-denominator-mul-fraction-ℤ :
+  (x y : fraction-ℤ) → is-positive-ℤ (denominator-mul-fraction-ℤ x y)
+is-positive-denominator-mul-fraction-ℤ x y =
+  is-positive-int-positive-ℤ (positive-denominator-mul-fraction-ℤ x y)
+
 mul-fraction-ℤ : fraction-ℤ → fraction-ℤ → fraction-ℤ
-pr1 (mul-fraction-ℤ (m , n , n-pos) (m' , n' , n'-pos)) =
-  m *ℤ m'
-pr1 (pr2 (mul-fraction-ℤ (m , n , n-pos) (m' , n' , n'-pos))) =
-  n *ℤ n'
-pr2 (pr2 (mul-fraction-ℤ (m , n , n-pos) (m' , n' , n'-pos))) =
-  is-positive-mul-ℤ n-pos n'-pos
+pr1 (mul-fraction-ℤ x y) = numerator-mul-fraction-ℤ x y
+pr2 (mul-fraction-ℤ x y) = positive-denominator-mul-fraction-ℤ x y
 
 mul-fraction-ℤ' : fraction-ℤ → fraction-ℤ → fraction-ℤ
 mul-fraction-ℤ' x y = mul-fraction-ℤ y x
@@ -98,8 +119,8 @@ right-unit-law-mul-fraction-ℤ (n , d , p) =
 associative-mul-fraction-ℤ :
   (x y z : fraction-ℤ) →
   sim-fraction-ℤ
-    (mul-fraction-ℤ (mul-fraction-ℤ x y) z)
-    (mul-fraction-ℤ x (mul-fraction-ℤ y z))
+    ( mul-fraction-ℤ (mul-fraction-ℤ x y) z)
+    ( mul-fraction-ℤ x (mul-fraction-ℤ y z))
 associative-mul-fraction-ℤ (nx , dx , dxp) (ny , dy , dyp) (nz , dz , dzp) =
   ap-mul-ℤ (associative-mul-ℤ nx ny nz) (inv (associative-mul-ℤ dx dy dz))
 ```
@@ -119,8 +140,8 @@ commutative-mul-fraction-ℤ (nx , dx , dxp) (ny , dy , dyp) =
 left-distributive-mul-add-fraction-ℤ :
   (x y z : fraction-ℤ) →
   sim-fraction-ℤ
-    (mul-fraction-ℤ x (add-fraction-ℤ y z))
-    (add-fraction-ℤ (mul-fraction-ℤ x y) (mul-fraction-ℤ x z))
+    ( mul-fraction-ℤ x (add-fraction-ℤ y z))
+    ( add-fraction-ℤ (mul-fraction-ℤ x y) (mul-fraction-ℤ x z))
 left-distributive-mul-add-fraction-ℤ
   (nx , dx , dxp) (ny , dy , dyp) (nz , dz , dzp) =
     ( ap

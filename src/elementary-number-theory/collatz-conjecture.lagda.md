@@ -7,7 +7,7 @@ module elementary-number-theory.collatz-conjecture where
 <details><summary>Imports</summary>
 
 ```agda
-open import elementary-number-theory.modular-arithmetic-standard-finite-types
+open import elementary-number-theory.divisibility-natural-numbers
 open import elementary-number-theory.multiplication-natural-numbers
 open import elementary-number-theory.natural-numbers
 

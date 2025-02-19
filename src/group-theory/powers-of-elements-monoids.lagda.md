@@ -25,9 +25,19 @@ open import group-theory.monoids
 
 ## Idea
 
-The **power operation** on a [monoid](group-theory.monoids.md) is the map
+The {{#concept "power operation" Disambiguation="monoid" Agda=power-Monoid}} on a [monoid](group-theory.monoids.md) is the map
 `n x ↦ xⁿ`, which is defined by [iteratively](foundation.iterating-functions.md)
 multiplying `x` with itself `n` times.
+
+We define the power operation such that the following equalities hold by definition:
+
+```text
+  x⁰ ≐ 1
+  x¹ ≐ x
+  xⁿ⁺² ≐ xⁿ⁺¹ · x.
+```
+
+This setup requires one extra step for the most basic properties, but it avoids having a superficial factor of the multiplicative unit in its definition for `n ≥ 1`.
 
 ## Definitions
 

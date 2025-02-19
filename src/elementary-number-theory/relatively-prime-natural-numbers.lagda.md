@@ -131,9 +131,7 @@ is-relatively-prime-quotient-div-gcd-ℕ a b nz =
     ( is-gcd-gcd-ℕ
       ( quotient-div-ℕ (gcd-ℕ a b) a (div-left-factor-gcd-ℕ a b))
       ( quotient-div-ℕ (gcd-ℕ a b) b (div-right-factor-gcd-ℕ a b)))
-    ( is-gcd-quotient-div-gcd-ℕ
-      ( is-nonzero-gcd-ℕ a b nz)
-      ( is-common-divisor-gcd-ℕ a b))) ∙
+    ( is-gcd-quotient-div-gcd-ℕ (is-common-divisor-gcd-ℕ a b))) ∙
   ( is-idempotent-quotient-div-ℕ
     ( gcd-ℕ a b)
     ( is-nonzero-gcd-ℕ a b nz)

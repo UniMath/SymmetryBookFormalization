@@ -50,7 +50,8 @@ number-nodes-Tree-Fin (tree-Fin (succ-ℕ n) f) =
 height-Tree-Fin : Tree-Fin → ℕ
 height-Tree-Fin (tree-Fin zero-ℕ f) = zero-ℕ
 height-Tree-Fin (tree-Fin (succ-ℕ n) f) =
-  succ-ℕ (max-Fin-ℕ (succ-ℕ n) (λ k → height-Tree-Fin (f k)))
+  succ-ℕ
+    ( max-standard-finite-family-ℕ (succ-ℕ n) (λ k → height-Tree-Fin (f k)))
 
 is-leaf-Tree-Fin : Tree-Fin → UU lzero
 is-leaf-Tree-Fin (tree-Fin zero-ℕ _) = unit

@@ -217,7 +217,7 @@ module _
     lower-neighborhood-leq-ℚ d (x +ℚ u) (x +ℚ v) →
     lower-neighborhood-leq-ℚ d u v
   reflects-lower-neighborhood-leq-add-ℚ =
-    ( reflects-leq-right-add-ℚ x v (u +ℚ rational-ℚ⁺ d)) ∘
+    ( reflects-order-right-add-ℚ x v (u +ℚ rational-ℚ⁺ d)) ∘
     ( tr (leq-ℚ (x +ℚ v)) (associative-add-ℚ x u (rational-ℚ⁺ d)))
 ```
 

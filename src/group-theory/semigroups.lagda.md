@@ -13,6 +13,8 @@ open import foundation.dependent-pair-types
 open import foundation.identity-types
 open import foundation.sets
 open import foundation.universe-levels
+
+open import structured-types.magmas
 ```
 
 </details>
@@ -99,6 +101,10 @@ module _
     ( associative-mul-Semigroup _ _ _) ∙
     ( ap (mul-Semigroup _) (left-swap-mul-Semigroup H)) ∙
     ( inv (associative-mul-Semigroup _ _ _))
+
+  magma-Semigroup : Magma l
+  pr1 magma-Semigroup = type-Semigroup
+  pr2 magma-Semigroup = mul-Semigroup
 ```
 
 ### The structure of a semigroup

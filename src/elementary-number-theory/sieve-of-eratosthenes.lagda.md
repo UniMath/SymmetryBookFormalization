@@ -85,9 +85,9 @@ pr2 (in-sieve-of-eratosthenes-succ-factorial-ℕ zero-ℕ) x l d =
       ( is-zero-is-zero-div-ℕ x 2 d (is-zero-leq-zero-ℕ x l)))
 pr1 (in-sieve-of-eratosthenes-succ-factorial-ℕ (succ-ℕ n)) =
   concatenate-leq-le-ℕ
-    { succ-ℕ n}
-    { factorial-ℕ (succ-ℕ n)}
-    { succ-ℕ (factorial-ℕ (succ-ℕ n))}
+    ( succ-ℕ n)
+    ( factorial-ℕ (succ-ℕ n))
+    ( succ-ℕ (factorial-ℕ (succ-ℕ n)))
     ( leq-factorial-ℕ (succ-ℕ n))
     ( succ-le-ℕ (factorial-ℕ (succ-ℕ n)))
 pr2 (in-sieve-of-eratosthenes-succ-factorial-ℕ (succ-ℕ n)) x l (pair y p) with

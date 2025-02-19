@@ -13,6 +13,9 @@ open import foundation.dependent-pair-types
 open import foundation.identity-types
 open import foundation.universe-levels
 
+open import linear-algebra.vectors
+
+
 open import lists.arrays
 open import lists.lists
 open import lists.permutation-lists
@@ -62,7 +65,7 @@ module _
 
   permutation-insertion-sort-list :
     (l : list (type-Decidable-Total-Order X)) →
-    Permutation (length-list l)
+    permutation (length-list l)
   permutation-insertion-sort-list =
     permutation-list-is-sort-list
       X

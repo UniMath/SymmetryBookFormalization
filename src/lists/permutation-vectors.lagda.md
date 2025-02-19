@@ -50,7 +50,7 @@ module _
   {l : Level} {A : UU l}
   where
 
-  permute-vec : (n : ℕ) → vec A n → Permutation n → vec A n
+  permute-vec : (n : ℕ) → vec A n → permutation n → vec A n
   permute-vec n v s =
     listed-vec-functional-vec n (functional-vec-vec n v ∘ (map-equiv s))
 ```
@@ -61,12 +61,12 @@ module _
   is-permutation-vec : (n : ℕ) → (vec A n → vec A n) → UU l
   is-permutation-vec n f =
     (v : vec A n) →
-    Σ ( Permutation n)
+    Σ ( permutation n)
       ( λ t → f v ＝ permute-vec n v t)
 
   permutation-is-permutation-vec :
     (n : ℕ) (f : vec A n → vec A n) → is-permutation-vec n f →
-    (v : vec A n) → Permutation n
+    (v : vec A n) → permutation n
   permutation-is-permutation-vec n f P v = pr1 (P v)
 
   eq-permute-vec-permutation-is-permutation-vec :
@@ -91,7 +91,7 @@ module _
   compute-composition-permute-vec :
     (n : ℕ)
     (v : vec A n) →
-    (a b : Permutation n) →
+    (a b : permutation n) →
     permute-vec n v (a ∘e b) ＝ permute-vec n (permute-vec n v a) b
   compute-composition-permute-vec n v a b =
     ap
@@ -129,7 +129,7 @@ module _
     (n : ℕ)
     (v : vec A n)
     (x : A)
-    (t : Permutation n) →
+    (t : permutation n) →
     permute-vec (succ-ℕ n) (x ∷ v) (equiv-coproduct t id-equiv) ＝
     (x ∷ permute-vec n v t)
   compute-equiv-coproduct-permutation-id-equiv-permute-vec n v x t =
@@ -146,7 +146,7 @@ module _
 
   ap-permute-vec :
     {n : ℕ}
-    (a : Permutation n)
+    (a : permutation n)
     {v w : vec A n} →
     v ＝ w →
     permute-vec n v a ＝ permute-vec n w a
@@ -157,13 +157,13 @@ module _
 
 ```agda
   is-in-functional-vec-is-in-permute-functional-vec :
-    (n : ℕ) (v : Fin n → A) (t : Permutation n) (x : A) →
+    (n : ℕ) (v : Fin n → A) (t : permutation n) (x : A) →
     in-functional-vec n x (v ∘ map-equiv t) → in-functional-vec n x v
   is-in-functional-vec-is-in-permute-functional-vec n v t x (k , refl) =
     map-equiv t k , refl
 
   is-in-vec-is-in-permute-vec :
-    (n : ℕ) (v : vec A n) (t : Permutation n) (x : A) →
+    (n : ℕ) (v : vec A n) (t : permutation n) (x : A) →
     x ∈-vec (permute-vec n v t) → x ∈-vec v
   is-in-vec-is-in-permute-vec n v t x I =
     is-in-vec-is-in-functional-vec
@@ -182,13 +182,13 @@ module _
           ( is-in-functional-vec-is-in-vec n (permute-vec n v t) x I)))
 
   is-in-permute-functional-vec-is-in-functional-vec :
-    (n : ℕ) (v : Fin n → A) (t : Permutation n) (x : A) →
+    (n : ℕ) (v : Fin n → A) (t : permutation n) (x : A) →
     in-functional-vec n x v → in-functional-vec n x (v ∘ map-equiv t)
   is-in-permute-functional-vec-is-in-functional-vec n v t x (k , refl) =
     map-inv-equiv t k , ap v (inv (is-section-map-inv-equiv t k))
 
   is-in-permute-vec-is-in-vec :
-    (n : ℕ) (v : vec A n) (t : Permutation n) (x : A) →
+    (n : ℕ) (v : vec A n) (t : permutation n) (x : A) →
     x ∈-vec v → x ∈-vec (permute-vec n v t)
   is-in-permute-vec-is-in-vec n v t x I =
     is-in-vec-is-in-functional-vec
@@ -346,10 +346,10 @@ module _
               ( transposition-Fin (succ-ℕ n) i j neq)
               ( permutation-list-standard-transpositions-Fin (succ-ℕ n) l))))))
 
-  invariant-permutation-fold-vec :
-    {n : ℕ} → (v : vec A n) → (f : Permutation n) →
+  permutation-invariant-fold-vec :
+    {n : ℕ} → (v : vec A n) → (f : permutation n) →
     fold-vec b μ v ＝ fold-vec b μ (permute-vec n v f)
-  invariant-permutation-fold-vec {n} v f =
+  permutation-invariant-fold-vec {n} v f =
     ( ( invariant-list-transpositions-fold-vec
         ( v)
         ( list-standard-transpositions-permutation-Fin n f)) ∙
@@ -369,7 +369,7 @@ module _
 ```agda
 eq-map-vec-permute-vec :
   {l1 l2 : Level} {A : UU l1} {B : UU l2}
-  (f : A → B) {n : ℕ} (v : vec A n) (t : Permutation n) →
+  (f : A → B) {n : ℕ} (v : vec A n) (t : permutation n) →
   permute-vec n (map-vec f v) t ＝
   map-vec f (permute-vec n v t)
 eq-map-vec-permute-vec f {n} v t =

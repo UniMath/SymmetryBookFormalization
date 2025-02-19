@@ -9,7 +9,7 @@ module elementary-number-theory.dirichlet-convolution where
 ```agda
 open import elementary-number-theory.arithmetic-functions
 open import elementary-number-theory.bounded-sums-arithmetic-functions
-open import elementary-number-theory.modular-arithmetic-standard-finite-types
+open import elementary-number-theory.divisibility-natural-numbers
 open import elementary-number-theory.natural-numbers
 open import elementary-number-theory.nonzero-natural-numbers
 

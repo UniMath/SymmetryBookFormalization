@@ -17,6 +17,8 @@ open import elementary-number-theory.natural-numbers
 open import elementary-number-theory.nonnegative-integers
 open import elementary-number-theory.positive-and-negative-integers
 open import elementary-number-theory.positive-integers
+open import elementary-number-theory.unit-integers
+open import elementary-number-theory.unit-similarity-integers
 
 open import foundation.action-on-identifications-functions
 open import foundation.cartesian-product-types
@@ -127,13 +129,13 @@ is-common-divisor-int-abs-is-common-divisor-ℤ :
   {x y d : ℤ} →
   is-common-divisor-ℤ x y d → is-common-divisor-ℤ x y (int-abs-ℤ d)
 is-common-divisor-int-abs-is-common-divisor-ℤ =
-  map-product div-int-abs-div-ℤ div-int-abs-div-ℤ
+  map-product div-int-abs-divisor-div-ℤ div-int-abs-divisor-div-ℤ
 
 is-common-divisor-is-common-divisor-int-abs-ℤ :
   {x y d : ℤ} →
   is-common-divisor-ℤ x y (int-abs-ℤ d) → is-common-divisor-ℤ x y d
 is-common-divisor-is-common-divisor-int-abs-ℤ =
-  map-product div-div-int-abs-ℤ div-div-int-abs-ℤ
+  map-product div-div-int-abs-divisor-ℤ div-div-int-abs-divisor-ℤ
 
 is-common-divisor-is-gcd-ℤ :
   (a b d : ℤ) → is-gcd-ℤ a b d → is-common-divisor-ℤ a b d
@@ -147,7 +149,7 @@ is-gcd-int-is-gcd-ℕ :
   {x y d : ℕ} → is-gcd-ℕ x y d → is-gcd-ℤ (int-ℕ x) (int-ℕ y) (int-ℕ d)
 pr1 (is-gcd-int-is-gcd-ℕ {x} {y} {d} H) = is-nonnegative-int-ℕ d
 pr1 (pr2 (is-gcd-int-is-gcd-ℕ {x} {y} {d} H) k) =
-  ( ( ( ( div-div-int-abs-ℤ) ∘
+  ( ( ( ( div-div-int-abs-divisor-ℤ) ∘
         ( div-int-div-ℕ)) ∘
       ( pr1 (H (abs-ℤ k)))) ∘
     ( is-common-divisor-is-common-divisor-int-ℕ)) ∘
@@ -157,7 +159,7 @@ pr2 (pr2 (is-gcd-int-is-gcd-ℕ {x} {y} {d} H) k) =
         ( is-common-divisor-int-is-common-divisor-ℕ)) ∘
       ( pr2 (H (abs-ℤ k)))) ∘
     ( div-div-int-ℕ)) ∘
-  ( div-int-abs-div-ℤ)
+  ( div-int-abs-divisor-div-ℤ)
 
 is-gcd-is-gcd-int-ℕ :
   {x y d : ℕ} → is-gcd-ℤ (int-ℕ x) (int-ℕ y) (int-ℕ d) → is-gcd-ℕ x y d
@@ -316,7 +318,7 @@ is-commutative-gcd-ℤ x y =
 is-one-is-gcd-one-ℤ : {b x : ℤ} → is-gcd-ℤ one-ℤ b x → is-one-ℤ x
 is-one-is-gcd-one-ℤ {b} {x} H with
   ( is-one-or-neg-one-is-unit-ℤ x
-    ( pr1 (is-common-divisor-is-gcd-ℤ one-ℤ b x H)))
+    ( is-unit-div-one-ℤ x (pr1 (is-common-divisor-is-gcd-ℤ one-ℤ b x H))))
 ... | inl p = p
 ... | inr p = ex-falso (tr is-nonnegative-ℤ p (pr1 H))
 
@@ -330,7 +332,7 @@ is-one-gcd-one-ℤ b = is-one-is-gcd-one-ℤ (is-gcd-gcd-ℤ one-ℤ b)
 is-one-is-gcd-one-ℤ' : {a x : ℤ} → is-gcd-ℤ a one-ℤ x → is-one-ℤ x
 is-one-is-gcd-one-ℤ' {a} {x} H with
   ( is-one-or-neg-one-is-unit-ℤ x
-    ( pr2 (is-common-divisor-is-gcd-ℤ a one-ℤ x H)))
+    ( is-unit-div-one-ℤ x (pr2 (is-common-divisor-is-gcd-ℤ a one-ℤ x H))))
 ... | inl p = p
 ... | inr p = ex-falso (tr is-nonnegative-ℤ p (pr1 H))
 

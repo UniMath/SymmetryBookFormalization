@@ -63,24 +63,24 @@ transitive-leq-count (pair k e) {x} {y} {z} =
     ( map-inv-equiv e y)
     ( map-inv-equiv-count (pair k e) z)
 
-preserves-leq-equiv-count :
+preserves-order-equiv-count :
   {l : Level} {X : UU l} (e : count X)
   {x y : Fin (number-of-elements-count e)} →
   leq-Fin (number-of-elements-count e) x y →
   leq-count e (map-equiv-count e x) (map-equiv-count e y)
-preserves-leq-equiv-count e {x} {y} H =
+preserves-order-equiv-count e {x} {y} H =
   concatenate-eq-leq-eq-Fin
     ( number-of-elements-count e)
     ( is-retraction-map-inv-equiv (equiv-count e) x)
     ( H)
     ( inv (is-retraction-map-inv-equiv (equiv-count e) y))
 
-reflects-leq-equiv-count :
+reflects-order-equiv-count :
   {l : Level} {X : UU l} (e : count X)
   {x y : Fin (number-of-elements-count e)} →
   leq-count e (map-equiv-count e x) (map-equiv-count e y) →
   leq-Fin (number-of-elements-count e) x y
-reflects-leq-equiv-count e {x} {y} H =
+reflects-order-equiv-count e {x} {y} H =
   concatenate-eq-leq-eq-Fin
     ( number-of-elements-count e)
     ( inv (is-retraction-map-inv-equiv (equiv-count e) x))
