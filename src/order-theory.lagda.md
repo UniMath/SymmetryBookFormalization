@@ -25,6 +25,7 @@ open import order-theory.decidable-total-preorders public
 open import order-theory.deflationary-maps-posets public
 open import order-theory.deflationary-maps-preorders public
 open import order-theory.dependent-products-large-frames public
+open import order-theory.dependent-products-large-inflattices public
 open import order-theory.dependent-products-large-locales public
 open import order-theory.dependent-products-large-meet-semilattices public
 open import order-theory.dependent-products-large-posets public
@@ -62,6 +63,8 @@ open import order-theory.join-preserving-maps-posets public
 open import order-theory.join-semilattices public
 open import order-theory.knaster-tarski-fixed-point-theorem public
 open import order-theory.large-frames public
+open import order-theory.large-inflattices public
+open import order-theory.large-join-semilattices public
 open import order-theory.large-locales public
 open import order-theory.large-meet-semilattices public
 open import order-theory.large-meet-subsemilattices public
