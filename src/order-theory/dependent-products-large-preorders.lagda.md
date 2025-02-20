@@ -1,4 +1,4 @@
-# Dependent products large preorders
+# Dependent products of large preorders
 
 ```agda
 module order-theory.dependent-products-large-preorders where

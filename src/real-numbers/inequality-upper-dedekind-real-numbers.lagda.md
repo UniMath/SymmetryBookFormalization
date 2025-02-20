@@ -1,6 +1,8 @@
 # Inequality on the upper Dedekind real numbers
 
 ```agda
+{-# OPTIONS --lossy-unification #-}
+
 module real-numbers.inequality-upper-dedekind-real-numbers where
 ```
 
@@ -19,8 +21,10 @@ open import foundation.logical-equivalences
 open import foundation.powersets
 open import foundation.propositions
 open import foundation.subtypes
+open import foundation.unit-type
 open import foundation.universe-levels
 
+open import order-theory.bottom-elements-large-posets
 open import order-theory.large-posets
 open import order-theory.large-preorders
 
@@ -109,4 +113,18 @@ iff-leq-upper-real-ℚ :
   (p q : ℚ) → leq-ℚ p q ↔ leq-upper-ℝ (upper-real-ℚ p) (upper-real-ℚ q)
 pr1 (iff-leq-upper-real-ℚ p q) = preserves-leq-upper-real-ℚ p q
 pr2 (iff-leq-upper-real-ℚ p q) = reflects-leq-upper-real-ℚ p q
+```
+
+### Negative infinity is the bottom element of the large poset of upper reals
+
+```agda
+is-bottom-element-neg-∞-upper-ℝ :
+  is-bottom-element-Large-Poset upper-ℝ-Large-Poset neg-∞-upper-ℝ
+is-bottom-element-neg-∞-upper-ℝ x q _ = star
+
+has-bottom-element-upper-ℝ :
+  has-bottom-element-Large-Poset upper-ℝ-Large-Poset
+bottom-has-bottom-element-Large-Poset has-bottom-element-upper-ℝ = neg-∞-upper-ℝ
+is-bottom-element-bottom-has-bottom-element-Large-Poset
+  has-bottom-element-upper-ℝ = is-bottom-element-neg-∞-upper-ℝ
 ```
