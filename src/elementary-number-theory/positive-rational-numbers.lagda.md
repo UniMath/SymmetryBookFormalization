@@ -190,13 +190,14 @@ module _
   (x y : ℚ) (H : le-ℚ x y)
   where
 
-  is-positive-diff-le-ℚ : is-positive-ℚ (y -ℚ x)
-  is-positive-diff-le-ℚ =
-    is-positive-le-zero-ℚ
-      ( y -ℚ x)
-      ( backward-implication
-        ( iff-translate-diff-le-zero-ℚ x y)
-        ( H))
+  abstract
+    is-positive-diff-le-ℚ : is-positive-ℚ (y -ℚ x)
+    is-positive-diff-le-ℚ =
+      is-positive-le-zero-ℚ
+        ( y -ℚ x)
+        ( backward-implication
+          ( iff-translate-diff-le-zero-ℚ x y)
+          ( H))
 
   positive-diff-le-ℚ : ℚ⁺
   positive-diff-le-ℚ = y -ℚ x , is-positive-diff-le-ℚ
@@ -539,12 +540,13 @@ mediant-zero-ℚ⁺ x =
         ( rational-ℚ⁺ x)
         ( le-zero-is-positive-ℚ (rational-ℚ⁺ x) (is-positive-rational-ℚ⁺ x))))
 
-le-mediant-zero-ℚ⁺ : (x : ℚ⁺) → le-ℚ⁺ (mediant-zero-ℚ⁺ x) x
-le-mediant-zero-ℚ⁺ x =
-  le-right-mediant-ℚ
-    ( zero-ℚ)
-    ( rational-ℚ⁺ x)
-    ( le-zero-is-positive-ℚ (rational-ℚ⁺ x) (is-positive-rational-ℚ⁺ x))
+abstract
+  le-mediant-zero-ℚ⁺ : (x : ℚ⁺) → le-ℚ⁺ (mediant-zero-ℚ⁺ x) x
+  le-mediant-zero-ℚ⁺ x =
+    le-right-mediant-ℚ
+      ( zero-ℚ)
+      ( rational-ℚ⁺ x)
+      ( le-zero-is-positive-ℚ (rational-ℚ⁺ x) (is-positive-rational-ℚ⁺ x))
 ```
 
 ### Any positive rational number is the sum of two positive rational numbers

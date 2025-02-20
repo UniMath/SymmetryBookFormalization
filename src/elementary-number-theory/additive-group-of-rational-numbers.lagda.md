@@ -17,6 +17,7 @@ open import foundation.unital-binary-operations
 open import foundation.universe-levels
 
 open import group-theory.abelian-groups
+open import group-theory.commutative-monoids
 open import group-theory.groups
 open import group-theory.monoids
 open import group-theory.semigroups
@@ -60,9 +61,13 @@ pr2 (pr2 (pr2 (pr2 group-add-ℚ))) = right-inverse-law-add-ℚ
 
 ## Properties
 
-### Tha additive group of rational numbers is commutative
+### The additive group of rational numbers is commutative
 
 ```agda
+commutative-monoid-add-ℚ : Commutative-Monoid lzero
+pr1 commutative-monoid-add-ℚ = monoid-add-ℚ
+pr2 commutative-monoid-add-ℚ = commutative-add-ℚ
+
 abelian-group-add-ℚ : Ab lzero
 pr1 abelian-group-add-ℚ = group-add-ℚ
 pr2 abelian-group-add-ℚ = commutative-add-ℚ

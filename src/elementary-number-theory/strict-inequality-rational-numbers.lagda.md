@@ -122,12 +122,13 @@ module _
   (x y z : ℚ)
   where
 
-  transitive-le-ℚ : le-ℚ y z → le-ℚ x y → le-ℚ x z
-  transitive-le-ℚ =
-    transitive-le-fraction-ℤ
-      ( fraction-ℚ x)
-      ( fraction-ℚ y)
-      ( fraction-ℚ z)
+  abstract
+    transitive-le-ℚ : le-ℚ y z → le-ℚ x y → le-ℚ x z
+    transitive-le-ℚ =
+      transitive-le-fraction-ℤ
+        ( fraction-ℚ x)
+        ( fraction-ℚ y)
+        ( fraction-ℚ z)
 ```
 
 ### Concatenation rules for inequality and strict inequality on the rational numbers
@@ -315,15 +316,16 @@ module _
 ### Addition on the rational numbers preserves strict inequality
 
 ```agda
-preserves-le-add-ℚ :
-  {a b c d : ℚ} → le-ℚ a b → le-ℚ c d → le-ℚ (a +ℚ c) (b +ℚ d)
-preserves-le-add-ℚ {a} {b} {c} {d} H K =
-  transitive-le-ℚ
-    ( a +ℚ c)
-    ( b +ℚ c)
-    ( b +ℚ d)
-    ( preserves-le-right-add-ℚ b c d K)
-    ( preserves-le-left-add-ℚ c a b H)
+abstract
+  preserves-le-add-ℚ :
+    {a b c d : ℚ} → le-ℚ a b → le-ℚ c d → le-ℚ (a +ℚ c) (b +ℚ d)
+  preserves-le-add-ℚ {a} {b} {c} {d} H K =
+    transitive-le-ℚ
+      ( a +ℚ c)
+      ( b +ℚ c)
+      ( b +ℚ d)
+      ( preserves-le-right-add-ℚ b c d K)
+      ( preserves-le-left-add-ℚ c a b H)
 ```
 
 ### The rational numbers have no lower or upper bound

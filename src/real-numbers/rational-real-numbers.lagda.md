@@ -74,6 +74,13 @@ real-ℚ : ℚ → ℝ lzero
 real-ℚ x = (lower-real-ℚ x , upper-real-ℚ x , is-dedekind-lower-upper-real-ℚ x)
 ```
 
+### Zero as a real number
+
+```agda
+zero-ℝ : ℝ lzero
+zero-ℝ = real-ℚ zero-ℚ
+```
+
 ### The property of being a rational real number
 
 ```agda
