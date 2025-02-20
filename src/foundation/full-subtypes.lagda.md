@@ -36,7 +36,7 @@ module _
   where
 
   is-full-subtype-Prop : Prop (l1 ⊔ l2)
-  is-full-subtype-Prop = Π-Prop A (λ x → P x)
+  is-full-subtype-Prop = Π-Prop A P
 
   is-full-subtype : UU (l1 ⊔ l2)
   is-full-subtype = type-Prop is-full-subtype-Prop

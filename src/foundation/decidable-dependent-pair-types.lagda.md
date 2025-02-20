@@ -9,17 +9,28 @@ module foundation.decidable-dependent-pair-types where
 ```agda
 open import foundation.decidable-types
 open import foundation.dependent-pair-types
+open import foundation.double-negation
+open import foundation.empty-types
+open import foundation.functoriality-coproduct-types
+open import foundation.identity-types
+open import foundation.irrefutable-equality
 open import foundation.maybe
+open import foundation.mere-equality
+open import foundation.propositional-truncations
+open import foundation.transport-along-identifications
 open import foundation.type-arithmetic-coproduct-types
 open import foundation.type-arithmetic-unit-type
 open import foundation.uniformly-decidable-type-families
 open import foundation.universe-levels
 
 open import foundation-core.coproduct-types
+open import foundation-core.decidable-propositions
 open import foundation-core.equivalences
 open import foundation-core.function-types
 open import foundation-core.functoriality-dependent-pair-types
 open import foundation-core.negation
+
+open import logic.propositionally-decidable-types
 ```
 
 </details>
@@ -31,6 +42,21 @@ We describe conditions under which
 [decidable](foundation.decidable-types.md)
 
 ## Properites
+
+### Decidability of dependent sums over equivalences
+
+```agda
+module _
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : A → UU l3} {D : B → UU l4}
+  (e : A ≃ B) (f : (x : A) → C x ≃ D (map-equiv e x))
+  where
+
+  is-decidable-Σ-equiv : is-decidable (Σ A C) → is-decidable (Σ B D)
+  is-decidable-Σ-equiv = is-decidable-equiv' (equiv-Σ D e f)
+
+  is-decidable-Σ-equiv' : is-decidable (Σ B D) → is-decidable (Σ A C)
+  is-decidable-Σ-equiv' = is-decidable-equiv (equiv-Σ D e f)
+```
 
 ### Dependent sums of a uniformly decidable family of types
 
@@ -66,24 +92,60 @@ is-decidable-Σ-coproduct {A = A} {B} C dA dB =
 ```agda
 is-decidable-Σ-Maybe :
   {l1 l2 : Level} {A : UU l1} {B : Maybe A → UU l2} →
-  is-decidable (Σ A (B ∘ unit-Maybe)) → is-decidable (B exception-Maybe) →
+  is-decidable (Σ A (B ∘ unit-Maybe)) →
+  is-decidable (B exception-Maybe) →
   is-decidable (Σ (Maybe A) B)
 is-decidable-Σ-Maybe {A = A} {B} dA de =
   is-decidable-Σ-coproduct B dA
     ( is-decidable-equiv (left-unit-law-Σ (B ∘ inr)) de)
 ```
 
-### Decidability of dependent sums over equivalences
+### Decidability of dependent sums over irrefutably π₀-trivial bases
 
 ```agda
 module _
-  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : A → UU l3} {D : B → UU l4}
-  (e : A ≃ B) (f : (x : A) → C x ≃ D (map-equiv e x))
+  {l1 l2 : Level} {A : UU l1} {B : A → UU l2}
+  (H : all-elements-irrefutably-equal A)
   where
 
-  is-decidable-Σ-equiv : is-decidable (Σ A C) → is-decidable (Σ B D)
-  is-decidable-Σ-equiv = is-decidable-equiv' (equiv-Σ D e f)
+  is-inhabited-or-empty-Σ-all-elements-irrefutably-equal-base :
+    is-inhabited-or-empty A →
+    ((x : A) → is-inhabited-or-empty (B x)) →
+    is-inhabited-or-empty (Σ A B)
+  is-inhabited-or-empty-Σ-all-elements-irrefutably-equal-base dA dB =
+    elim-is-inhabited-or-empty-Prop
+      ( is-inhabited-or-empty-Prop (Σ A B))
+      ( λ a →
+        elim-is-inhabited-or-empty-Prop
+          ( is-inhabited-or-empty-Prop (Σ A B))
+          ( λ b → inl (unit-trunc-Prop (a , b)))
+          ( λ nb → inr (λ x → H (pr1 x) a (λ p → nb (tr B p (pr2 x)))))
+          ( dB a))
+      ( λ na → inr (map-neg pr1 na))
+      ( dA)
+```
 
-  is-decidable-Σ-equiv' : is-decidable (Σ B D) → is-decidable (Σ A C)
-  is-decidable-Σ-equiv' = is-decidable-equiv (equiv-Σ D e f)
+### Decidability of dependent sums over π₀-trivial bases
+
+```agda
+module _
+  {l1 l2 : Level} {A : UU l1} {B : A → UU l2}
+  (H : all-elements-merely-equal A)
+  where
+
+  is-decidable-Σ-all-elements-merely-equal-base :
+    is-decidable A →
+    ((x : A) → is-decidable (B x)) →
+    is-decidable (Σ A B)
+  is-decidable-Σ-all-elements-merely-equal-base =
+    is-decidable-Σ-all-elements-irrefutably-equal-base
+      ( all-elements-irrefutably-equal-all-elements-merely-equal H)
+
+  is-inhabited-or-empty-Σ-all-elements-merely-equal-base :
+    is-inhabited-or-empty A →
+    ((x : A) → is-inhabited-or-empty (B x)) →
+    is-inhabited-or-empty (Σ A B)
+  is-inhabited-or-empty-Σ-all-elements-merely-equal-base =
+    is-inhabited-or-empty-Σ-all-elements-irrefutably-equal-base
+      ( all-elements-irrefutably-equal-all-elements-merely-equal H)
 ```

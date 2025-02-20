@@ -87,7 +87,7 @@ pr2 (refl-is-common-divisor-ℕ x) = refl-div-ℕ x
 
 ```agda
 is-decidable-is-common-divisor-ℕ :
-  (a b : ℕ) → is-decidable-fam (is-common-divisor-ℕ a b)
+  (a b : ℕ) → is-decidable-family (is-common-divisor-ℕ a b)
 is-decidable-is-common-divisor-ℕ a b x =
   is-decidable-product
     ( is-decidable-div-ℕ x a)
@@ -137,7 +137,7 @@ leq-sum-is-common-divisor-ℕ a b d H =
 
 ```agda
 is-decidable-is-multiple-of-gcd-ℕ :
-  (a b : ℕ) → is-decidable-fam (is-multiple-of-gcd-ℕ a b)
+  (a b : ℕ) → is-decidable-family (is-multiple-of-gcd-ℕ a b)
 is-decidable-is-multiple-of-gcd-ℕ a b n =
   is-decidable-function-type'
     ( is-decidable-neg (is-decidable-is-zero-ℕ (a +ℕ b)))

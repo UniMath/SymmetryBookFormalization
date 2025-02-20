@@ -34,7 +34,7 @@ A **poset** is a [set](foundation-core.sets.md)
 [relation](foundation.binary-relations.md) that takes values in
 [propositions](foundation-core.propositions.md).
 
-## Definition
+## Definitions
 
 ```agda
 is-antisymmetric-leq-Preorder :
@@ -102,18 +102,6 @@ module _
 
   antisymmetric-leq-Poset : is-antisymmetric leq-Poset
   antisymmetric-leq-Poset = pr2 X
-
-  is-set-type-Poset : is-set type-Poset
-  is-set-type-Poset =
-    is-set-prop-in-id
-      ( λ x y → leq-Poset x y × leq-Poset y x)
-      ( λ x y → is-prop-product (is-prop-leq-Poset x y) (is-prop-leq-Poset y x))
-      ( λ x → refl-leq-Poset x , refl-leq-Poset x)
-      ( λ x y (H , K) → antisymmetric-leq-Poset x y H K)
-
-  set-Poset : Set l1
-  pr1 set-Poset = type-Poset
-  pr2 set-Poset = is-set-type-Poset
 ```
 
 ## Reasoning with inequalities in posets
@@ -156,6 +144,29 @@ syntax step-calculate-in-Poset X u z v = u ≤ z by v in-Poset X
 ```
 
 ## Properties
+
+### The underlying type of a poset is a set
+
+```agda
+module _
+  {l1 l2 : Level} (X : Poset l1 l2)
+  where
+
+  is-set-type-Poset : is-set (type-Poset X)
+  is-set-type-Poset =
+    is-set-prop-in-id
+      ( λ x y → leq-Poset X x y × leq-Poset X y x)
+      ( λ x y →
+        is-prop-product (is-prop-leq-Poset X x y) (is-prop-leq-Poset X y x))
+      ( λ x → refl-leq-Poset X x , refl-leq-Poset X x)
+      ( λ x y (H , K) → antisymmetric-leq-Poset X x y H K)
+
+  set-Poset : Set l1
+  set-Poset = (type-Poset X , is-set-type-Poset)
+```
+
+We characterize equality in a poset as _similarity of elements_ in
+[`order-theory.similarity-of-elements-posets`](order-theory.similarity-of-elements-posets.md).
 
 ### Posets are categories whose underlying hom-sets are propositions
 

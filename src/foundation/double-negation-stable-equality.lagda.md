@@ -2,35 +2,25 @@
 
 ```agda
 module foundation.double-negation-stable-equality where
+
+open import foundation-core.double-negation-stable-equality public
 ```
 
 <details><summary>Imports</summary>
 
 ```agda
-open import foundation.action-on-identifications-dependent-functions
 open import foundation.action-on-identifications-functions
-open import foundation.coproduct-types
 open import foundation.dependent-pair-types
 open import foundation.double-negation
-open import foundation.equality-cartesian-product-types
-open import foundation.equality-dependent-pair-types
-open import foundation.equivalences
-open import foundation.injective-maps
-open import foundation.negated-equality
+open import foundation.function-types
+open import foundation.identity-types
 open import foundation.negation
-open import foundation.sets
-open import foundation.transport-along-identifications
-open import foundation.unit-type
 open import foundation.universe-levels
 
-open import foundation-core.cartesian-product-types
-open import foundation-core.empty-types
-open import foundation-core.identity-types
-open import foundation-core.propositions
-open import foundation-core.retractions
-open import foundation-core.retracts-of-types
+open import foundation-core.homotopies
 
-open import logic.double-negation-elimination
+open import logic.double-negation-dense-maps
+open import logic.double-negation-dense-subtypes
 ```
 
 </details>
@@ -45,233 +35,80 @@ if `x ＝ y` has
 [fundamental theorem of identity types](foundation.fundamental-theorem-of-identity-types.md),
 types with double negation stable equality are [sets](foundation-core.sets.md).
 
-## Definitions
-
-```agda
-has-based-double-negation-stable-equality : {l : Level} (A : UU l) → A → UU l
-has-based-double-negation-stable-equality A x =
-  (y : A) → has-double-negation-elim (x ＝ y)
-
-has-based-double-negation-stable-equality' : {l : Level} (A : UU l) → A → UU l
-has-based-double-negation-stable-equality' A x =
-  (y : A) → has-double-negation-elim (y ＝ x)
-
-has-double-negation-stable-equality : {l : Level} → UU l → UU l
-has-double-negation-stable-equality A =
-  (x : A) → has-based-double-negation-stable-equality A x
-```
-
-## Examples
-
-### Propositions have double negation stable equality
-
-```agda
-abstract
-  has-double-negation-stable-equality-is-prop :
-    {l1 : Level} {A : UU l1} → is-prop A → has-double-negation-stable-equality A
-  has-double-negation-stable-equality-is-prop H x y =
-    double-negation-elim-is-contr (H x y)
-```
-
-### The empty type has double negation stable equality
-
-```agda
-has-double-negation-stable-equality-empty :
-  has-double-negation-stable-equality empty
-has-double-negation-stable-equality-empty ()
-```
-
-### The unit type has double negation stable equality
-
-```agda
-has-double-negation-stable-equality-unit :
-  has-double-negation-stable-equality unit
-has-double-negation-stable-equality-unit _ _ _ = refl
-```
-
 ## Properties
 
-### Types with double negation stable equality are sets
+## Homotopies of maps into types with double negation stable equality
+
+Given a double negation dense subtype `P ⊆ X` and two functions `f` and
+`g : X → Y` into a type `Y` with double negation stable equality. Then if `f`
+and `g` are homotopic on `P`, they are homotopic on all of `X`.
 
 ```agda
 module _
-  {l : Level} {A : UU l}
+  {l1 l2 l3 : Level} {X : UU l1} {Y : X → UU l2} {X' : UU l3} (i : X' ↠¬¬ X)
   where
 
-  is-prop-based-Id-has-based-double-negation-stable-equality :
-    {x : A} →
-    has-based-double-negation-stable-equality A x → (y : A) → is-prop (x ＝ y)
-  is-prop-based-Id-has-based-double-negation-stable-equality {x} =
-    is-prop-based-Id-prop-in-based-id x
-      ( λ y → ¬¬ (x ＝ y))
-      ( λ y → is-prop-neg)
-      ( intro-double-negation refl)
+  abstract
+    htpy-htpy-double-negation-dense-map' :
+      {f g : (x : X) → Y x}
+      (K :
+        (x : X') →
+        f (map-double-negation-dense-map i x) ＝
+        g (map-double-negation-dense-map i x)) →
+      (x : X) → ¬¬ (f x ＝ g x)
+    htpy-htpy-double-negation-dense-map' {f} {g} K x =
+      map-double-negation
+        ( λ where (x' , refl) → K x')
+        ( is-double-negation-dense-map-double-negation-dense-map i x)
 
-  is-set-has-double-negation-stable-equality :
-    has-double-negation-stable-equality A → is-set A
-  is-set-has-double-negation-stable-equality H x =
-    is-prop-based-Id-has-based-double-negation-stable-equality (H x)
+  htpy-htpy-double-negation-dense-map :
+    (H : (x : X) → has-double-negation-stable-equality (Y x))
+    {f g : (x : X) → Y x}
+    (K :
+      (x : X') →
+      f (map-double-negation-dense-map i x) ＝
+      g (map-double-negation-dense-map i x)) →
+    f ~ g
+  htpy-htpy-double-negation-dense-map H {f} {g} K x =
+    H x (f x) (g x) (htpy-htpy-double-negation-dense-map' {f} {g} K x)
+
+module _
+  {l1 l2 l3 : Level} {X : UU l1} {Y : X → UU l2}
+  (P : double-negation-dense-subtype l3 X)
+  (H : (x : X) → has-double-negation-stable-equality (Y x))
+  where
+
+  htpy-htpy-on-double-negation-dense-subtype :
+    {f g : (x : X) → Y x}
+    (K :
+      (x : type-double-negation-dense-subtype P) →
+      f (inclusion-double-negation-dense-subtype P x) ＝
+      g (inclusion-double-negation-dense-subtype P x)) →
+    f ~ g
+  htpy-htpy-on-double-negation-dense-subtype =
+    htpy-htpy-double-negation-dense-map
+      ( double-negation-dense-inclusion-double-negation-dense-subtype P)
+      ( H)
 ```
 
-### Types with double negation stable equality are closed under injections
-
-```agda
-abstract
-  has-double-negation-stable-equality-injection :
-    {l1 l2 : Level} {A : UU l1} {B : UU l2} →
-    injection A B →
-    has-double-negation-stable-equality B →
-    has-double-negation-stable-equality A
-  has-double-negation-stable-equality-injection (f , H) d x y =
-    has-double-negation-elim-iff (ap f , H) (d (f x) (f y))
-```
-
-### Types with double negation stable equality are closed under retracts
-
-```agda
-abstract
-  has-double-negation-stable-equality-retract-of :
-    {l1 l2 : Level} {A : UU l1} {B : UU l2} →
-    A retract-of B →
-    has-double-negation-stable-equality B →
-    has-double-negation-stable-equality A
-  has-double-negation-stable-equality-retract-of (i , r , R) =
-    has-double-negation-stable-equality-injection
-      ( i , is-injective-has-retraction i r R)
-```
-
-### Types with double negation stable equality are closed under equivalences
-
-```agda
-abstract
-  has-double-negation-stable-equality-equiv :
-    {l1 l2 : Level} {A : UU l1} {B : UU l2} (e : A ≃ B) →
-    has-double-negation-stable-equality B →
-    has-double-negation-stable-equality A
-  has-double-negation-stable-equality-equiv e =
-    has-double-negation-stable-equality-retract-of (retract-equiv e)
-
-abstract
-  has-double-negation-stable-equality-equiv' :
-    {l1 l2 : Level} {A : UU l1} {B : UU l2} (e : A ≃ B) →
-    has-double-negation-stable-equality A →
-    has-double-negation-stable-equality B
-  has-double-negation-stable-equality-equiv' e =
-    has-double-negation-stable-equality-retract-of (retract-inv-equiv e)
-```
-
-### Having double negation stable equality is a property
-
-```agda
-abstract
-  is-prop-has-based-double-negation-stable-equality :
-    {l1 : Level} {X : UU l1} (x : X) →
-    is-prop (has-based-double-negation-stable-equality X x)
-  is-prop-has-based-double-negation-stable-equality x =
-    is-prop-has-element
-      ( λ d →
-        is-prop-Π
-        ( λ y →
-          is-prop-function-type
-            ( is-prop-based-Id-has-based-double-negation-stable-equality d y)))
-
-abstract
-  is-prop-has-double-negation-stable-equality :
-    {l1 : Level} {X : UU l1} → is-prop (has-double-negation-stable-equality X)
-  is-prop-has-double-negation-stable-equality =
-    is-prop-Π is-prop-has-based-double-negation-stable-equality
-
-has-double-negation-stable-equality-Prop : {l1 : Level} → UU l1 → Prop l1
-has-double-negation-stable-equality-Prop X =
-  ( has-double-negation-stable-equality X ,
-    is-prop-has-double-negation-stable-equality)
-```
-
-### A product of types with double negation stable equality has double negation stable equality
-
-```agda
-has-double-negation-stable-equality-product :
-  {l1 l2 : Level} {A : UU l1} {B : UU l2} →
-  has-double-negation-stable-equality A →
-  has-double-negation-stable-equality B →
-  has-double-negation-stable-equality (A × B)
-has-double-negation-stable-equality-product d e x y p =
-  eq-pair
-    ( d (pr1 x) (pr1 y) (map-double-negation (ap pr1) p))
-    ( e (pr2 x) (pr2 y) (map-double-negation (ap pr2) p))
-```
-
-### Double negation stability of equality of the factors of a cartesian product
-
-If `A × B` has double negation stable equality and `B` has an element, then `A`
-has double negation stable equality; and vice versa.
-
-```agda
-has-double-negation-stable-equality-left-factor :
-  {l1 l2 : Level} {A : UU l1} {B : UU l2} →
-  has-double-negation-stable-equality (A × B) →
-  B →
-  has-double-negation-stable-equality A
-has-double-negation-stable-equality-left-factor d b x y p =
-  ap pr1 (d (x , b) (y , b) (map-double-negation (λ q → eq-pair q refl) p))
-
-has-double-negation-stable-equality-right-factor :
-  {l1 l2 : Level} {A : UU l1} {B : UU l2} →
-  has-double-negation-stable-equality (A × B) →
-  A → has-double-negation-stable-equality B
-has-double-negation-stable-equality-right-factor d a x y p =
-  ap pr2 (d (a , x) (a , y) (map-double-negation (eq-pair refl) p))
-```
-
-### If the total space has double negation stable equality, and `B` has a section, then the base type has double negation stable equality
-
-```agda
-abstract
-  has-double-negation-stable-equality-base-has-double-negation-stable-equality-Σ :
-    {l1 l2 : Level} {A : UU l1} {B : A → UU l2} (b : (x : A) → B x) →
-    has-double-negation-stable-equality (Σ A B) →
-    has-double-negation-stable-equality A
-  has-double-negation-stable-equality-base-has-double-negation-stable-equality-Σ
-    b dΣ x y nnp =
-    ap
-      ( pr1)
-      ( dΣ
-        ( x , b x)
-        ( y , b y)
-        ( map-double-negation (λ p → eq-pair-Σ p (apd b p)) nnp))
-```
-
-### If `A` and `B` have double negation stable equality, then so does their coproduct
+As a corollary, if `f` is constant on `P`, it is constant on all of `X`. This is
+Lemma 3.4 in {{#cite Esc13}}
 
 ```agda
 module _
-  {l1 l2 : Level} {A : UU l1} {B : UU l2}
+  {l1 l2 l3 : Level} {X : UU l1} {Y : UU l2}
+  (P : double-negation-dense-subtype l3 X)
+  (H : has-double-negation-stable-equality Y)
   where
 
-  has-double-negation-stable-equality-coproduct :
-    has-double-negation-stable-equality A →
-    has-double-negation-stable-equality B →
-    has-double-negation-stable-equality (A + B)
-  has-double-negation-stable-equality-coproduct dA dB (inl x) (inl y) =
-    has-double-negation-elim-iff (is-injective-inl , ap inl) (dA x y)
-  has-double-negation-stable-equality-coproduct dA dB (inl x) (inr y) p =
-    ex-falso (p neq-inl-inr)
-  has-double-negation-stable-equality-coproduct dA dB (inr x) (inl y) p =
-    ex-falso (p neq-inr-inl)
-  has-double-negation-stable-equality-coproduct dA dB (inr x) (inr y) =
-    has-double-negation-elim-iff (is-injective-inr , ap inr) (dB x y)
-
-  has-double-negation-stable-equality-left-summand :
-    has-double-negation-stable-equality (A + B) →
-    has-double-negation-stable-equality A
-  has-double-negation-stable-equality-left-summand d x y =
-    has-double-negation-elim-iff (ap inl , is-injective-inl) (d (inl x) (inl y))
-
-  has-double-negation-stable-equality-right-summand :
-    has-double-negation-stable-equality (A + B) →
-    has-double-negation-stable-equality B
-  has-double-negation-stable-equality-right-summand d x y =
-    has-double-negation-elim-iff (ap inr , is-injective-inr) (d (inr x) (inr y))
+  htpy-const-htpy-const-on-double-negation-dense-subtype :
+    (f : X → Y) (y : Y)
+    (K :
+      (x : type-double-negation-dense-subtype P) →
+      f (inclusion-double-negation-dense-subtype P x) ＝ y) →
+    (x : X) → f x ＝ y
+  htpy-const-htpy-const-on-double-negation-dense-subtype f y =
+    htpy-htpy-on-double-negation-dense-subtype P (λ _ → H)
 ```
 
 ## See also
@@ -281,6 +118,10 @@ module _
   negation stable equality. Conversely, every type with double negation stable
   equality has a tight, symmetric, antireflexive relation. However, this
   relation need not be cotransitive.
+
+## References
+
+{{#bibliography}}
 
 ## External links
 

@@ -4,7 +4,7 @@
 {-# OPTIONS --guardedness #-}
 ```
 
-## Files in the `trees` module
+## Modules in the trees namespace
 
 ```agda
 module trees where

@@ -11,27 +11,21 @@ open import foundation.commuting-triangles-of-identifications
 open import foundation.constant-maps
 open import foundation.dependent-pair-types
 open import foundation.empty-types
-open import foundation.functoriality-dependent-pair-types
 open import foundation.fundamental-theorem-of-identity-types
 open import foundation.homotopy-induction
 open import foundation.identity-types
-open import foundation.images
 open import foundation.inhabited-types
-open import foundation.negation
 open import foundation.propositional-truncations
 open import foundation.propositions
 open import foundation.sets
 open import foundation.structure-identity-principle
 open import foundation.torsorial-type-families
 open import foundation.type-arithmetic-dependent-pair-types
-open import foundation.unit-type
 open import foundation.universal-property-empty-type
 open import foundation.universe-levels
 open import foundation.weakly-constant-maps
 
-open import foundation-core.contractible-types
 open import foundation-core.equivalences
-open import foundation-core.function-types
 open import foundation-core.homotopies
 ```
 

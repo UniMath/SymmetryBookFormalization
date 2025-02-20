@@ -10,6 +10,7 @@ module order-theory.transitive-well-founded-relations where
 open import foundation.binary-relations
 open import foundation.cartesian-product-types
 open import foundation.dependent-pair-types
+open import foundation.identity-types
 open import foundation.universe-levels
 
 open import order-theory.well-founded-relations
@@ -63,9 +64,9 @@ module _
   is-well-founded-relation-le-Transitive-Well-Founded-Relation =
     pr1 is-transitive-well-founded-relation-Transitive-Well-Founded-Relation
 
-  is-transitive-le-Transitive-Well-Founded-Relation :
+  transitive-le-Transitive-Well-Founded-Relation :
     is-transitive le-Transitive-Well-Founded-Relation
-  is-transitive-le-Transitive-Well-Founded-Relation =
+  transitive-le-Transitive-Well-Founded-Relation =
     pr2 is-transitive-well-founded-relation-Transitive-Well-Founded-Relation
 
   well-founded-relation-Transitive-Well-Founded-Relation :
@@ -90,11 +91,11 @@ module _
 
 ### The associated reflexive relation of a transitive well-founded relation
 
-Given a transitive well-founded relation `P` there is an associated reflexive
+Given a transitive well-founded relation $∈$ there is an associated reflexive
 relation given by
 
 $$
-  (x ≤ y) := (u : X) → u ∈ x → u ∈ y.
+  (x ≤ y) := (u : X) → (u ∈ x) → (u ∈ y).
 $$
 
 ```agda
@@ -114,9 +115,32 @@ module _
     refl-leq-Well-Founded-Relation
       ( well-founded-relation-Transitive-Well-Founded-Relation R)
 
+  leq-eq-Transitive-Well-Founded-Relation :
+    {x y : X} → x ＝ y → leq-Transitive-Well-Founded-Relation x y
+  leq-eq-Transitive-Well-Founded-Relation =
+    leq-eq-Well-Founded-Relation
+      ( well-founded-relation-Transitive-Well-Founded-Relation R)
+
   transitive-leq-Transitive-Well-Founded-Relation :
     is-transitive leq-Transitive-Well-Founded-Relation
   transitive-leq-Transitive-Well-Founded-Relation =
     transitive-leq-Well-Founded-Relation
       ( well-founded-relation-Transitive-Well-Founded-Relation R)
+```
+
+## Properties
+
+### Less than implies less than or equal for a transitive well-founded relation
+
+```agda
+module _
+  {l1 l2 : Level} {X : UU l1} (R : Transitive-Well-Founded-Relation l2 X)
+  where
+
+  leq-le-Transitive-Well-Founded-Relation :
+    {x y : X} →
+    le-Transitive-Well-Founded-Relation R x y →
+    leq-Transitive-Well-Founded-Relation R x y
+  leq-le-Transitive-Well-Founded-Relation {x} {y} p u q =
+    transitive-le-Transitive-Well-Founded-Relation R u x y p q
 ```

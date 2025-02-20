@@ -14,6 +14,7 @@ open import elementary-number-theory.nonzero-integers
 open import foundation.action-on-identifications-functions
 open import foundation.coproduct-types
 open import foundation.decidable-subtypes
+open import foundation.decidable-type-families
 open import foundation.decidable-types
 open import foundation.dependent-pair-types
 open import foundation.empty-types
@@ -96,7 +97,7 @@ neg-one-negative-ℤ = (neg-one-ℤ , star)
 ### Negativity is decidable
 
 ```agda
-is-decidable-is-negative-ℤ : is-decidable-fam is-negative-ℤ
+is-decidable-is-negative-ℤ : is-decidable-family is-negative-ℤ
 is-decidable-is-negative-ℤ (inl x) = inl star
 is-decidable-is-negative-ℤ (inr x) = inr id
 

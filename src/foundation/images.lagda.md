@@ -17,7 +17,6 @@ open import foundation.universe-levels
 
 open import foundation-core.1-types
 open import foundation-core.commuting-triangles-of-maps
-open import foundation-core.contractible-types
 open import foundation-core.embeddings
 open import foundation-core.equivalences
 open import foundation-core.fibers-of-maps
@@ -52,8 +51,8 @@ module _
   subtype-im : subtype (l1 ⊔ l2) X
   subtype-im x = trunc-Prop (fiber f x)
 
-  is-in-subtype-im : X → UU (l1 ⊔ l2)
-  is-in-subtype-im = is-in-subtype subtype-im
+  is-in-im : X → UU (l1 ⊔ l2)
+  is-in-im = is-in-subtype subtype-im
 
   im : UU (l1 ⊔ l2)
   im = type-subtype subtype-im

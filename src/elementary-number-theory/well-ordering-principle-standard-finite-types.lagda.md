@@ -15,6 +15,7 @@ open import elementary-number-theory.well-ordering-principle-natural-numbers
 open import foundation.cartesian-product-types
 open import foundation.coproduct-types
 open import foundation.decidable-subtypes
+open import foundation.decidable-type-families
 open import foundation.decidable-types
 open import foundation.dependent-pair-types
 open import foundation.empty-types
@@ -56,7 +57,7 @@ numbers.
 
 ```agda
 exists-not-not-for-all-Fin :
-  {l : Level} (k : ℕ) {P : Fin k → UU l} → (is-decidable-fam P) →
+  {l : Level} (k : ℕ) {P : Fin k → UU l} → (is-decidable-family P) →
   ¬ ((x : Fin k) → P x) → Σ (Fin k) (λ x → ¬ (P x))
 exists-not-not-for-all-Fin {l} zero-ℕ d H = ex-falso (H ind-empty)
 exists-not-not-for-all-Fin {l} (succ-ℕ k) {P} d H with d (inr star)
@@ -71,7 +72,7 @@ exists-not-not-for-all-Fin {l} (succ-ℕ k) {P} d H with d (inr star)
 
 exists-not-not-for-all-count :
   {l1 l2 : Level} {X : UU l1} (P : X → UU l2) →
-  (is-decidable-fam P) → count X →
+  (is-decidable-family P) → count X →
   ¬ ((x : X) → P x) → Σ X (λ x → ¬ (P x))
 exists-not-not-for-all-count {l1} {l2} {X} P p e =
   ( g) ∘
