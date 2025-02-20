@@ -69,7 +69,7 @@ list-Monoid X =
     ( pair nil (pair left-unit-law-concat-list right-unit-law-concat-list))
 ```
 
-### `snoc`-law for list concatenation
+### `snoc`-laws for list concatenation
 
 ```agda
 snoc-concat-list :
@@ -77,6 +77,14 @@ snoc-concat-list :
   snoc (concat-list x y) a ＝ concat-list x (snoc y a)
 snoc-concat-list nil y a = refl
 snoc-concat-list (cons b x) y a = ap (cons b) (snoc-concat-list x y a)
+```
+
+```agda
+snoc-concat-unit :
+  {l1 : Level} {A : UU l1} (xs : list A) (a : A) →
+  snoc xs a ＝ concat-list xs (unit-list a)
+snoc-concat-unit nil a = refl
+snoc-concat-unit (cons x xs) a = ap (cons x) (snoc-concat-unit xs a)
 ```
 
 ### The length of a concatenation of two lists is the sum of the length of the two lists
