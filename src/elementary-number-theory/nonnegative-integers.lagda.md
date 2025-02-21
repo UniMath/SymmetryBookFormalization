@@ -13,6 +13,7 @@ open import elementary-number-theory.natural-numbers
 open import foundation.action-on-identifications-functions
 open import foundation.coproduct-types
 open import foundation.decidable-subtypes
+open import foundation.decidable-type-families
 open import foundation.decidable-types
 open import foundation.dependent-pair-types
 open import foundation.empty-types
@@ -98,7 +99,7 @@ one-nonnegative-ℤ = (one-ℤ , star)
 ### Nonnegativity is decidable
 
 ```agda
-is-decidable-is-nonnegative-ℤ : is-decidable-fam is-nonnegative-ℤ
+is-decidable-is-nonnegative-ℤ : is-decidable-family is-nonnegative-ℤ
 is-decidable-is-nonnegative-ℤ (inl x) = inr id
 is-decidable-is-nonnegative-ℤ (inr x) = inl star
 

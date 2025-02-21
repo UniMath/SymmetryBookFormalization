@@ -154,14 +154,14 @@ module _
       ( is-decidable-emb-map-decidable-emb f)
       ( y)
 
-  compute-type-decidable-type-decidable-emb :
+  compute-type-decidable-subtype-decidable-emb :
     type-decidable-subtype decidable-subtype-decidable-emb ≃ X
-  compute-type-decidable-type-decidable-emb =
+  compute-type-decidable-subtype-decidable-emb =
     equiv-total-fiber (map-decidable-emb f)
 
-  inv-compute-type-decidable-type-decidable-emb :
+  inv-compute-type-decidable-subtype-decidable-emb :
     X ≃ type-decidable-subtype decidable-subtype-decidable-emb
-  inv-compute-type-decidable-type-decidable-emb =
+  inv-compute-type-decidable-subtype-decidable-emb =
     inv-equiv-total-fiber (map-decidable-emb f)
 ```
 

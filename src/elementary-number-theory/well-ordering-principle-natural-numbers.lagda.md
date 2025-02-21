@@ -13,6 +13,7 @@ open import elementary-number-theory.natural-numbers
 
 open import foundation.cartesian-product-types
 open import foundation.coproduct-types
+open import foundation.decidable-type-families
 open import foundation.decidable-types
 open import foundation.dependent-pair-types
 open import foundation.empty-types
@@ -66,7 +67,7 @@ module _
   pr2 minimal-element-ℕ-Prop = is-prop-minimal-element-ℕ
 
 is-minimal-element-succ-ℕ :
-  {l : Level} (P : ℕ → UU l) (d : is-decidable-fam P)
+  {l : Level} (P : ℕ → UU l) (d : is-decidable-family P)
   (m : ℕ) (pm : P (succ-ℕ m))
   (is-lower-bound-m : is-lower-bound-ℕ (λ x → P (succ-ℕ x)) m) →
   ¬ (P zero-ℕ) → is-lower-bound-ℕ P (succ-ℕ m)
@@ -80,7 +81,7 @@ is-minimal-element-succ-ℕ
   is-lower-bound-m n psuccn
 
 well-ordering-principle-succ-ℕ :
-  {l : Level} (P : ℕ → UU l) (d : is-decidable-fam P)
+  {l : Level} (P : ℕ → UU l) (d : is-decidable-family P)
   (n : ℕ) (p : P (succ-ℕ n)) →
   is-decidable (P zero-ℕ) →
   minimal-element-ℕ (λ m → P (succ-ℕ m)) → minimal-element-ℕ P
@@ -90,7 +91,7 @@ well-ordering-principle-succ-ℕ P d n p (inr neg-p0) (m , pm , is-min-m) =
   ( succ-ℕ m , pm , is-minimal-element-succ-ℕ P d m pm is-min-m neg-p0)
 
 well-ordering-principle-ℕ :
-  {l : Level} (P : ℕ → UU l) (d : is-decidable-fam P) →
+  {l : Level} (P : ℕ → UU l) (d : is-decidable-family P) →
   Σ ℕ P → minimal-element-ℕ P
 pr1 (well-ordering-principle-ℕ P d (pair zero-ℕ p)) = zero-ℕ
 pr1 (pr2 (well-ordering-principle-ℕ P d (pair zero-ℕ p))) = p
@@ -103,7 +104,7 @@ well-ordering-principle-ℕ P d (pair (succ-ℕ n) p) =
       ( pair n p))
 
 number-well-ordering-principle-ℕ :
-  {l : Level} (P : ℕ → UU l) (d : is-decidable-fam P) (nP : Σ ℕ P) → ℕ
+  {l : Level} (P : ℕ → UU l) (d : is-decidable-family P) (nP : Σ ℕ P) → ℕ
 number-well-ordering-principle-ℕ P d nP =
   pr1 (well-ordering-principle-ℕ P d nP)
 ```
@@ -114,7 +115,7 @@ This is independently of the input `(pair n p) : Σ ℕ P`.
 
 ```agda
 is-zero-well-ordering-principle-succ-ℕ :
-  {l : Level} (P : ℕ → UU l) (d : is-decidable-fam P)
+  {l : Level} (P : ℕ → UU l) (d : is-decidable-family P)
   (n : ℕ) (p : P (succ-ℕ n)) (d0 : is-decidable (P zero-ℕ)) →
   (x : minimal-element-ℕ (λ m → P (succ-ℕ m))) (p0 : P zero-ℕ) →
   pr1 (well-ordering-principle-succ-ℕ P d n p d0 x) ＝ zero-ℕ
@@ -124,7 +125,7 @@ is-zero-well-ordering-principle-succ-ℕ P d n p (inr np0) x q0 =
   ex-falso (np0 q0)
 
 is-zero-well-ordering-principle-ℕ :
-  {l : Level} (P : ℕ → UU l) (d : is-decidable-fam P) →
+  {l : Level} (P : ℕ → UU l) (d : is-decidable-family P) →
   (x : Σ ℕ P) → P zero-ℕ → is-zero-ℕ (number-well-ordering-principle-ℕ P d x)
 is-zero-well-ordering-principle-ℕ P d (pair zero-ℕ p) p0 = refl
 is-zero-well-ordering-principle-ℕ P d (pair (succ-ℕ m) p) =

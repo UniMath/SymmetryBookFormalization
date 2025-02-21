@@ -18,6 +18,7 @@ open import foundation-core.function-types
 open import foundation-core.homotopies
 open import foundation-core.identity-types
 open import foundation-core.retractions
+open import foundation-core.retracts-of-types
 open import foundation-core.sections
 ```
 
@@ -42,6 +43,16 @@ is-injective {l1} {l2} {A} {B} f = {x y : A} → f x ＝ f y → x ＝ y
 
 injection : {l1 l2 : Level} (A : UU l1) (B : UU l2) → UU (l1 ⊔ l2)
 injection A B = Σ (A → B) is-injective
+
+module _
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : injection A B)
+  where
+
+  map-injection : A → B
+  map-injection = pr1 f
+
+  is-injective-injection : is-injective map-injection
+  is-injective-injection = pr2 f
 ```
 
 ## Examples
@@ -100,6 +111,39 @@ module _
     is-inj-h (is-inj-g ((inv (H x)) ∙ (p ∙ (H x'))))
 ```
 
+### Embeddings are injective
+
+```agda
+module _
+  {l1 l2 : Level} {A : UU l1} {B : UU l2}
+  where
+
+  is-injective-is-emb : {f : A → B} → is-emb f → is-injective f
+  is-injective-is-emb is-emb-f {x} {y} = map-inv-is-equiv (is-emb-f x y)
+
+  is-injective-emb : (e : A ↪ B) → is-injective (map-emb e)
+  is-injective-emb e {x} {y} = map-inv-is-equiv (is-emb-map-emb e x y)
+
+  injection-emb : A ↪ B → injection A B
+  injection-emb (f , H) = (f , is-injective-is-emb H)
+```
+
+### Retracts are injective
+
+```agda
+module _
+  {l1 l2 : Level} {A : UU l1} {B : UU l2}
+  where
+
+  is-injective-inclusion-retract :
+    (R : A retract-of B) → is-injective (inclusion-retract R)
+  is-injective-inclusion-retract (i , R) = is-injective-retraction i R
+
+  injection-retract : A retract-of B → injection A B
+  injection-retract R =
+    ( inclusion-retract R , is-injective-inclusion-retract R)
+```
+
 ### Equivalences are injective
 
 ```agda
@@ -135,20 +179,6 @@ module _
   is-equiv-is-injective : {f : A → B} → section f → is-injective f → is-equiv f
   is-equiv-is-injective {f} (pair g G) H =
     is-equiv-is-invertible g G (λ x → H (G (f x)))
-```
-
-### Any embedding is injective
-
-```agda
-module _
-  {l1 l2 : Level} {A : UU l1} {B : UU l2}
-  where
-
-  is-injective-is-emb : {f : A → B} → is-emb f → is-injective f
-  is-injective-is-emb is-emb-f {x} {y} = map-inv-is-equiv (is-emb-f x y)
-
-  is-injective-emb : (e : A ↪ B) → is-injective (map-emb e)
-  is-injective-emb e {x} {y} = map-inv-is-equiv (is-emb-map-emb e x y)
 ```
 
 ### Any map out of a contractible type is injective

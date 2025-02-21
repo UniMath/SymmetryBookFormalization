@@ -36,7 +36,7 @@ Slice-structure l P B = Σ (UU l) (λ A → hom-structure P A B)
 
 equiv-Fiber-structure :
   {l1 l2 : Level} (l : Level) (P : UU (l1 ⊔ l) → UU l2) (B : UU l1) →
-  Slice-structure (l1 ⊔ l) P B ≃ fam-structure P B
+  Slice-structure (l1 ⊔ l) P B ≃ structured-family P B
 equiv-Fiber-structure {l1} {l3} l P B =
   ( ( inv-distributive-Π-Σ) ∘e
     ( equiv-Σ

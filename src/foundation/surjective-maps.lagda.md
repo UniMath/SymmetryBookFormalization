@@ -41,6 +41,7 @@ open import foundation-core.homotopies
 open import foundation-core.precomposition-dependent-functions
 open import foundation-core.propositional-maps
 open import foundation-core.propositions
+open import foundation-core.retracts-of-types
 open import foundation-core.sections
 open import foundation-core.sets
 open import foundation-core.subtypes
@@ -223,6 +224,16 @@ abstract
     {l1 l2 : Level} {A : UU l1} {B : UU l2} {f : A → B} →
     section f → is-surjective f
   is-surjective-has-section (g , G) b = unit-trunc-Prop (g b , G b)
+```
+
+### The underlying surjection of a retract
+
+```agda
+surjection-retract :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} →
+  A retract-of B → B ↠ A
+surjection-retract R =
+  ( map-retraction-retract R , is-surjective-has-section (section-retract R))
 ```
 
 ### Any split surjective map is surjective

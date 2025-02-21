@@ -120,8 +120,17 @@ have the induction principle of the identity type.
 ind-Id :
   {l1 l2 : Level} {A : UU l1}
   (x : A) (B : (y : A) (p : x ＝ y) → UU l2) →
-  (B x refl) → (y : A) (p : x ＝ y) → B y p
+  B x refl → (y : A) (p : x ＝ y) → B y p
 ind-Id x B b y refl = b
+```
+
+### The recursion principle of identity types
+
+```agda
+rec-Id :
+  {l1 l2 : Level} {A : UU l1} (x : A) {B : A → UU l2} →
+  B x → (y : A) → x ＝ y → B y
+rec-Id x {B} = ind-Id x (λ y p → B y)
 ```
 
 ## Operations on the identity type

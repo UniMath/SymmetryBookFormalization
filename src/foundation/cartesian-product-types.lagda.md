@@ -13,7 +13,11 @@ open import foundation.dependent-pair-types
 open import foundation.subuniverses
 open import foundation.universe-levels
 
+open import foundation-core.homotopies
 open import foundation-core.identity-types
+open import foundation-core.retractions
+open import foundation-core.retracts-of-types
+open import foundation-core.sections
 open import foundation-core.transport-along-identifications
 ```
 
@@ -45,4 +49,24 @@ is-closed-under-products-subuniverse :
   {l1 l2 : Level} (P : subuniverse l1 l2) → UU (lsuc l1 ⊔ l2)
 is-closed-under-products-subuniverse P =
   is-closed-under-products-subuniverses P P P
+```
+
+### If a factor has an element, then the opposite factor is a retract of the product
+
+```agda
+module _
+  {l1 l2 : Level} {X : UU l1} {Y : UU l2}
+  where
+
+  section-pr1-product : Y → section (pr1 {A = X} {B = λ _ → Y})
+  section-pr1-product y = ((λ x → (x , y)) , refl-htpy)
+
+  retract-left-factor-product : Y → X retract-of (X × Y)
+  retract-left-factor-product y = retract-section pr1 (section-pr1-product y)
+
+  section-pr2-product : X → section (pr2 {A = X} {B = λ _ → Y})
+  section-pr2-product x = ((λ y → (x , y)) , refl-htpy)
+
+  retract-right-factor-product : X → Y retract-of (X × Y)
+  retract-right-factor-product x = retract-section pr2 (section-pr2-product x)
 ```

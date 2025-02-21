@@ -11,8 +11,10 @@ open import foundation-core.decidable-propositions public
 ```agda
 open import foundation.action-on-identifications-functions
 open import foundation.booleans
+open import foundation.decidable-equality
 open import foundation.decidable-types
 open import foundation.dependent-pair-types
+open import foundation.discrete-types
 open import foundation.embeddings
 open import foundation.empty-types
 open import foundation.equivalences
@@ -122,15 +124,18 @@ module _
   equiv-bool-Decidable-Prop : Decidable-Prop l ≃ bool
   equiv-bool-Decidable-Prop = equiv-bool-Decidable-Prop' ∘e split-Decidable-Prop
 
+  bool-Decidable-Prop : Decidable-Prop l → bool
+  bool-Decidable-Prop = map-equiv equiv-bool-Decidable-Prop
+
   abstract
     compute-equiv-bool-Decidable-Prop :
       (P : Decidable-Prop l) →
       type-Decidable-Prop P ≃ (map-equiv equiv-bool-Decidable-Prop P ＝ true)
-    compute-equiv-bool-Decidable-Prop (pair P (pair H (inl p))) =
+    compute-equiv-bool-Decidable-Prop (P , H , inl p) =
       equiv-is-contr
         ( is-proof-irrelevant-is-prop H p)
         ( is-proof-irrelevant-is-prop (is-set-bool true true) refl)
-    compute-equiv-bool-Decidable-Prop (pair P (pair H (inr np))) =
+    compute-equiv-bool-Decidable-Prop (P , H , inr np) =
       equiv-is-empty np neq-false-true-bool
 ```
 
@@ -164,6 +169,21 @@ pr2 (iff-universes-Decidable-Prop l l' P) p =
         ( compute-equiv-bool-Decidable-Prop
           ( map-equiv (equiv-universes-Decidable-Prop l l') P))
         ( p)))
+```
+
+### The type of decidable propositions in any universe is discrete
+
+```agda
+has-decidable-equality-Decidable-Prop :
+  {l : Level} → has-decidable-equality (Decidable-Prop l)
+has-decidable-equality-Decidable-Prop =
+  has-decidable-equality-equiv
+    ( equiv-bool-Decidable-Prop)
+    ( has-decidable-equality-bool)
+
+Decidable-Prop-Discrete-Type : (l : Level) → Discrete-Type (lsuc l)
+Decidable-Prop-Discrete-Type l =
+  ( Decidable-Prop l , has-decidable-equality-Decidable-Prop)
 ```
 
 ### The type of decidable propositions in any universe is a set

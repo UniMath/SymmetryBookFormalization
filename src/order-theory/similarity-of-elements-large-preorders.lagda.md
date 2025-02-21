@@ -21,10 +21,12 @@ open import order-theory.large-preorders
 ## Idea
 
 Two elements `x` and `y` of a [large preorder](order-theory.large-preorders.md)
-`P` are said to be **similar** if both `x ≤ y` and `y ≤ x` hold.
+`P` are said to be
+{{#concept "similar" Disambiguation="elements of a large preorder" Agda=sim-Large-Preorder}}
+if both `x ≤ y` and `y ≤ x` hold.
 
 In informal writing we will use the notation `x ≈ y` to assert that `x` and `y`
-are similar elements in a preorder `P`.
+are similar elements in a large preorder `P`.
 
 ## Definition
 

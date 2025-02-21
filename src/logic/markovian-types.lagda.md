@@ -91,6 +91,10 @@ module _
 
 > This remains to be formalized.
 
+### Types with decidability search are markovian
+
+> TODO
+
 ## See also
 
 - [Markov's principle](logic.markovs-principle.md)

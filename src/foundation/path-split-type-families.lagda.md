@@ -36,7 +36,7 @@ and `v` _over_ p. This condition is
 [equivalent](foundation.logical-equivalences.md) to asking that `P` is a family
 of [propositions](foundation-core.propositions.md).
 
-This condition is a direct rephrasing of stating that the
+This condition is a direct rephrasing of the statement that the
 [action on identifications](foundation.action-on-identifications-functions.md)
 of the first projection map `Σ A P → A` has a
 [section](foundation-core.sections.md), and in this way is closely related to

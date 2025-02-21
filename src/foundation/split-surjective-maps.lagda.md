@@ -95,25 +95,22 @@ module _
 
   retraction-is-split-surjective-is-injective :
     is-injective f → is-split-surjective f → retraction f
-  pr1 (retraction-is-split-surjective-is-injective l s) = pr1 ∘ s
-  pr2 (retraction-is-split-surjective-is-injective l s) = l ∘ pr2 ∘ s ∘ f
+  retraction-is-split-surjective-is-injective l s = (pr1 ∘ s , l ∘ pr2 ∘ s ∘ f)
 
   is-equiv-is-split-surjective-is-injective :
     is-injective f → is-split-surjective f → is-equiv f
-  pr1 (is-equiv-is-split-surjective-is-injective l s) =
-    section-is-split-surjective f s
-  pr2 (is-equiv-is-split-surjective-is-injective l s) =
-    retraction-is-split-surjective-is-injective l s
+  is-equiv-is-split-surjective-is-injective l s =
+    ( section-is-split-surjective f s ,
+      retraction-is-split-surjective-is-injective l s)
 
   is-split-surjective-is-equiv : is-equiv f → is-split-surjective f
   is-split-surjective-is-equiv = is-split-surjective-section f ∘ pr1
 
   is-split-surjective-is-injective-is-equiv :
     is-equiv f → is-injective f × is-split-surjective f
-  pr1 (is-split-surjective-is-injective-is-equiv is-equiv-f) =
-    is-injective-is-equiv is-equiv-f
-  pr2 (is-split-surjective-is-injective-is-equiv is-equiv-f) =
-    is-split-surjective-is-equiv is-equiv-f
+  is-split-surjective-is-injective-is-equiv is-equiv-f =
+    ( is-injective-is-equiv is-equiv-f ,
+      is-split-surjective-is-equiv is-equiv-f)
 ```
 
 ## See also

@@ -27,6 +27,8 @@ open import foundation-core.homotopies
 open import foundation-core.identity-types
 open import foundation-core.injective-maps
 open import foundation-core.propositional-maps
+open import foundation-core.retracts-of-types
+open import foundation-core.sections
 open import foundation-core.transport-along-identifications
 open import foundation-core.truncated-maps
 open import foundation-core.truncated-types
@@ -392,6 +394,20 @@ module _
       ( equiv-tot e)
       ( ( is-section-map-inv-equiv (equiv-tot e) (a , c)) ∙
         ( eq-pair-eq-fiber (inv (is-section-map-inv-equiv (e a) c))))
+```
+
+### If every fiber has an element then the base is a retract of the dependent sum
+
+```agda
+module _
+  {l1 l2 : Level} {A : UU l1} {B : A → UU l2}
+  where
+
+  section-pr1-section : ((x : A) → B x) → section (pr1 {A = A} {B})
+  section-pr1-section f = ((λ x → (x , f x)) , refl-htpy)
+
+  retract-base-Σ-section-family : ((x : A) → B x) → A retract-of (Σ A B)
+  retract-base-Σ-section-family f = retract-section pr1 (section-pr1-section f)
 ```
 
 ### Dependent sums of morphisms of arrows

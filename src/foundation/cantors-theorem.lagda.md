@@ -26,6 +26,7 @@ open import foundation-core.propositions
 
 open import logic.de-morgan-propositions
 open import logic.de-morgan-subtypes
+open import logic.double-negation-dense-maps
 open import logic.double-negation-stable-subtypes
 ```
 
@@ -74,18 +75,20 @@ module _
   subtype-theorem-Cantor : powerset l2 X
   subtype-theorem-Cantor x = neg-Prop (f x x)
 
-  abstract
-    not-in-image-subtype-theorem-Cantor : ¬ (fiber f subtype-theorem-Cantor)
-    not-in-image-subtype-theorem-Cantor (ξ , α) =
-      no-fixed-points-neg-Prop (f ξ ξ) (iff-eq (htpy-eq α ξ))
+  not-in-image-subtype-theorem-Cantor : ¬ (fiber f subtype-theorem-Cantor)
+  not-in-image-subtype-theorem-Cantor (ξ , α) =
+    no-fixed-points-neg-Prop (f ξ ξ) (iff-eq (htpy-eq α ξ))
+
+  theorem-irrefutably-surjective-Cantor : ¬ (is-double-negation-dense-map f)
+  theorem-irrefutably-surjective-Cantor H =
+    H subtype-theorem-Cantor not-in-image-subtype-theorem-Cantor
 
   abstract
     theorem-Cantor : ¬ (is-surjective f)
-    theorem-Cantor H =
-      apply-universal-property-trunc-Prop
-        ( H subtype-theorem-Cantor)
-        ( empty-Prop)
-        ( not-in-image-subtype-theorem-Cantor)
+    theorem-Cantor =
+      map-neg
+        is-double-negation-dense-map-is-surjective
+        theorem-irrefutably-surjective-Cantor
 ```
 
 ### Cantor's theorem for the set of decidable subtypes
@@ -101,21 +104,24 @@ module _
   map-theorem-decidable-Cantor : decidable-subtype l2 X
   map-theorem-decidable-Cantor x = neg-Decidable-Prop (f x x)
 
-  abstract
-    not-in-image-map-theorem-decidable-Cantor :
-      ¬ (fiber f map-theorem-decidable-Cantor)
-    not-in-image-map-theorem-decidable-Cantor (x , α) =
-      no-fixed-points-neg-Decidable-Prop
-        ( f x x)
-        ( iff-eq (ap prop-Decidable-Prop (htpy-eq α x)))
+  not-in-image-map-theorem-decidable-Cantor :
+    ¬ (fiber f map-theorem-decidable-Cantor)
+  not-in-image-map-theorem-decidable-Cantor (x , α) =
+    no-fixed-points-neg-Decidable-Prop
+      ( f x x)
+      ( iff-eq (ap prop-Decidable-Prop (htpy-eq α x)))
+
+  theorem-irrefutably-surjective-decidable-Cantor :
+    ¬ (is-double-negation-dense-map f)
+  theorem-irrefutably-surjective-decidable-Cantor H =
+    H map-theorem-decidable-Cantor not-in-image-map-theorem-decidable-Cantor
 
   abstract
     theorem-decidable-Cantor : ¬ (is-surjective f)
-    theorem-decidable-Cantor H =
-      apply-universal-property-trunc-Prop
-        ( H map-theorem-decidable-Cantor)
-        ( empty-Prop)
-        ( not-in-image-map-theorem-decidable-Cantor)
+    theorem-decidable-Cantor =
+      map-neg
+        is-double-negation-dense-map-is-surjective
+        theorem-irrefutably-surjective-decidable-Cantor
 ```
 
 ### Cantor's theorem for the set of double negation stable subtypes
@@ -133,21 +139,25 @@ module _
   map-theorem-double-negation-stable-Cantor x =
     neg-Double-Negation-Stable-Prop (f x x)
 
-  abstract
-    not-in-image-map-theorem-double-negation-stable-Cantor :
-      ¬ (fiber f map-theorem-double-negation-stable-Cantor)
-    not-in-image-map-theorem-double-negation-stable-Cantor (x , α) =
-      no-fixed-points-neg-Double-Negation-Stable-Prop
-        ( f x x)
-        ( iff-eq (ap prop-Double-Negation-Stable-Prop (htpy-eq α x)))
+  not-in-image-map-theorem-double-negation-stable-Cantor :
+    ¬ (fiber f map-theorem-double-negation-stable-Cantor)
+  not-in-image-map-theorem-double-negation-stable-Cantor (x , α) =
+    no-fixed-points-neg-Double-Negation-Stable-Prop
+      ( f x x)
+      ( iff-eq (ap prop-Double-Negation-Stable-Prop (htpy-eq α x)))
+
+  theorem-irrefutably-surjective-double-negation-stable-Cantor :
+    ¬ (is-double-negation-dense-map f)
+  theorem-irrefutably-surjective-double-negation-stable-Cantor H =
+    H map-theorem-double-negation-stable-Cantor
+      not-in-image-map-theorem-double-negation-stable-Cantor
 
   abstract
     theorem-double-negation-stable-Cantor : ¬ (is-surjective f)
-    theorem-double-negation-stable-Cantor H =
-      apply-universal-property-trunc-Prop
-        ( H map-theorem-double-negation-stable-Cantor)
-        ( empty-Prop)
-        ( not-in-image-map-theorem-double-negation-stable-Cantor)
+    theorem-double-negation-stable-Cantor =
+      map-neg
+        is-double-negation-dense-map-is-surjective
+        theorem-irrefutably-surjective-double-negation-stable-Cantor
 ```
 
 ### Cantor's theorem for the set of De Morgan subtypes
@@ -163,21 +173,24 @@ module _
   map-theorem-de-morgan-Cantor : de-morgan-subtype l2 X
   map-theorem-de-morgan-Cantor x = neg-De-Morgan-Prop (f x x)
 
-  abstract
-    not-in-image-map-theorem-de-morgan-Cantor :
-      ¬ (fiber f map-theorem-de-morgan-Cantor)
-    not-in-image-map-theorem-de-morgan-Cantor (x , α) =
-      no-fixed-points-neg-De-Morgan-Prop
-        ( f x x)
-        ( iff-eq (ap prop-De-Morgan-Prop (htpy-eq α x)))
+  not-in-image-map-theorem-de-morgan-Cantor :
+    ¬ (fiber f map-theorem-de-morgan-Cantor)
+  not-in-image-map-theorem-de-morgan-Cantor (x , α) =
+    no-fixed-points-neg-De-Morgan-Prop
+      ( f x x)
+      ( iff-eq (ap prop-De-Morgan-Prop (htpy-eq α x)))
+
+  theorem-irrefutably-surjective-de-morgan-Cantor :
+    ¬ (is-double-negation-dense-map f)
+  theorem-irrefutably-surjective-de-morgan-Cantor H =
+    H map-theorem-de-morgan-Cantor not-in-image-map-theorem-de-morgan-Cantor
 
   abstract
     theorem-de-morgan-Cantor : ¬ (is-surjective f)
-    theorem-de-morgan-Cantor H =
-      apply-universal-property-trunc-Prop
-        ( H map-theorem-de-morgan-Cantor)
-        ( empty-Prop)
-        ( not-in-image-map-theorem-de-morgan-Cantor)
+    theorem-de-morgan-Cantor =
+      map-neg
+        is-double-negation-dense-map-is-surjective
+        theorem-irrefutably-surjective-de-morgan-Cantor
 ```
 
 ## References
