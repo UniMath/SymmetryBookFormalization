@@ -1,6 +1,8 @@
 # Strict inequality on the rational numbers
 
 ```agda
+{-# OPTIONS --lossy-unification #-}
+
 module elementary-number-theory.strict-inequality-rational-numbers where
 ```
 
@@ -9,6 +11,7 @@ module elementary-number-theory.strict-inequality-rational-numbers where
 ```agda
 open import elementary-number-theory.addition-integer-fractions
 open import elementary-number-theory.addition-rational-numbers
+open import elementary-number-theory.additive-group-of-rational-numbers
 open import elementary-number-theory.cross-multiplication-difference-integer-fractions
 open import elementary-number-theory.difference-integers
 open import elementary-number-theory.difference-rational-numbers
@@ -46,6 +49,8 @@ open import foundation.propositional-truncations
 open import foundation.propositions
 open import foundation.transport-along-identifications
 open import foundation.universe-levels
+
+open import group-theory.groups
 ```
 
 </details>
@@ -456,4 +461,44 @@ located-le-ℚ x y z H =
 ```agda
 neg-le-ℚ : (x y : ℚ) → le-ℚ x y → le-ℚ (neg-ℚ y) (neg-ℚ x)
 neg-le-ℚ x y = neg-le-fraction-ℤ (fraction-ℚ x) (fraction-ℚ y)
+```
+
+### Transposing additions on strict inequalities of rational numbers
+
+```agda
+le-transpose-right-diff-ℚ : (x y z : ℚ) → le-ℚ x (y -ℚ z) → le-ℚ (x +ℚ z) y
+le-transpose-right-diff-ℚ x y z x<y-z =
+  tr
+    ( le-ℚ (x +ℚ z))
+    ( is-section-right-div-Group group-add-ℚ z y)
+    ( preserves-le-left-add-ℚ z x (y -ℚ z) x<y-z)
+
+le-transpose-right-add-ℚ : (x y z : ℚ) → le-ℚ x (y +ℚ z) → le-ℚ (x -ℚ z) y
+le-transpose-right-add-ℚ x y z x<y+z =
+  tr
+    ( le-ℚ (x -ℚ z))
+    ( is-retraction-right-div-Group group-add-ℚ z y)
+    ( preserves-le-left-add-ℚ (neg-ℚ z) x (y +ℚ z) x<y+z)
+
+le-transpose-left-diff-ℚ : (x y z : ℚ) → le-ℚ (x -ℚ y) z → le-ℚ x (z +ℚ y)
+le-transpose-left-diff-ℚ x y z x-y<z =
+  tr
+    ( λ w → le-ℚ w (z +ℚ y))
+    ( is-section-right-div-Group group-add-ℚ y x)
+    ( preserves-le-left-add-ℚ y (x -ℚ y) z x-y<z)
+
+le-transpose-left-add-ℚ : (x y z : ℚ) → le-ℚ (x +ℚ y) z → le-ℚ x (z -ℚ y)
+le-transpose-left-add-ℚ x y z x+y<z =
+  tr
+    ( λ w → le-ℚ w (z -ℚ y))
+    ( is-retraction-right-div-Group group-add-ℚ y x)
+    ( preserves-le-left-add-ℚ (neg-ℚ y) (x +ℚ y) z x+y<z)
+
+le-iff-transpose-left-add-ℚ : (x y z : ℚ) → le-ℚ (x +ℚ y) z ↔ le-ℚ x (z -ℚ y)
+pr1 (le-iff-transpose-left-add-ℚ x y z) = le-transpose-left-add-ℚ x y z
+pr2 (le-iff-transpose-left-add-ℚ x y z) = le-transpose-right-diff-ℚ x z y
+
+le-iff-transpose-left-diff-ℚ : (x y z : ℚ) → le-ℚ (x -ℚ y) z ↔ le-ℚ x (z +ℚ y)
+pr1 (le-iff-transpose-left-diff-ℚ x y z) = le-transpose-left-diff-ℚ x y z
+pr2 (le-iff-transpose-left-diff-ℚ x y z) = le-transpose-right-add-ℚ x z y
 ```
