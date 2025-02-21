@@ -446,6 +446,45 @@ module _
     is-equiv-map-inv-trunc-Prop-diagonal-coproduct
 ```
 
+## `do` syntax for propositional truncation { #do-syntax }
+
+Consider a case where you are trying to prove a proposition, `motive : Prop l`,
+from witnesses of propositional truncations of types `P` and `Q`:
+
+```text
+rec-trunc-Prop
+  ( motive)
+  ( λ (p : P) →
+    rec-trunc-Prop
+      ( motive)
+      ( λ (q : Q) → witness-motive-P-Q p q)
+      ( witness-truncated-prop-Q p))
+  ( witness-truncated-prop-P)
+```
+
+We can rewrite this using
+[Agda's `do` syntax](https://agda.readthedocs.io/en/latest/language/syntactic-sugar.html#do-notation)
+with the module
+
+```agda
+module do-syntax-trunc-Prop {l : Level} (motive : Prop l) where
+  _>>=_ :
+    {l : Level} {A : UU l} →
+    type-trunc-Prop A → (A → type-Prop motive) →
+    type-Prop motive
+  trunc-prop-a >>= k = rec-trunc-Prop motive k trunc-prop-a
+```
+
+This allows us to rewrite the nested chain above as
+
+```text
+do
+  p ← witness-truncated-prop-P
+  q ← witness-truncated-prop-Q p
+  witness-motive-P-Q p q
+where open do-syntax-trunc-Prop motive
+```
+
 ## Table of files about propositional logic
 
 The following table gives an overview of basic constructions in propositional
