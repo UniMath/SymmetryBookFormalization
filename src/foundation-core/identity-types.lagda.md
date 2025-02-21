@@ -509,9 +509,9 @@ equational-reasoning
     ＝ v by eq-3
 ```
 
-The resulting identification of this computaion is `eq-1 ∙ (eq-2 ∙ eq-3)`, i.e.,
-the identification is associated fully to the right. For examples of the use of
-equational reasoning, see
+The resulting identification of this computation is `eq-1 ∙ (eq-2 ∙ eq-3)`,
+i.e., the identification is associated fully to the right. For examples of the
+use of equational reasoning, see
 [addition-integers](elementary-number-theory.addition-integers.md).
 
 ```agda
