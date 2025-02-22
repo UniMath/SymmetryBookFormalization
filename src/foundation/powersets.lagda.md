@@ -217,6 +217,20 @@ module _
   refl-sim-subtype = refl-sim-Large-Poset (powerset-Large-Poset A)
 ```
 
+#### Similarity is symmetric
+
+```agda
+module _
+  {l1 : Level} {A : UU l1}
+  where
+
+  symmetric-sim-subtype :
+    {l2 l3 : Level} →
+    (P : subtype l2 A) (Q : subtype l3 A) →
+    sim-subtype P Q → sim-subtype Q P
+  symmetric-sim-subtype = symmetric-sim-Large-Poset (powerset-Large-Poset A)
+```
+
 #### Similarity is transitive
 
 ```agda

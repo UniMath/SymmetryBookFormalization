@@ -76,7 +76,7 @@ antisymmetric-leq-Large-Poset lower-ℝ-Large-Poset x y x≤y y≤x =
     ( antisymmetric-leq-subtype (cut-lower-ℝ x) (cut-lower-ℝ y) x≤y y≤x)
 ```
 
-### If a rational is in a lower Dedekind cut, its projections is less than or equal to the corresponding lower real
+### If a rational is in a lower Dedekind cut, its projection is less than or equal to the corresponding lower real
 
 ```agda
 module _
