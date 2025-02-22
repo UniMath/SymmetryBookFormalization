@@ -448,9 +448,11 @@ module _
 
 ## `do` syntax for propositional truncation { #do-syntax }
 
-Consider a case where you are trying to prove a proposition, `motive : Prop l`,
-from witnesses of propositional truncations of types `P` and `Q`:
-
+[Agda's `do` syntax](https://agda.readthedocs.io/en/v2.7.0/language/syntactic-sugar.html#do-notation)
+is a handy tool to avoid deeply nesting calls to the same lambda-based function.
+For example, consider a case where you are trying to prove a proposition,
+`motive : Prop l`, from witnesses of propositional truncations of types `P` and
+`Q`:
 ```text
 rec-trunc-Prop
   ( motive)
@@ -461,11 +463,11 @@ rec-trunc-Prop
       ( witness-truncated-prop-Q p))
   ( witness-truncated-prop-P)
 ```
-
-We can rewrite this using
-[Agda's `do` syntax](https://agda.readthedocs.io/en/latest/language/syntactic-sugar.html#do-notation)
-with the module
-
+The tower of indentation, with many layers of indentation in the innermost
+derivation, is a little awkward even at two levels, let alone more. In
+particular, we have the many duplicated lines of `rec-trunc-Prop motive`, and
+the increasing distance between the `rec-trunc-Prop` and the `trunc-Prop` being
+recursed on. Agda's `do` syntax offers us an alternative.
 ```agda
 module do-syntax-trunc-Prop {l : Level} (motive : Prop l) where
   _>>=_ :
@@ -474,9 +476,7 @@ module do-syntax-trunc-Prop {l : Level} (motive : Prop l) where
     type-Prop motive
   trunc-prop-a >>= k = rec-trunc-Prop motive k trunc-prop-a
 ```
-
 This allows us to rewrite the nested chain above as
-
 ```text
 do
   p ← witness-truncated-prop-P
@@ -484,6 +484,40 @@ do
   witness-motive-P-Q p q
 where open do-syntax-trunc-Prop motive
 ```
+
+Since Agda's `do` syntax desugars to calls to `>>=`, this is syntactic sugar for
+
+```text
+witness-truncated-prop-P >>=
+  ( λ p → witness-truncated-prop-Q p >>=
+    ( λ q → witness-motive-P-Q p q))
+```
+
+which, inlining the definition of `>>=`, becomes exactly the chain of
+`rec-trunc-Prop` used above.
+
+To read the `do` syntax, it may help to go through each line:
+
+1. `do` indicates that we will be using Agda's syntactic sugar for the `>>=`
+   function defined in the `do-syntax-trunc-Prop` module.
+1. You can read the `p ← witness-truncated-prop-P` as an _instruction_ saying,
+   "Get the value `p` out of the witness of `trunc-Prop P`." We cannot extract
+   elements out of witnesses of propositionally truncated types, but since we're
+   eliminating into a proposition, the universal property of the truncation
+   allows us to lift a map from the untruncated type to a map from its
+   truncation.
+1. `q ← witness-truncated-prop-Q p` says, "Get the value `q` out of the witness
+   for the truncation `witness-truncated-prop-Q p`" --- noticing that we can
+   make use of `p : P` in that line.
+1. `witness-motive-P-Q p q` must give us a witness of `motive` --- that is, a
+   value of type `type-Prop motive` --- from `p` and `q`.
+1. `where open do-syntax-trunc-Prop motive` is required to allow us to use the
+   `do` syntax.
+
+The result of the entire `do` block is the value of type `type-Prop motive`,
+which is internally constructed with an appropriate chain of `rec-trunc-Prop`
+from the intermediate steps.
+
 
 ## Table of files about propositional logic
 
