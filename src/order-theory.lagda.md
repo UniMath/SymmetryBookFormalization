@@ -129,6 +129,8 @@ open import order-theory.top-elements-preorders public
 open import order-theory.total-orders public
 open import order-theory.total-preorders public
 open import order-theory.transitive-well-founded-relations public
+open import order-theory.transposition-inequalities-along-order-preserving-retractions-posets public
+open import order-theory.transposition-inequalities-along-sections-of-order-preserving-maps-posets public
 open import order-theory.upper-bounds-chains-posets public
 open import order-theory.upper-bounds-large-posets public
 open import order-theory.upper-bounds-posets public

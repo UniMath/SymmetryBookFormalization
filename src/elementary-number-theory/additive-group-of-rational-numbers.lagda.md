@@ -10,13 +10,16 @@ module elementary-number-theory.additive-group-of-rational-numbers where
 
 ```agda
 open import elementary-number-theory.addition-rational-numbers
+open import elementary-number-theory.difference-rational-numbers
 open import elementary-number-theory.rational-numbers
 
 open import foundation.dependent-pair-types
+open import foundation.identity-types
 open import foundation.unital-binary-operations
 open import foundation.universe-levels
 
 open import group-theory.abelian-groups
+open import group-theory.commutative-monoids
 open import group-theory.groups
 open import group-theory.monoids
 open import group-theory.semigroups
@@ -60,10 +63,39 @@ pr2 (pr2 (pr2 (pr2 group-add-ℚ))) = right-inverse-law-add-ℚ
 
 ## Properties
 
-### Tha additive group of rational numbers is commutative
+### The additive group of rational numbers is commutative
 
 ```agda
+commutative-monoid-add-ℚ : Commutative-Monoid lzero
+pr1 commutative-monoid-add-ℚ = monoid-add-ℚ
+pr2 commutative-monoid-add-ℚ = commutative-add-ℚ
+
 abelian-group-add-ℚ : Ab lzero
 pr1 abelian-group-add-ℚ = group-add-ℚ
 pr2 abelian-group-add-ℚ = commutative-add-ℚ
+```
+
+### Identities for addition on the rational numbers from group properties
+
+```agda
+abstract
+  is-identity-right-conjugation-add-ℚ : (p q : ℚ) → p +ℚ (q -ℚ p) ＝ q
+  is-identity-right-conjugation-add-ℚ =
+    is-identity-right-conjugation-Ab abelian-group-add-ℚ
+
+  is-identity-left-conjugation-add-ℚ : (p q : ℚ) → (p +ℚ q) -ℚ p ＝ q
+  is-identity-left-conjugation-add-ℚ =
+    is-identity-left-conjugation-Ab abelian-group-add-ℚ
+
+  is-section-diff-ℚ : (p q : ℚ) → (q -ℚ p) +ℚ p ＝ q
+  is-section-diff-ℚ = is-section-right-div-Group group-add-ℚ
+
+  is-retraction-diff-ℚ : (p q : ℚ) → (q +ℚ p) -ℚ p ＝ q
+  is-retraction-diff-ℚ = is-retraction-right-div-Group group-add-ℚ
+
+  right-swap-add-ℚ : (p q r : ℚ) → (p +ℚ q) +ℚ r ＝ (p +ℚ r) +ℚ q
+  right-swap-add-ℚ = right-swap-add-Ab abelian-group-add-ℚ
+
+  left-swap-add-ℚ : (p q r : ℚ) → p +ℚ (q +ℚ r) ＝ q +ℚ (p +ℚ r)
+  left-swap-add-ℚ = left-swap-add-Ab abelian-group-add-ℚ
 ```
