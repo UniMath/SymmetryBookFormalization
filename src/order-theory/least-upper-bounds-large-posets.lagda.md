@@ -22,17 +22,42 @@ open import order-theory.upper-bounds-large-posets
 
 ## Idea
 
-A **least upper bound** of a family of elements `a : I → P` in a
+A **binary least upper bound** on a pair of elements `a`, `b` in a
 [large poset](order-theory.large-posets.md) `P` is an element `x` in `P` such
 that the [logical equivalence](foundation.logical-equivalences.md)
+
+```text
+  is-binary-upper-bound-Large-Poset P a b y ↔ (x ≤ y)
+```
+
+holds for every `y` in `P`.
+
+Similarly, a least upper bound of a family of elements `a : I → P` in a large
+poset `P` is an element `x` in `P` such that the logical equivalence
 
 ```text
   is-upper-bound-family-of-elements-Large-Poset P a y ↔ (x ≤ y)
 ```
 
-holds for every element in `P`.
+holds for every `y` in `P`.
 
 ## Definitions
+
+### The predicate on large posets of being a least binary upper bound of a pair of elements
+
+```agda
+module _
+  {α : Level → Level} {β : Level → Level → Level}
+  (P : Large-Poset α β)
+  {l1 l2 : Level} (a : type-Large-Poset P l1) (b : type-Large-Poset P l2)
+  where
+
+  is-least-binary-upper-bound-Large-Poset :
+    {l3 : Level} (x : type-Large-Poset P l3) → UUω
+  is-least-binary-upper-bound-Large-Poset x =
+    {l4 : Level} (y : type-Large-Poset P l4) →
+    is-binary-upper-bound-Large-Poset P a b y ↔ leq-Large-Poset P x y
+```
 
 ### The predicate on large posets of being a least upper bound of a family of elements
 
@@ -84,6 +109,45 @@ module _
 
 ## Properties
 
+### Binary least upper bounds are upper bounds
+
+```agda
+module _
+  {α : Level → Level} {β : Level → Level → Level}
+  (P : Large-Poset α β)
+  {l1 l2 : Level} (a : type-Large-Poset P l1) (b : type-Large-Poset P l2)
+  where
+
+  is-binary-upper-bound-is-least-binary-upper-bound-Large-Poset :
+    {l3 : Level} {y : type-Large-Poset P l3} →
+    is-least-binary-upper-bound-Large-Poset P a b y →
+    is-binary-upper-bound-Large-Poset P a b y
+  is-binary-upper-bound-is-least-binary-upper-bound-Large-Poset H =
+    backward-implication (H _) (refl-leq-Large-Poset P _)
+```
+
+### Binary least upper bounds are unique up to similarity of elements
+
+```agda
+module _
+  {α : Level → Level} {β : Level → Level → Level}
+  (P : Large-Poset α β)
+  {l1 l2 : Level} (a : type-Large-Poset P l1) (b : type-Large-Poset P l2)
+  where
+
+  sim-is-least-binary-upper-bound-Large-Poset :
+    {l3 l4 : Level} {x : type-Large-Poset P l3} {y : type-Large-Poset P l4} →
+    is-least-binary-upper-bound-Large-Poset P a b x →
+    is-least-binary-upper-bound-Large-Poset P a b y →
+    sim-Large-Poset P x y
+  pr1 (sim-is-least-binary-upper-bound-Large-Poset H K) =
+    forward-implication (H _)
+      ( backward-implication (K _) (refl-leq-Large-Poset P _))
+  pr2 (sim-is-least-binary-upper-bound-Large-Poset H K) =
+    forward-implication (K _)
+      ( backward-implication (H _) (refl-leq-Large-Poset P _))
+```
+
 ### Least upper bounds of families of elements are upper bounds
 
 ```agda
@@ -101,7 +165,7 @@ module _
     backward-implication (H _) (refl-leq-Large-Poset P _)
 ```
 
-### Least upper bounds of families of elements are unique up to similairity of elements
+### Least upper bounds of families of elements are unique up to similarity of elements
 
 ```agda
 module _
