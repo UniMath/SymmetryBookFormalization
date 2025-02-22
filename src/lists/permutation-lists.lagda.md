@@ -24,6 +24,7 @@ open import linear-algebra.functoriality-vectors
 open import linear-algebra.vectors
 
 open import lists.arrays
+open import lists.elementhood-relation-lists
 open import lists.functoriality-lists
 open import lists.lists
 open import lists.permutation-vectors
@@ -45,7 +46,7 @@ module _
   {l : Level} {A : UU l}
   where
 
-  permute-list : (l : list A) → Permutation (length-list l) → list A
+  permute-list : (l : list A) → permutation (length-list l) → list A
   permute-list l s =
     list-vec
       ( length-list l)
@@ -58,12 +59,12 @@ module _
   is-permutation-list : (list A → list A) → UU l
   is-permutation-list f =
     (l : list A) →
-    Σ ( Permutation (length-list l))
+    Σ ( permutation (length-list l))
       ( λ t → f l ＝ permute-list l t)
 
   permutation-is-permutation-list :
     (f : list A → list A) → is-permutation-list f →
-    ((l : list A) → Permutation (length-list l))
+    ((l : list A) → permutation (length-list l))
   permutation-is-permutation-list f P l = pr1 (P l)
 
   eq-permute-list-permutation-is-permutation-list :
@@ -79,7 +80,7 @@ module _
 
 ```agda
   length-permute-list :
-    (l : list A) (t : Permutation (length-list l)) →
+    (l : list A) (t : permutation (length-list l)) →
     length-list (permute-list l t) ＝ (length-list l)
   length-permute-list l t =
     compute-length-list-list-vec
@@ -91,7 +92,7 @@ module _
 
 ```agda
   eq-vec-list-permute-list :
-    (l : list A) (f : Permutation (length-list l)) →
+    (l : list A) (f : permutation (length-list l)) →
     permute-vec (length-list l) (vec-list l) f ＝
     tr
       ( vec A)
@@ -123,7 +124,7 @@ module _
 
 ```agda
   is-in-list-is-in-permute-list :
-    (l : list A) (t : Permutation (length-list l)) (x : A) →
+    (l : list A) (t : permutation (length-list l)) (x : A) →
     x ∈-list (permute-list l t) → x ∈-list l
   is-in-list-is-in-permute-list l t x I =
     is-in-list-is-in-vec-list
@@ -147,7 +148,7 @@ module _
             ( I))))
 
   is-in-permute-list-is-in-list :
-    (l : list A) (t : Permutation (length-list l)) (x : A) →
+    (l : list A) (t : permutation (length-list l)) (x : A) →
     x ∈-list l → x ∈-list (permute-list l t)
   is-in-permute-list-is-in-list l t x I =
     is-in-list-is-in-vec-list
@@ -181,12 +182,12 @@ module _
     fold-vec b μ (tr (vec A) eq v) ＝ fold-vec b μ v
   invariant-fold-vec-tr v refl = refl
 
-  invariant-permutation-fold-list :
-    (l : list A) → (f : Permutation (length-list l)) →
+  permutation-invariant-fold-list :
+    (l : list A) → (f : permutation (length-list l)) →
     fold-list b μ l ＝ fold-list b μ (permute-list l f)
-  invariant-permutation-fold-list l f =
+  permutation-invariant-fold-list l f =
     ( inv (htpy-fold-list-fold-vec b μ l) ∙
-      ( invariant-permutation-fold-vec b μ C (vec-list l) f ∙
+      ( permutation-invariant-fold-vec b μ C (vec-list l) f ∙
         ( ap (fold-vec b μ) (eq-vec-list-permute-list l f) ∙
           ( ( invariant-fold-vec-tr
               { m = length-list l}
@@ -200,14 +201,14 @@ module _
 ```agda
 compute-tr-permute-vec :
   {l : Level} {A : UU l} {n m : ℕ}
-  (e : n ＝ m) (v : vec A n) (t : Permutation m) →
+  (e : n ＝ m) (v : vec A n) (t : permutation m) →
   tr
     ( vec A)
     ( e)
     ( permute-vec
       ( n)
       ( v)
-      ( tr Permutation (inv e) t)) ＝
+      ( tr permutation (inv e) t)) ＝
   permute-vec
     ( m)
     ( tr (vec A) e v)
@@ -222,7 +223,7 @@ compute-tr-map-vec f refl v = refl
 
 helper-compute-list-vec-map-vec-permute-vec-vec-list :
   {l1 l2 : Level} {A : UU l1} {B : UU l2}
-  (f : A → B) (p : list A) (t : Permutation (length-list p)) →
+  (f : A → B) (p : list A) (t : permutation (length-list p)) →
   tr
     ( vec B)
     ( inv (length-permute-list p t))
@@ -250,7 +251,7 @@ helper-compute-list-vec-map-vec-permute-vec-vec-list f p t =
 
 compute-list-vec-map-vec-permute-vec-vec-list :
   {l1 l2 : Level} {A : UU l1} {B : UU l2}
-  (f : A → B) (p : list A) (t : Permutation (length-list p)) →
+  (f : A → B) (p : list A) (t : permutation (length-list p)) →
   list-vec
     ( length-list p)
     ( map-vec f (permute-vec (length-list p) (vec-list p) t)) ＝
@@ -266,8 +267,8 @@ compute-list-vec-map-vec-permute-vec-vec-list f p t =
 
 eq-map-list-permute-list :
   {l1 l2 : Level} {A : UU l1} {B : UU l2}
-  (f : A → B) (p : list A) (t : Permutation (length-list p)) →
-  permute-list (map-list f p) (tr Permutation (inv (length-map-list f p)) t) ＝
+  (f : A → B) (p : list A) (t : permutation (length-list p)) →
+  permute-list (map-list f p) (tr permutation (inv (length-map-list f p)) t) ＝
   map-list f (permute-list p t)
 eq-map-list-permute-list {B = B} f p t =
   ( ( ap
@@ -282,7 +283,7 @@ eq-map-list-permute-list {B = B} f p t =
                 ( permute-vec
                   ( length-list (map-list f p))
                   ( x)
-                  ( tr Permutation (inv (length-map-list f p)) t)))
+                  ( tr permutation (inv (length-map-list f p)) t)))
             ( vec-list-map-list-map-vec-list' f p)) ∙
           ( ( compute-tr-permute-vec
               ( length-map-list f p)

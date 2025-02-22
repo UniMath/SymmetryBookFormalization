@@ -74,7 +74,7 @@ succ-strong-ind-ℕ :
   {l : Level} (P : ℕ → UU l) → ((k : ℕ) → (□-≤-ℕ P k) → P (succ-ℕ k)) →
   (k : ℕ) → (□-≤-ℕ P k) → (□-≤-ℕ P (succ-ℕ k))
 succ-strong-ind-ℕ P pS k H m p =
-  cases-succ-strong-ind-ℕ P pS k H m (cases-leq-succ-ℕ p)
+  cases-succ-strong-ind-ℕ P pS k H m (decide-leq-succ-ℕ m k p)
 
 cases-htpy-succ-strong-ind-ℕ :
   {l : Level} (P : ℕ → UU l) (pS : (k : ℕ) → (□-≤-ℕ P k) → P (succ-ℕ k)) →
@@ -93,7 +93,7 @@ htpy-succ-strong-ind-ℕ :
   ( succ-strong-ind-ℕ P pS k H m p) ＝
   ( H m q)
 htpy-succ-strong-ind-ℕ P pS k H m p q =
-  cases-htpy-succ-strong-ind-ℕ P pS k H m (cases-leq-succ-ℕ p) q
+  cases-htpy-succ-strong-ind-ℕ P pS k H m (decide-leq-succ-ℕ m k p) q
 
 cases-eq-succ-strong-ind-ℕ :
   {l : Level} (P : ℕ → UU l) (pS : (k : ℕ) → (□-≤-ℕ P k) → P (succ-ℕ k)) →
@@ -113,7 +113,7 @@ eq-succ-strong-ind-ℕ :
   ( (succ-strong-ind-ℕ P pS k H (succ-ℕ k) p)) ＝
   ( pS k H)
 eq-succ-strong-ind-ℕ P pS k H p =
-  cases-eq-succ-strong-ind-ℕ P pS k H (cases-leq-succ-ℕ p)
+  cases-eq-succ-strong-ind-ℕ P pS k H (decide-leq-succ-ℕ (succ-ℕ k) k p)
 ```
 
 ### The inductive step
@@ -161,7 +161,7 @@ cases-eq-compute-succ-strong-ind-ℕ :
     ( m : ℕ) (p : leq-ℕ m n) →
     ( induction-strong-ind-ℕ P (zero-strong-ind-ℕ P p0)
       ( λ k z m₁ z₁ →
-        cases-succ-strong-ind-ℕ P pS k z m₁ (cases-leq-succ-ℕ z₁))
+        cases-succ-strong-ind-ℕ P pS k z m₁ (decide-leq-succ-ℕ m₁ k z₁))
       n m p) ＝
     ( strong-ind-ℕ P p0 pS m)) →
   ( m : ℕ) (p : leq-ℕ m (succ-ℕ n)) →
@@ -190,10 +190,10 @@ cases-eq-compute-succ-strong-ind-ℕ P p0 pS n α .(succ-ℕ n) p (inr refl) =
         ( induction-strong-ind-ℕ P
           ( zero-strong-ind-ℕ P p0)
           ( λ k H m p₁ →
-            cases-succ-strong-ind-ℕ P pS k H m (cases-leq-succ-ℕ p₁))
+            cases-succ-strong-ind-ℕ P pS k H m (decide-leq-succ-ℕ m k p₁))
           n)
         ( succ-ℕ n))
-      ( cases-leq-succ-reflexive-leq-ℕ)))
+      ( decide-leq-refl-succ-ℕ)))
 
 eq-compute-succ-strong-ind-ℕ :
   { l : Level} (P : ℕ → UU l) (p0 : P zero-ℕ) →
@@ -202,14 +202,14 @@ eq-compute-succ-strong-ind-ℕ :
   ( m : ℕ) (p : leq-ℕ m n) →
   ( induction-strong-ind-ℕ P (zero-strong-ind-ℕ P p0)
     ( λ k z m₁ z₁ →
-      cases-succ-strong-ind-ℕ P pS k z m₁ (cases-leq-succ-ℕ z₁))
+      cases-succ-strong-ind-ℕ P pS k z m₁ (decide-leq-succ-ℕ m₁ k z₁))
     n m p) ＝
   ( strong-ind-ℕ P p0 pS m)
 eq-compute-succ-strong-ind-ℕ P p0 pS zero-ℕ zero-ℕ _ = refl
 eq-compute-succ-strong-ind-ℕ P p0 pS (succ-ℕ n) m p =
   cases-eq-compute-succ-strong-ind-ℕ P p0 pS n
     ( eq-compute-succ-strong-ind-ℕ P p0 pS n) m p
-    ( cases-leq-succ-ℕ p)
+    ( decide-leq-succ-ℕ m n p)
 
 compute-succ-strong-ind-ℕ :
   { l : Level} (P : ℕ → UU l) (p0 : P zero-ℕ) →

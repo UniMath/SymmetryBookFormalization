@@ -29,6 +29,8 @@ open import foundation.unit-type
 open import foundation.universe-levels
 open import foundation.whiskering-higher-homotopies-composition
 
+open import lists.lists
+
 open import univalent-combinatorics.involution-standard-finite-types
 open import univalent-combinatorics.standard-finite-types
 ```
@@ -71,9 +73,9 @@ module _
   revert-vec empty-vec = empty-vec
   revert-vec (x ∷ v) = snoc-vec (revert-vec v) x
 
-  all-vec : {l2 : Level} {n : ℕ} → (P : A → UU l2) → vec A n → UU l2
-  all-vec P empty-vec = raise-unit _
-  all-vec P (x ∷ v) = P x × all-vec P v
+  for-all-vec : {l2 : Level} {n : ℕ} → (P : A → UU l2) → vec A n → UU l2
+  for-all-vec P empty-vec = raise-unit _
+  for-all-vec P (x ∷ v) = P x × for-all-vec P v
 
   component-vec :
     (n : ℕ) → vec A n → Fin n → A
@@ -85,7 +87,7 @@ module _
     is-head : {n : ℕ} (a : A) (l : vec A n) → a ∈-vec (a ∷ l)
     is-in-tail : {n : ℕ} (a x : A) (l : vec A n) → a ∈-vec l → a ∈-vec (x ∷ l)
 
-  index-in-vec : (n : ℕ) → (a : A) → (v : vec A n) → a ∈-vec v → Fin n
+  index-in-vec : (n : ℕ) (a : A) (v : vec A n) → a ∈-vec v → Fin n
   index-in-vec (succ-ℕ n) a (.a ∷ v) (is-head .a .v) =
     inr star
   index-in-vec (succ-ℕ n) a (x ∷ v) (is-in-tail .a .x .v I) =
@@ -147,6 +149,16 @@ module _
     (n : ℕ) (x : A) (v : functional-vec A n) (I : in-functional-vec n x v) →
     x ＝ v (index-in-functional-vec n x v I)
   eq-component-functional-vec-index-in-functional-vec n x v I = pr2 I
+```
+
+### The definition of `fold-vec`
+
+```agda
+fold-vec :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (b : B) (μ : A → (B → B)) →
+  {n : ℕ} → vec A n → B
+fold-vec b μ {0} _ = b
+fold-vec b μ (a ∷ l) = μ a (fold-vec b μ l)
 ```
 
 ## Properties
@@ -435,4 +447,55 @@ compute-tr-vec :
   tr (vec A) p (x ∷ v) ＝
   (x ∷ tr (vec A) (is-injective-succ-ℕ p) v)
 compute-tr-vec refl v x = refl
+```
+
+### Back and forth between vectors and lists
+
+```agda
+module _
+  {l : Level} {A : UU l}
+  where
+
+  list-vec : (n : ℕ) → vec A n → list A
+  list-vec zero-ℕ _ = nil
+  list-vec (succ-ℕ n) (x ∷ l) = cons x (list-vec n l)
+
+  vec-list : (l : list A) → vec A (length-list l)
+  vec-list nil = empty-vec
+  vec-list (cons x l) = x ∷ vec-list l
+
+  is-section-vec-list : (λ l → list-vec (length-list l) (vec-list l)) ~ id
+  is-section-vec-list nil = refl
+  is-section-vec-list (cons x l) = ap (cons x) (is-section-vec-list l)
+
+  is-retraction-vec-list :
+    ( λ (x : Σ ℕ (λ n → vec A n)) →
+      ( length-list (list-vec (pr1 x) (pr2 x)) ,
+        vec-list (list-vec (pr1 x) (pr2 x)))) ~
+    id
+  is-retraction-vec-list (zero-ℕ , empty-vec) = refl
+  is-retraction-vec-list (succ-ℕ n , (x ∷ v)) =
+    ap
+      ( λ v → succ-ℕ (pr1 v) , (x ∷ (pr2 v)))
+      ( is-retraction-vec-list (n , v))
+```
+
+### Back and forth between functional vectors and lists
+
+```agda
+module _
+  {l : Level} {A : UU l}
+  where
+
+  list-functional-vec : (n : ℕ) → functional-vec A n → list A
+  list-functional-vec zero-ℕ v =
+    nil
+  list-functional-vec (succ-ℕ n) v =
+    cons (v (inr star)) (list-functional-vec n (v ∘ inl))
+
+  functional-vec-list : (l : list A) → functional-vec A (length-list l)
+  functional-vec-list nil =
+    empty-functional-vec
+  functional-vec-list (cons x l) =
+    cons-functional-vec (length-list l) x (functional-vec-list l)
 ```

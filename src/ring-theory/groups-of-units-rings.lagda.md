@@ -9,8 +9,10 @@ module ring-theory.groups-of-units-rings where
 ```agda
 open import category-theory.functors-large-precategories
 
+open import foundation.dependent-pair-types
 open import foundation.identity-types
 open import foundation.propositions
+open import foundation.subtypes
 open import foundation.universe-levels
 
 open import group-theory.cores-monoids
@@ -32,14 +34,17 @@ open import ring-theory.rings
 
 ## Idea
 
-The **group of units** of a [ring](ring-theory.rings.md) `R` is the
-[group](group-theory.groups.md) consisting of all the
+The {{#concept "group of units" Disambiguation="ring" WD="unit" WDID=Q118084}}
+of a [ring](ring-theory.rings.md) `R` is the [group](group-theory.groups.md)
+consisting of all the
 [invertible elements](ring-theory.invertible-elements-rings.md) in `R`.
 Equivalently, the group of units of `R` is the
 [core](group-theory.cores-monoids.md) of the multiplicative
 [monoid](group-theory.monoids.md) of `R`.
 
 ## Definitions
+
+### The group of units of a ring
 
 ```agda
 module _
@@ -136,6 +141,13 @@ module _
   inclusion-group-of-units-Ring =
     inclusion-core-Monoid (multiplicative-monoid-Ring R)
 
+  is-invertible-element-inclusion-group-of-units-Ring :
+    (x : type-group-of-units-Ring) →
+    is-invertible-element-Ring R
+      ( inclusion-group-of-units-Ring x)
+  is-invertible-element-inclusion-group-of-units-Ring =
+    is-in-subtype-inclusion-subtype subtype-group-of-units-Ring
+
   preserves-mul-inclusion-group-of-units-Ring :
     {x y : type-group-of-units-Ring} →
     inclusion-group-of-units-Ring (mul-group-of-units-Ring x y) ＝
@@ -210,7 +222,7 @@ module _
       ( hom-multiplicative-monoid-hom-Ring R S f)
 ```
 
-#### The functorial laws of `group-of-units-Ring`
+#### The functorial laws of the group-of-units functor
 
 ```agda
 module _
@@ -245,7 +257,7 @@ module _
       ( hom-multiplicative-monoid-hom-Ring R S f)
 ```
 
-#### The functor `group-of-units-Ring`
+#### The group-of-units functor
 
 ```agda
 group-of-units-ring-functor-Large-Precategory :
@@ -265,4 +277,22 @@ preserves-comp-functor-Large-Precategory
 preserves-id-functor-Large-Precategory
   group-of-units-ring-functor-Large-Precategory {X = R} =
   preserves-id-hom-group-of-units-hom-Ring R
+```
+
+### Negatives of units
+
+```agda
+module _
+  {l : Level} (R : Ring l)
+  where
+
+  neg-group-of-units-Ring :
+    type-group-of-units-Ring R → type-group-of-units-Ring R
+  pr1 (neg-group-of-units-Ring (x , H)) = neg-Ring R x
+  pr2 (neg-group-of-units-Ring (x , H)) = is-invertible-element-neg-Ring R x H
+
+  neg-unit-group-of-units-Ring :
+    type-group-of-units-Ring R
+  neg-unit-group-of-units-Ring =
+    neg-group-of-units-Ring (unit-group-of-units-Ring R)
 ```

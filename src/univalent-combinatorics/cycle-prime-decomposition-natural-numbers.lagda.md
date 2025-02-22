@@ -82,7 +82,7 @@ to the cycle prime decomposition of `n *ℕ m`.
 equiv-product-cycle-prime-decomposition-ℕ :
   (n m : ℕ) → (H : leq-ℕ 1 n) → (I : leq-ℕ 1 m) →
   ( cycle-prime-decomposition-ℕ n H × cycle-prime-decomposition-ℕ m I) ≃
-  cycle-prime-decomposition-ℕ (n *ℕ m) (preserves-leq-mul-ℕ 1 n 1 m H I)
+  cycle-prime-decomposition-ℕ (n *ℕ m) (preserves-order-mul-ℕ 1 n 1 m H I)
 equiv-product-cycle-prime-decomposition-ℕ n m H I =
   ( ( equiv-eq
       ( ap
@@ -98,7 +98,7 @@ equiv-product-cycle-prime-decomposition-ℕ n m H I =
             ( eq-is-contr'
               ( fundamental-theorem-arithmetic-list-ℕ
                 ( n *ℕ m)
-                ( preserves-leq-mul-ℕ 1 n 1 m H I))
+                ( preserves-order-mul-ℕ 1 n 1 m H I))
               ( prime-decomposition-list-sort-concatenation-ℕ
                 ( n)
                 ( m)
@@ -114,7 +114,7 @@ equiv-product-cycle-prime-decomposition-ℕ n m H I =
                   I))
               ( prime-decomposition-fundamental-theorem-arithmetic-list-ℕ
                 (n *ℕ m)
-                ( preserves-leq-mul-ℕ 1 n 1 m H I))))))) ∘e
+                ( preserves-order-mul-ℕ 1 n 1 m H I))))))) ∘e
     ( equiv-eq
       ( ap
         ( iterated-product-lists)
@@ -136,7 +136,7 @@ equiv-product-cycle-prime-decomposition-ℕ n m H I =
                 ( list-fundamental-theorem-arithmetic-ℕ n H)
                 ( list-fundamental-theorem-arithmetic-ℕ m I)))
             ( tr
-              ( Permutation)
+              ( permutation)
               ( inv
                 ( length-map-list
                   ( Cyclic-Type lzero)

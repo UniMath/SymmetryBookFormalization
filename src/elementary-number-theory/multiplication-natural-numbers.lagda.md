@@ -68,11 +68,20 @@ triple-ℕ x = 3 *ℕ x
 
 ## Properties
 
+### The zero laws for multiplication
+
+For any natural number `x` we have `0x ＝ x0 ＝ 0`.
+
 ```agda
 abstract
   left-zero-law-mul-ℕ :
     (x : ℕ) → zero-ℕ *ℕ x ＝ zero-ℕ
   left-zero-law-mul-ℕ x = refl
+
+  left-zero-law-mul-is-zero-ℕ :
+    (x y : ℕ) → is-zero-ℕ x → is-zero-ℕ (x *ℕ y)
+  left-zero-law-mul-is-zero-ℕ .zero-ℕ y refl =
+    left-zero-law-mul-ℕ y
 
   right-zero-law-mul-ℕ :
     (x : ℕ) → x *ℕ zero-ℕ ＝ zero-ℕ
@@ -80,6 +89,17 @@ abstract
   right-zero-law-mul-ℕ (succ-ℕ x) =
     ( right-unit-law-add-ℕ (x *ℕ zero-ℕ)) ∙ (right-zero-law-mul-ℕ x)
 
+  right-zero-law-mul-is-zero-ℕ :
+    (x y : ℕ) → is-zero-ℕ y → is-zero-ℕ (x *ℕ y)
+  right-zero-law-mul-is-zero-ℕ x .zero-ℕ refl =
+    right-zero-law-mul-ℕ x
+```
+
+### The unit laws for multiplication
+
+For any natural number `x` we have `1x ＝ x1 ＝ x`.
+
+```agda
 abstract
   right-unit-law-mul-ℕ :
     (x : ℕ) → x *ℕ 1 ＝ x
@@ -90,29 +110,57 @@ abstract
     (x : ℕ) → 1 *ℕ x ＝ x
   left-unit-law-mul-ℕ zero-ℕ = refl
   left-unit-law-mul-ℕ (succ-ℕ x) = ap succ-ℕ (left-unit-law-mul-ℕ x)
+```
 
+### The successor laws for multiplication
+
+For any two natural numbers `x` and `y` we have:
+
+```text
+  (x + 1)y ＝ xy + y                   -- The left successor law
+  x(y + 1) ＝ xy + x                   -- The right successor law
+  (x + 1)(y + 1) ＝ xy + x + y + 1     -- The double successor law
+```
+
+```agda
 abstract
   left-successor-law-mul-ℕ :
-    (x y : ℕ) → (succ-ℕ x) *ℕ y ＝ (x *ℕ y) +ℕ y
+    (x y : ℕ) → succ-ℕ x *ℕ y ＝ x *ℕ y +ℕ y
   left-successor-law-mul-ℕ x y = refl
 
   right-successor-law-mul-ℕ :
-    (x y : ℕ) → x *ℕ (succ-ℕ y) ＝ x +ℕ (x *ℕ y)
+    (x y : ℕ) → x *ℕ succ-ℕ y ＝ x *ℕ y +ℕ x
   right-successor-law-mul-ℕ zero-ℕ y = refl
   right-successor-law-mul-ℕ (succ-ℕ x) y =
-    ( ( ap (λ t → succ-ℕ (t +ℕ y)) (right-successor-law-mul-ℕ x y)) ∙
-      ( ap succ-ℕ (associative-add-ℕ x (x *ℕ y) y))) ∙
-    ( inv (left-successor-law-add-ℕ x ((x *ℕ y) +ℕ y)))
+    ap
+      ( succ-ℕ)
+      ( ap (add-ℕ' y) (right-successor-law-mul-ℕ x y) ∙
+        right-swap-add-ℕ (mul-ℕ x y) x y)
 
+  double-successor-law-mul-ℕ :
+    (x y : ℕ) → succ-ℕ x *ℕ succ-ℕ y ＝ x *ℕ y +ℕ x +ℕ y +ℕ 1
+  double-successor-law-mul-ℕ x y =
+    left-successor-law-mul-ℕ x (succ-ℕ y) ∙
+    ap
+      ( add-ℕ' (succ-ℕ y))
+      ( right-successor-law-mul-ℕ x y)
+```
+
+### Multiplication is commutative
+
+```agda
 abstract
   commutative-mul-ℕ :
     (x y : ℕ) → x *ℕ y ＝ y *ℕ x
   commutative-mul-ℕ zero-ℕ y = inv (right-zero-law-mul-ℕ y)
   commutative-mul-ℕ (succ-ℕ x) y =
-    ( commutative-add-ℕ (x *ℕ y) y) ∙
-    ( ( ap (y +ℕ_) (commutative-mul-ℕ x y)) ∙
-      ( inv (right-successor-law-mul-ℕ y x)))
+    ap (add-ℕ' y) (commutative-mul-ℕ x y) ∙
+    inv (right-successor-law-mul-ℕ y x)
+```
 
+### The distributive laws of multiplication over addition
+
+```agda
 abstract
   left-distributive-mul-add-ℕ :
     (x y z : ℕ) → x *ℕ (y +ℕ z) ＝ (x *ℕ y) +ℕ (x *ℕ z)
@@ -138,13 +186,31 @@ abstract
         ( ap ((x *ℕ z) +ℕ_) (commutative-mul-ℕ z y))))
 
 abstract
+  double-distributive-mul-add-ℕ :
+    (w x y z : ℕ) → (w +ℕ x) *ℕ (y +ℕ z) ＝ w *ℕ y +ℕ w *ℕ z +ℕ x *ℕ y +ℕ x *ℕ z
+  double-distributive-mul-add-ℕ w x y z =
+    ( right-distributive-mul-add-ℕ w x (y +ℕ z)) ∙
+    ( ap-add-ℕ
+      ( left-distributive-mul-add-ℕ w y z)
+      ( left-distributive-mul-add-ℕ x y z)) ∙
+    ( inv (associative-add-ℕ (w *ℕ y +ℕ w *ℕ z) (x *ℕ y) (x *ℕ z)))
+```
+
+### Multiplication is associative
+
+```agda
+abstract
   associative-mul-ℕ :
     (x y z : ℕ) → (x *ℕ y) *ℕ z ＝ x *ℕ (y *ℕ z)
   associative-mul-ℕ zero-ℕ y z = refl
   associative-mul-ℕ (succ-ℕ x) y z =
     ( right-distributive-mul-add-ℕ (x *ℕ y) y z) ∙
-    ( ap (_+ℕ (y *ℕ z)) (associative-mul-ℕ x y z))
+    ( ap (_+ℕ y *ℕ z) (associative-mul-ℕ x y z))
+```
 
+### For any natural number we have `2x ＝ x2 ＝ x + x`
+
+```agda
 left-two-law-mul-ℕ :
   (x : ℕ) → 2 *ℕ x ＝ x +ℕ x
 left-two-law-mul-ℕ x =
@@ -154,16 +220,48 @@ left-two-law-mul-ℕ x =
 right-two-law-mul-ℕ :
   (x : ℕ) → x *ℕ 2 ＝ x +ℕ x
 right-two-law-mul-ℕ x =
-  ( right-successor-law-mul-ℕ x 1) ∙
-  ( ap (x +ℕ_) (right-unit-law-mul-ℕ x))
+  right-successor-law-mul-ℕ x 1 ∙
+  ap (_+ℕ x) (right-unit-law-mul-ℕ x)
+```
 
+### The interchange laws for multipliplication interchanging over itself
+
+For any four natural numbers `x`, `y`, `u`, and `v` we have
+
+```text
+  (xy)(uv) ＝ (xu)(yv)
+```
+
+```agda
 interchange-law-mul-mul-ℕ : interchange-law mul-ℕ mul-ℕ
 interchange-law-mul-mul-ℕ =
   interchange-law-commutative-and-associative
     mul-ℕ
     commutative-mul-ℕ
     associative-mul-ℕ
+```
 
+### Swapping the order of multiplication
+
+```agda
+left-swap-mul-ℕ :
+  (m n x : ℕ) → m *ℕ (n *ℕ x) ＝ n *ℕ (m *ℕ x)
+left-swap-mul-ℕ m n x =
+  ( inv (associative-mul-ℕ m n x)) ∙
+  ( ap (_*ℕ x) (commutative-mul-ℕ m n)) ∙
+  ( associative-mul-ℕ n m x)
+
+right-swap-mul-ℕ :
+  (x m n : ℕ) → (x *ℕ m) *ℕ n ＝ (x *ℕ n) *ℕ m
+right-swap-mul-ℕ x m n =
+  ( associative-mul-ℕ x m n) ∙
+  ( ap (x *ℕ_) (commutative-mul-ℕ m n)) ∙
+  ( inv (associative-mul-ℕ x n m))
+```
+
+### Multiplication by a nonzero natural number is injective
+
+```agda
 is-injective-right-mul-succ-ℕ :
   (k : ℕ) → is-injective (_*ℕ (succ-ℕ k))
 is-injective-right-mul-succ-ℕ k {zero-ℕ} {zero-ℕ} p = refl
@@ -201,7 +299,11 @@ is-emb-left-mul-ℕ x H =
 is-emb-right-mul-ℕ : (x : ℕ) → is-nonzero-ℕ x → is-emb (_*ℕ x)
 is-emb-right-mul-ℕ x H =
   is-emb-is-injective is-set-ℕ (is-injective-right-mul-ℕ x H)
+```
 
+### A product of natural numbers is nonzero if and only if both its factors are nonzero
+
+```agda
 is-nonzero-mul-ℕ :
   (x y : ℕ) → is-nonzero-ℕ x → is-nonzero-ℕ y → is-nonzero-ℕ (x *ℕ y)
 is-nonzero-mul-ℕ x y H K p =
@@ -216,7 +318,7 @@ is-nonzero-right-factor-mul-ℕ :
 is-nonzero-right-factor-mul-ℕ x .zero-ℕ H refl = H (right-zero-law-mul-ℕ x)
 ```
 
-We conclude that $y = 1$ if $(x+1)y = x+1$.
+### If $(x+1)y = x+1$ then it follows that $y = 1$
 
 ```agda
 is-one-is-right-unit-mul-ℕ :
@@ -258,6 +360,7 @@ neq-mul-ℕ m n p =
     ( ( m *ℕ (succ-ℕ n)) +ℕ n)
     ( ( p) ∙
       ( ( right-successor-law-mul-ℕ (succ-ℕ m) (succ-ℕ n)) ∙
+        ( commutative-add-ℕ _ (succ-ℕ m)) ∙
         ( ap ((succ-ℕ m) +ℕ_) (left-successor-law-mul-ℕ m (succ-ℕ n)))))
 ```
 
@@ -289,3 +392,5 @@ is-zero-mul-ℕ-is-zero-summand x y (inr H) =
 
 - [Squares of natural numbers](elementary-number-theory.squares-natural-numbers.md)
 - [Cubes of natural numbers](elementary-number-theory.cubes-natural-numbers.md)
+- [Pronic numbers](elementary-number-theory.pronic-numbers.md), i.e., numbers of
+  the form $n(n+1)$.

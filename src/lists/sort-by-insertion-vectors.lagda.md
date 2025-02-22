@@ -89,7 +89,7 @@ module _
     (x y : type-Decidable-Total-Order X)
     (l : vec (type-Decidable-Total-Order X) n) →
     leq-or-strict-greater-Decidable-Poset X x y →
-    Permutation (succ-ℕ (succ-ℕ (n)))
+    permutation (succ-ℕ (succ-ℕ (n)))
   helper-permutation-insertion-sort-vec x y l (inl _) = id-equiv
   helper-permutation-insertion-sort-vec {0} x y empty-vec (inr _) =
     swap-two-last-elements-transposition-Fin 0
@@ -106,7 +106,7 @@ module _
   permutation-insertion-sort-vec :
     {n : ℕ}
     (v : vec (type-Decidable-Total-Order X) n) →
-    Permutation n
+    permutation n
   permutation-insertion-sort-vec {zero-ℕ} empty-vec = id-equiv
   permutation-insertion-sort-vec {1} l = id-equiv
   permutation-insertion-sort-vec {succ-ℕ (succ-ℕ n)} (x ∷ y ∷ l) =

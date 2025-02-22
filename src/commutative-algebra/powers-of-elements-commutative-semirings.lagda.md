@@ -8,8 +8,10 @@ module commutative-algebra.powers-of-elements-commutative-semirings where
 
 ```agda
 open import commutative-algebra.commutative-semirings
+open import commutative-algebra.homomorphisms-commutative-semirings
 
 open import elementary-number-theory.addition-natural-numbers
+open import elementary-number-theory.multiplication-natural-numbers
 open import elementary-number-theory.natural-numbers
 
 open import foundation.identity-types
@@ -36,6 +38,21 @@ power-Commutative-Semiring A = power-Semiring (semiring-Commutative-Semiring A)
 
 ## Properties
 
+### `1ⁿ ＝ 1`
+
+```agda
+module _
+  {l : Level} (A : Commutative-Semiring l)
+  where
+
+  power-one-Commutative-Semiring :
+    (n : ℕ) →
+    power-Commutative-Semiring A n (one-Commutative-Semiring A) ＝
+    one-Commutative-Semiring A
+  power-one-Commutative-Semiring =
+    power-one-Semiring (semiring-Commutative-Semiring A)
+```
+
 ### `xⁿ⁺¹ = xⁿx`
 
 ```agda
@@ -49,6 +66,21 @@ module _
     mul-Commutative-Semiring A (power-Commutative-Semiring A n x) x
   power-succ-Commutative-Semiring =
     power-succ-Semiring (semiring-Commutative-Semiring A)
+```
+
+### `xⁿ⁺¹ ＝ xxⁿ`
+
+```agda
+module _
+  {l : Level} (A : Commutative-Semiring l)
+  where
+
+  power-succ-Commutative-Semiring' :
+    (n : ℕ) (x : type-Commutative-Semiring A) →
+    power-Commutative-Semiring A (succ-ℕ n) x ＝
+    mul-Commutative-Semiring A x (power-Commutative-Semiring A n x)
+  power-succ-Commutative-Semiring' =
+    power-succ-Semiring' (semiring-Commutative-Semiring A)
 ```
 
 ### Powers by sums of natural numbers are products of powers
@@ -68,7 +100,7 @@ module _
     distributive-power-add-Semiring (semiring-Commutative-Semiring A)
 ```
 
-### If `x` commutes with `y`, then powers distribute over the product of `x` and `y`
+### Powers distribute over products
 
 ```agda
 module _
@@ -86,4 +118,39 @@ module _
       ( semiring-Commutative-Semiring A)
       ( n)
       ( commutative-mul-Commutative-Semiring A x y)
+```
+
+### Powers by products of natural numbers are iterated powers
+
+```agda
+module _
+  {l : Level} (A : Commutative-Semiring l)
+  where
+
+  power-mul-Commutative-Semiring :
+    (m n : ℕ) {x : type-Commutative-Semiring A} →
+    power-Commutative-Semiring A (m *ℕ n) x ＝
+    power-Commutative-Semiring A n (power-Commutative-Semiring A m x)
+  power-mul-Commutative-Semiring =
+    power-mul-Semiring (semiring-Commutative-Semiring A)
+```
+
+### Homomorphisms of semirings preserve powers
+
+```agda
+module _
+  {l1 l2 : Level}
+  (A : Commutative-Semiring l1) (B : Commutative-Semiring l2)
+  (f : hom-Commutative-Semiring A B)
+  where
+
+  preserves-powers-hom-Commutative-Semiring :
+    (n : ℕ) (x : type-Commutative-Semiring A) →
+    map-hom-Commutative-Semiring A B f (power-Commutative-Semiring A n x) ＝
+    power-Commutative-Semiring B n (map-hom-Commutative-Semiring A B f x)
+  preserves-powers-hom-Commutative-Semiring =
+    preserves-powers-hom-Semiring
+      ( semiring-Commutative-Semiring A)
+      ( semiring-Commutative-Semiring B)
+      ( f)
 ```

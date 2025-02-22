@@ -24,6 +24,7 @@ open import foundation.universe-levels
 
 open import linear-algebra.vectors
 
+open import lists.elementhood-relation-lists
 open import lists.lists
 
 open import univalent-combinatorics.involution-standard-finite-types
@@ -34,8 +35,11 @@ open import univalent-combinatorics.standard-finite-types
 
 ## Idea
 
-An array is a pair of a natural number `n`, and a function from `Fin n` to `A`.
-We show that arrays and lists are equivalent.
+An {{#concept "array" Agda=array}} is a pair consisting of a [natural number](elementary-number-theory.natural-numbers.md) `n`, and a [functional vector](linear-algebra.vectors.md) of `n` elements of `A`. The concept of array is [equivalent](foundation-core.equivalences.md) to the concept of [list](lists.lists.md).
+
+## Definitions
+
+### Arrays
 
 ```agda
 array : {l : Level} → UU l → UU l
@@ -84,47 +88,12 @@ module _
   revert-array (n , t) = (n , λ k → t (opposite-Fin n k))
 ```
 
-### The definition of `fold-vec`
-
-```agda
-fold-vec :
-  {l1 l2 : Level} {A : UU l1} {B : UU l2} (b : B) (μ : A → (B → B)) →
-  {n : ℕ} → vec A n → B
-fold-vec b μ {0} _ = b
-fold-vec b μ (a ∷ l) = μ a (fold-vec b μ l)
-```
-
 ## Properties
-
-### The types of lists and arrays are equivalent
 
 ```agda
 module _
   {l : Level} {A : UU l}
   where
-
-  list-vec : (n : ℕ) → (vec A n) → list A
-  list-vec zero-ℕ _ = nil
-  list-vec (succ-ℕ n) (x ∷ l) = cons x (list-vec n l)
-
-  vec-list : (l : list A) → vec A (length-list l)
-  vec-list nil = empty-vec
-  vec-list (cons x l) = x ∷ vec-list l
-
-  is-section-vec-list : (λ l → list-vec (length-list l) (vec-list l)) ~ id
-  is-section-vec-list nil = refl
-  is-section-vec-list (cons x l) = ap (cons x) (is-section-vec-list l)
-
-  is-retraction-vec-list :
-    ( λ (x : Σ ℕ (λ n → vec A n)) →
-      ( length-list (list-vec (pr1 x) (pr2 x)) ,
-        vec-list (list-vec (pr1 x) (pr2 x)))) ~
-    id
-  is-retraction-vec-list (zero-ℕ , empty-vec) = refl
-  is-retraction-vec-list (succ-ℕ n , (x ∷ v)) =
-    ap
-      ( λ v → succ-ℕ (pr1 v) , (x ∷ (pr2 v)))
-      ( is-retraction-vec-list (n , v))
 
   list-array : array A → list A
   list-array (n , t) = list-vec n (listed-vec-functional-vec n t)

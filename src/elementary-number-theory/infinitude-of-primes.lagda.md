@@ -104,7 +104,10 @@ is-not-one-larger-prime-ℕ :
 is-not-one-larger-prime-ℕ n H p with is-successor-is-nonzero-ℕ H
 ... | pair k refl =
   neq-le-ℕ {1} {larger-prime-ℕ n}
-    ( concatenate-leq-le-ℕ {1} {succ-ℕ k} {larger-prime-ℕ n} star
+    ( concatenate-leq-le-ℕ 1
+      ( succ-ℕ k)
+      ( larger-prime-ℕ n)
+      ( star)
       ( le-larger-prime-ℕ (succ-ℕ k)))
     ( inv p)
 
@@ -185,6 +188,13 @@ prime-counting-ℕ (succ-ℕ n) =
     ( is-decidable-is-prime-ℕ (succ-ℕ n))
     ( prime-counting-ℕ n)
 ```
+
+### A very weak lower bound on the prime counting function
+
+In section 2.2 of {{#cite HW08}}, Hardy and Wright illustrate how Euclid's proof
+of the infinitued of primes can be used to derive a lower bound on the prime
+counting function. This lower bound is extremely weak, but could nevertheless be
+found illustrative.
 
 ## References
 

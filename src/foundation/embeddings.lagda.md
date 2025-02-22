@@ -17,6 +17,7 @@ open import foundation.functoriality-cartesian-product-types
 open import foundation.functoriality-dependent-pair-types
 open import foundation.fundamental-theorem-of-identity-types
 open import foundation.identity-types
+open import foundation.logical-equivalences
 open import foundation.transport-along-identifications
 open import foundation.truncated-maps
 open import foundation.universe-levels
@@ -454,3 +455,48 @@ module _
       ( equiv-fiber f (f a))
       ( is-contr-fibers-values-is-emb' e a)
 ```
+
+### A family of logical equivalences between the fibers of two embeddings into a type induces an equivalence between their domain types
+
+```agda
+module _
+  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
+  (f : A ↪ X) (g : B ↪ X)
+  (H : (x : X) → fiber (map-emb f) x ↔ fiber (map-emb g) x)
+  where
+
+  fam-equiv-logical-equiv-fiber-emb :
+    (x : X) → fiber (map-emb f) x ≃ fiber (map-emb g) x
+  fam-equiv-logical-equiv-fiber-emb x =
+    equiv-iff
+      ( fiber-emb-Prop f x)
+      ( fiber-emb-Prop g x)
+      ( forward-implication (H x))
+      ( backward-implication (H x))
+
+  equiv-domain-logical-equiv-fiber-emb :
+    A ≃ B
+  equiv-domain-logical-equiv-fiber-emb =
+    equiv-total-fiber (map-emb g) ∘e
+    equiv-tot fam-equiv-logical-equiv-fiber-emb ∘e
+    inv-equiv-total-fiber (map-emb f)
+
+  map-equiv-domain-logical-equiv-fiber-emb :
+    A → B
+  map-equiv-domain-logical-equiv-fiber-emb =
+    map-equiv equiv-domain-logical-equiv-fiber-emb
+
+  coherence-triangle-equiv-domain-logical-equiv-fiber-emb :
+    coherence-triangle-maps
+      ( map-emb f)
+      ( map-emb g)
+      ( map-equiv-domain-logical-equiv-fiber-emb)
+  coherence-triangle-equiv-domain-logical-equiv-fiber-emb a =
+    inv (pr2 (forward-implication (H (map-emb f a)) (a , refl)))
+```
+
+## See also
+
+- [Propositional maps (core)](foundation-core.propositional-maps.md)
+- [Propositional-maps](foundation.propositional-maps.md)
+- [Subtype duality](foundation.subtype-duality.md)

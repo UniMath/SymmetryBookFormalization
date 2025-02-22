@@ -347,6 +347,10 @@ module _
         apply-universal-property-trunc-Prop K empty-Prop
           ( λ d → is-not-emb-le-count e d f
             ( concatenate-eq-le-eq-ℕ
+              ( number-of-elements-count d)
+              ( number-of-elements-is-finite K)
+              ( number-of-elements-is-finite H)
+              ( number-of-elements-count e)
               ( compute-number-of-elements-is-finite d K)
               ( p)
               ( inv (compute-number-of-elements-is-finite e H)))

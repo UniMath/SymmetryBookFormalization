@@ -11,6 +11,7 @@ open import category-theory.functors-large-precategories
 
 open import commutative-algebra.commutative-rings
 open import commutative-algebra.homomorphisms-commutative-rings
+open import commutative-algebra.invertible-elements-commutative-rings
 open import commutative-algebra.precategory-of-commutative-rings
 
 open import foundation.dependent-pair-types
@@ -35,8 +36,9 @@ open import ring-theory.groups-of-units-rings
 
 ## Idea
 
-The **group of units** of a
-[commutative ring](commutative-algebra.commutative-rings.md) `A` is the
+The
+{{#concept "group of units" Disambiguation="commutative ring" WD="unit" WDID=Q118084}}
+of a [commutative ring](commutative-algebra.commutative-rings.md) `A` is the
 [abelian group](group-theory.abelian-groups.md) consisting of all the
 [invertible elements](commutative-algebra.invertible-elements-commutative-rings.md)
 in `A`. Equivalently, the group of units of `A` is the
@@ -176,6 +178,14 @@ module _
     type-group-of-units-Commutative-Ring → type-Commutative-Ring A
   inclusion-group-of-units-Commutative-Ring =
     inclusion-group-of-units-Ring (ring-Commutative-Ring A)
+
+  is-invertible-element-inclusion-group-of-units-Commutative-Ring :
+    (x : type-group-of-units-Commutative-Ring) →
+    is-invertible-element-Commutative-Ring A
+      ( inclusion-group-of-units-Commutative-Ring x)
+  is-invertible-element-inclusion-group-of-units-Commutative-Ring =
+    is-invertible-element-inclusion-group-of-units-Ring
+      ( ring-Commutative-Ring A)
 
   preserves-mul-inclusion-group-of-units-Commutative-Ring :
     {x y : type-group-of-units-Commutative-Ring} →
@@ -323,4 +333,23 @@ preserves-comp-functor-Large-Precategory
 preserves-id-functor-Large-Precategory
   group-of-units-commutative-ring-functor-Large-Precategory {X = A} =
   preserves-id-hom-group-of-units-hom-Commutative-Ring A
+```
+
+### Negatives of units
+
+```agda
+module _
+  {l : Level} (A : Commutative-Ring l)
+  where
+
+  neg-group-of-units-Commutative-Ring :
+    type-group-of-units-Commutative-Ring A →
+    type-group-of-units-Commutative-Ring A
+  neg-group-of-units-Commutative-Ring =
+    neg-group-of-units-Ring (ring-Commutative-Ring A)
+
+  neg-unit-group-of-units-Commutative-Ring :
+    type-group-of-units-Commutative-Ring A
+  neg-unit-group-of-units-Commutative-Ring =
+    neg-unit-group-of-units-Ring (ring-Commutative-Ring A)
 ```

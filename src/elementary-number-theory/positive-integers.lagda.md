@@ -131,6 +131,14 @@ positive-ℤ-Set : Set lzero
 positive-ℤ-Set = positive-ℤ , is-set-positive-ℤ
 ```
 
+### Integers of the form `in-pos-ℤ n` are positive
+
+```agda
+is-positive-in-pos-ℤ :
+  (n : ℕ) → is-positive-ℤ (in-pos-ℤ n)
+is-positive-in-pos-ℤ n = star
+```
+
 ### The successor of a positive integer is positive
 
 ```agda

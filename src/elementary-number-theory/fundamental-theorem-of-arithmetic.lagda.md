@@ -13,11 +13,15 @@ open import elementary-number-theory.decidable-total-order-natural-numbers
 open import elementary-number-theory.divisibility-natural-numbers
 open import elementary-number-theory.equality-natural-numbers
 open import elementary-number-theory.inequality-natural-numbers
+open import elementary-number-theory.lists-of-prime-numbers
 open import elementary-number-theory.lower-bounds-natural-numbers
+open import elementary-number-theory.minimal-structured-natural-numbers
 open import elementary-number-theory.modular-arithmetic-standard-finite-types
-open import elementary-number-theory.multiplication-lists-of-natural-numbers
+open import elementary-number-theory.products-lists-of-natural-numbers
 open import elementary-number-theory.multiplication-natural-numbers
+open import elementary-number-theory.multiplicative-decompositions-natural-numbers
 open import elementary-number-theory.natural-numbers
+open import elementary-number-theory.nontrivial-divisors-natural-numbers
 open import elementary-number-theory.prime-numbers
 open import elementary-number-theory.relatively-prime-natural-numbers
 open import elementary-number-theory.strict-inequality-natural-numbers
@@ -41,10 +45,11 @@ open import foundation.unit-type
 open import foundation.universe-levels
 
 open import lists.concatenation-lists
+open import lists.elementhood-relation-lists
 open import lists.functoriality-lists
 open import lists.lists
 open import lists.permutation-lists
-open import lists.predicates-on-lists
+open import lists.universal-quantification-lists
 open import lists.sort-by-insertion-lists
 open import lists.sorted-lists
 ```
@@ -73,7 +78,8 @@ in several ways:
   [equal](foundation-core.identity-types.md) to `n` is contractible.
 
 Note that the [univalence axiom](foundation-core.univalence.md) is neccessary to
-prove the second uniqueness property of prime factorizations.
+prove the second uniqueness property of prime factorizations. On this page we
+will prove the fundamental theorem using the first approach.
 
 The fundamental theorem of arithmetic is the
 [80th](literature.100-theorems.md#80) theorem on
@@ -88,60 +94,83 @@ A list of natural numbers is a prime decomposition of a natural number `n` if:
 
 - The list is sorted.
 - Every element of the list is prime.
-- The product of the element of the list is equal to `n`.
+- The list is a
+  [multiplicative decomposition](elementary-number-theory.multiplicative-decompositions-natural-numbers.md)
+  of `n`.
 
 ```agda
-is-prime-list-ℕ :
-  list ℕ → UU lzero
-is-prime-list-ℕ = for-all-list ℕ is-prime-ℕ-Prop
-
-is-prop-is-prime-list-ℕ :
-  (l : list ℕ) → is-prop (is-prime-list-ℕ l)
-is-prop-is-prime-list-ℕ = is-prop-for-all-list ℕ is-prime-ℕ-Prop
-
-is-prime-list-primes-ℕ :
-  (l : list Prime-ℕ) → is-prime-list-ℕ (map-list nat-Prime-ℕ l)
-is-prime-list-primes-ℕ nil = raise-star
-is-prime-list-primes-ℕ (cons x l) =
-  (is-prime-Prime-ℕ x) , (is-prime-list-primes-ℕ l)
-
 module _
   (x : ℕ)
   (l : list ℕ)
   where
-
-  is-decomposition-list-ℕ :
-    UU lzero
-  is-decomposition-list-ℕ =
-    mul-list-ℕ l ＝ x
-
-  is-prop-is-decomposition-list-ℕ :
-    is-prop (is-decomposition-list-ℕ)
-  is-prop-is-decomposition-list-ℕ = is-set-ℕ (mul-list-ℕ l) x
 
   is-prime-decomposition-list-ℕ :
     UU lzero
   is-prime-decomposition-list-ℕ =
     is-sorted-list ℕ-Decidable-Total-Order l ×
     ( is-prime-list-ℕ l ×
-      is-decomposition-list-ℕ)
+      is-multiplicative-decomposition-list-ℕ x l)
 
-  is-sorted-list-is-prime-decomposition-list-ℕ :
+  is-sorted-is-prime-decomposition-list-ℕ :
     is-prime-decomposition-list-ℕ →
     is-sorted-list ℕ-Decidable-Total-Order l
-  is-sorted-list-is-prime-decomposition-list-ℕ D = pr1 D
+  is-sorted-is-prime-decomposition-list-ℕ D =
+    pr1 D
 
   is-prime-list-is-prime-decomposition-list-ℕ :
-    is-prime-decomposition-list-ℕ →
-    is-prime-list-ℕ l
+    is-prime-decomposition-list-ℕ → is-prime-list-ℕ l
   is-prime-list-is-prime-decomposition-list-ℕ D =
     pr1 (pr2 D)
 
-  is-decomposition-list-is-prime-decomposition-list-ℕ :
+  is-multiplicative-decomposition-is-prime-decomposition-list-ℕ :
     is-prime-decomposition-list-ℕ →
-    is-decomposition-list-ℕ
-  is-decomposition-list-is-prime-decomposition-list-ℕ D =
+    is-multiplicative-decomposition-list-ℕ x l
+  is-multiplicative-decomposition-is-prime-decomposition-list-ℕ D =
     pr2 (pr2 D)
+
+  le-one-list-is-prime-decomposition-list-ℕ :
+    is-prime-decomposition-list-ℕ →
+    for-all-list l (le-ℕ 1)
+  le-one-list-is-prime-decomposition-list-ℕ H =
+    map-for-all-list l
+      ( le-one-is-prime-ℕ)
+      ( is-prime-list-is-prime-decomposition-list-ℕ H)
+
+  leq-one-list-is-prime-decomposition-list-ℕ :
+    is-prime-decomposition-list-ℕ →
+    for-all-list l (leq-ℕ 1)
+  leq-one-list-is-prime-decomposition-list-ℕ H =
+    map-for-all-list l
+      ( leq-le-ℕ 1)
+      ( le-one-list-is-prime-decomposition-list-ℕ H)
+
+  eq-is-prime-decomposition-list-ℕ :
+    is-prime-decomposition-list-ℕ →
+    mul-list-ℕ l ＝ x
+  eq-is-prime-decomposition-list-ℕ H =
+    pr2 (is-multiplicative-decomposition-is-prime-decomposition-list-ℕ H)
+
+  leq-one-is-prime-decomposition-list-ℕ :
+    is-prime-decomposition-list-ℕ → 1 ≤-ℕ x
+  leq-one-is-prime-decomposition-list-ℕ H =
+    tr
+      ( leq-ℕ 1)
+      ( eq-is-prime-decomposition-list-ℕ H)
+      ( leq-one-mul-list-ℕ l (leq-one-list-is-prime-decomposition-list-ℕ H))
+
+  is-list-of-nontrivial-divisors-is-prime-dicomposition-list-ℕ :
+    is-prime-decomposition-list-ℕ →
+    is-list-of-nontrivial-divisors-ℕ x l
+  is-list-of-nontrivial-divisors-is-prime-dicomposition-list-ℕ H =
+    is-list-of-nontrivial-divisors-is-multiplicative-decomposition-list-ℕ x l
+      ( is-multiplicative-decomposition-is-prime-decomposition-list-ℕ H)
+
+  is-list-of-nontrivial-divisors-is-prime-decomposition-list-ℕ :
+    is-prime-decomposition-list-ℕ →
+    is-list-of-nontrivial-divisors-ℕ x l
+  is-list-of-nontrivial-divisors-is-prime-decomposition-list-ℕ D =
+    is-list-of-nontrivial-divisors-is-multiplicative-decomposition-list-ℕ x l
+      ( is-multiplicative-decomposition-is-prime-decomposition-list-ℕ D)
 
   is-prop-is-prime-decomposition-list-ℕ :
     is-prop (is-prime-decomposition-list-ℕ)
@@ -150,323 +179,181 @@ module _
       ( is-prop-is-sorted-list ℕ-Decidable-Total-Order l)
       ( is-prop-product
         ( is-prop-is-prime-list-ℕ l)
-        ( is-prop-is-decomposition-list-ℕ))
+        ( is-prop-is-multiplicative-decomposition-list-ℕ x l))
 
   is-prime-decomposition-list-ℕ-Prop : Prop lzero
   pr1 is-prime-decomposition-list-ℕ-Prop = is-prime-decomposition-list-ℕ
   pr2 is-prime-decomposition-list-ℕ-Prop = is-prop-is-prime-decomposition-list-ℕ
-```
 
-### Nontrivial divisors
-
-Nontrivial divisors of a natural number are divisors strictly greater than `1`.
-
-```agda
-is-nontrivial-divisor-ℕ : (n x : ℕ) → UU lzero
-is-nontrivial-divisor-ℕ n x = (le-ℕ 1 x) × (div-ℕ x n)
-
-is-prop-is-nontrivial-divisor-ℕ :
-  (n x : ℕ) → is-prop (is-nontrivial-divisor-ℕ n x)
-is-prop-is-nontrivial-divisor-ℕ n x =
-  is-prop-Σ
-    ( is-prop-le-ℕ 1 x)
-    ( λ p → is-prop-div-ℕ x n (is-nonzero-le-ℕ 1 x p))
-
-is-nontrivial-divisor-ℕ-Prop : (n x : ℕ) → Prop lzero
-pr1 (is-nontrivial-divisor-ℕ-Prop n x) = is-nontrivial-divisor-ℕ n x
-pr2 (is-nontrivial-divisor-ℕ-Prop n x) = is-prop-is-nontrivial-divisor-ℕ n x
-
-is-decidable-is-nontrivial-divisor-ℕ :
-  (n x : ℕ) → is-decidable (is-nontrivial-divisor-ℕ n x)
-is-decidable-is-nontrivial-divisor-ℕ n x =
-  is-decidable-product (is-decidable-le-ℕ 1 x) (is-decidable-div-ℕ x n)
-
-is-nontrivial-divisor-diagonal-ℕ :
-  (n : ℕ) → le-ℕ 1 n → is-nontrivial-divisor-ℕ n n
-pr1 (is-nontrivial-divisor-diagonal-ℕ n H) = H
-pr2 (is-nontrivial-divisor-diagonal-ℕ n H) = refl-div-ℕ n
-```
-
-If `l` is a prime decomposition of `n`, then `l` is a list of nontrivial
-divisors of `n`.
-
-```agda
-is-list-of-nontrivial-divisors-ℕ :
-  ℕ → list ℕ → UU lzero
-is-list-of-nontrivial-divisors-ℕ x nil = unit
-is-list-of-nontrivial-divisors-ℕ x (cons y l) =
-  (is-nontrivial-divisor-ℕ x y) × (is-list-of-nontrivial-divisors-ℕ x l)
-
-is-nontrivial-divisors-div-list-ℕ :
-  (x y : ℕ) → div-ℕ x y → (l : list ℕ) →
-  is-list-of-nontrivial-divisors-ℕ x l → is-list-of-nontrivial-divisors-ℕ y l
-is-nontrivial-divisors-div-list-ℕ x y d nil H = star
-is-nontrivial-divisors-div-list-ℕ x y d (cons z l) H =
-  ( pr1 (pr1 H) , transitive-div-ℕ z x y d (pr2 (pr1 H))) ,
-  is-nontrivial-divisors-div-list-ℕ x y d l (pr2 H)
-
-is-divisor-head-is-decomposition-list-ℕ :
-  (x : ℕ) (y : ℕ) (l : list ℕ) →
-  is-decomposition-list-ℕ x (cons y l) →
-  div-ℕ y x
-pr1 (is-divisor-head-is-decomposition-list-ℕ x y l D) =
-  mul-list-ℕ l
-pr2 (is-divisor-head-is-decomposition-list-ℕ x y l D) =
-  commutative-mul-ℕ (mul-list-ℕ l) y ∙ D
-
-is-nontrivial-divisor-head-is-decomposition-is-prime-list-ℕ :
-  (x : ℕ) (y : ℕ) (l : list ℕ) →
-  is-decomposition-list-ℕ x (cons y l) →
-  is-prime-list-ℕ (cons y l) →
-  is-nontrivial-divisor-ℕ x y
-pr1 (is-nontrivial-divisor-head-is-decomposition-is-prime-list-ℕ x y l D P) =
-  le-one-is-prime-ℕ y (pr1 P)
-pr2 (is-nontrivial-divisor-head-is-decomposition-is-prime-list-ℕ x y l D P) =
-  is-divisor-head-is-decomposition-list-ℕ x y l D
-
-is-list-of-nontrivial-divisors-is-decomposition-is-prime-list-ℕ :
-  (x : ℕ) → (l : list ℕ) →
-  is-decomposition-list-ℕ x l →
-  is-prime-list-ℕ l →
-  is-list-of-nontrivial-divisors-ℕ x l
-is-list-of-nontrivial-divisors-is-decomposition-is-prime-list-ℕ x nil _ _ = star
-is-list-of-nontrivial-divisors-is-decomposition-is-prime-list-ℕ
-  ( x)
-  ( cons y l)
-  ( D)
-  ( P) =
-  ( is-nontrivial-divisor-head-is-decomposition-is-prime-list-ℕ x y l D P ,
-    is-nontrivial-divisors-div-list-ℕ
-      ( mul-list-ℕ l)
-      ( x)
-      ( y , D)
-      ( l)
-      ( is-list-of-nontrivial-divisors-is-decomposition-is-prime-list-ℕ
-        ( mul-list-ℕ l)
-        ( l)
-        ( refl)
-        ( pr2 P)))
-
-is-divisor-head-prime-decomposition-list-ℕ :
-  (x : ℕ) (y : ℕ) (l : list ℕ) →
-  is-prime-decomposition-list-ℕ x (cons y l) →
-  div-ℕ y x
-is-divisor-head-prime-decomposition-list-ℕ x y l D =
-  is-divisor-head-is-decomposition-list-ℕ
-    ( x)
-    ( y)
-    ( l)
-    ( is-decomposition-list-is-prime-decomposition-list-ℕ x (cons y l) D)
-
-is-nontrivial-divisor-head-prime-decomposition-list-ℕ :
-  (x : ℕ) (y : ℕ) (l : list ℕ) →
-  is-prime-decomposition-list-ℕ x (cons y l) →
-  is-nontrivial-divisor-ℕ x y
-is-nontrivial-divisor-head-prime-decomposition-list-ℕ x y l D =
-  is-nontrivial-divisor-head-is-decomposition-is-prime-list-ℕ
-    ( x)
-    ( y)
-    ( l)
-    ( is-decomposition-list-is-prime-decomposition-list-ℕ x (cons y l) D)
-    ( is-prime-list-is-prime-decomposition-list-ℕ x (cons y l) D)
-
-is-list-of-nontrivial-divisors-is-prime-decomposition-list-ℕ :
-  (x : ℕ) → (l : list ℕ) →
-  is-prime-decomposition-list-ℕ x l →
-  is-list-of-nontrivial-divisors-ℕ x l
-is-list-of-nontrivial-divisors-is-prime-decomposition-list-ℕ x l D =
-  is-list-of-nontrivial-divisors-is-decomposition-is-prime-list-ℕ
-    ( x)
-    ( l)
-    ( is-decomposition-list-is-prime-decomposition-list-ℕ x l D)
-    ( is-prime-list-is-prime-decomposition-list-ℕ x l D)
-```
-
-## Lemmas
-
-### Every natural number strictly greater than `1` has a least nontrivial divisor
-
-```agda
-least-nontrivial-divisor-ℕ :
-  (n : ℕ) → le-ℕ 1 n → minimal-element-ℕ (is-nontrivial-divisor-ℕ n)
-least-nontrivial-divisor-ℕ n H =
-  well-ordering-principle-ℕ
-    ( is-nontrivial-divisor-ℕ n)
-    ( is-decidable-is-nontrivial-divisor-ℕ n)
-    ( n , is-nontrivial-divisor-diagonal-ℕ n H)
-
-nat-least-nontrivial-divisor-ℕ : (n : ℕ) → le-ℕ 1 n → ℕ
-nat-least-nontrivial-divisor-ℕ n H = pr1 (least-nontrivial-divisor-ℕ n H)
-
-nat-least-nontrivial-divisor-ℕ' : ℕ → ℕ
-nat-least-nontrivial-divisor-ℕ' zero-ℕ = 0
-nat-least-nontrivial-divisor-ℕ' (succ-ℕ zero-ℕ) = 1
-nat-least-nontrivial-divisor-ℕ' (succ-ℕ (succ-ℕ n)) =
-  nat-least-nontrivial-divisor-ℕ (succ-ℕ (succ-ℕ n)) star
-
-le-one-least-nontrivial-divisor-ℕ :
-  (n : ℕ) (H : le-ℕ 1 n) → le-ℕ 1 (nat-least-nontrivial-divisor-ℕ n H)
-le-one-least-nontrivial-divisor-ℕ n H =
-  pr1 (pr1 (pr2 (least-nontrivial-divisor-ℕ n H)))
-
-div-least-nontrivial-divisor-ℕ :
-  (n : ℕ) (H : le-ℕ 1 n) → div-ℕ (nat-least-nontrivial-divisor-ℕ n H) n
-div-least-nontrivial-divisor-ℕ n H =
-  pr2 (pr1 (pr2 (least-nontrivial-divisor-ℕ n H)))
-
-is-minimal-least-nontrivial-divisor-ℕ :
-  (n : ℕ) (H : le-ℕ 1 n) (x : ℕ) (K : le-ℕ 1 x) (d : div-ℕ x n) →
-  leq-ℕ (nat-least-nontrivial-divisor-ℕ n H) x
-is-minimal-least-nontrivial-divisor-ℕ n H x K d =
-  pr2 (pr2 (least-nontrivial-divisor-ℕ n H)) x (K , d)
-```
-
-### The least nontrivial divisor of a number `> 1` is nonzero
-
-```agda
-abstract
-  is-nonzero-least-nontrivial-divisor-ℕ :
-    (n : ℕ) (H : le-ℕ 1 n) → is-nonzero-ℕ (nat-least-nontrivial-divisor-ℕ n H)
-  is-nonzero-least-nontrivial-divisor-ℕ n H =
-    is-nonzero-div-ℕ
-      ( nat-least-nontrivial-divisor-ℕ n H)
-      ( n)
-      ( div-least-nontrivial-divisor-ℕ n H)
-      ( λ where refl → H)
-```
-
-### The least nontrivial divisor of a number `> 1` is prime
-
-```agda
-is-prime-least-nontrivial-divisor-ℕ :
-  (n : ℕ) (H : le-ℕ 1 n) → is-prime-ℕ (nat-least-nontrivial-divisor-ℕ n H)
-pr1 (is-prime-least-nontrivial-divisor-ℕ n H x) (K , L) =
-  map-right-unit-law-coproduct-is-empty
-    ( is-one-ℕ x)
-    ( le-ℕ 1 x)
-    ( λ p →
-      contradiction-le-ℕ x l
-        ( le-div-ℕ x l
-          ( is-nonzero-least-nontrivial-divisor-ℕ n H)
-          ( L)
-          ( K))
-        ( is-minimal-least-nontrivial-divisor-ℕ n H x p
-          ( transitive-div-ℕ x l n (div-least-nontrivial-divisor-ℕ n H) L)))
-    ( eq-or-le-leq-ℕ' 1 x
-      ( leq-one-div-ℕ x n
-        ( transitive-div-ℕ x l n
-          ( div-least-nontrivial-divisor-ℕ n H) L)
-        ( leq-le-ℕ 1 n H)))
+module _
+  (x y : ℕ) (l : list ℕ) (H : is-prime-decomposition-list-ℕ x (cons y l))
   where
-  l = nat-least-nontrivial-divisor-ℕ n H
-pr1 (pr2 (is-prime-least-nontrivial-divisor-ℕ n H .1) refl) =
-  neq-le-ℕ (le-one-least-nontrivial-divisor-ℕ n H)
-pr2 (pr2 (is-prime-least-nontrivial-divisor-ℕ n H .1) refl) =
-  div-one-ℕ _
+
+  is-prime-head-is-prime-decomposition-cons-list-ℕ :
+    is-prime-ℕ y
+  is-prime-head-is-prime-decomposition-cons-list-ℕ =
+    pr1 (is-prime-list-is-prime-decomposition-list-ℕ x (cons y l) H)
+
+  is-prime-tail-is-prime-decomposition-cons-list-ℕ :
+    is-prime-list-ℕ l
+  is-prime-tail-is-prime-decomposition-cons-list-ℕ =
+    pr2 (is-prime-list-is-prime-decomposition-list-ℕ x (cons y l) H)
+
+  le-one-head-is-prime-decomposition-cons-list-ℕ :
+    1 <-ℕ y
+  le-one-head-is-prime-decomposition-cons-list-ℕ =
+    le-one-is-prime-ℕ y is-prime-head-is-prime-decomposition-cons-list-ℕ
+
+  div-head-is-prime-decomposition-cons-list-ℕ :
+    div-ℕ y x
+  div-head-is-prime-decomposition-cons-list-ℕ =
+    div-head-is-multiplicative-decomposition-cons-list-ℕ
+      ( x)
+      ( y)
+      ( l)
+      ( is-multiplicative-decomposition-is-prime-decomposition-list-ℕ x
+        ( cons y l)
+        ( H))
+
+  quotient-head-is-prime-decomposition-cons-list-ℕ :
+    ℕ
+  quotient-head-is-prime-decomposition-cons-list-ℕ =
+    quotient-div-ℕ y x div-head-is-prime-decomposition-cons-list-ℕ
+
+  eq-quotient-head-is-prime-decomposition-cons-list-ℕ :
+    quotient-head-is-prime-decomposition-cons-list-ℕ *ℕ y ＝ x
+  eq-quotient-head-is-prime-decomposition-cons-list-ℕ =
+    eq-quotient-div-ℕ y x div-head-is-prime-decomposition-cons-list-ℕ
+
+  leq-one-quotient-head-is-prime-decomposition-cons-list-ℕ :
+    1 ≤-ℕ quotient-head-is-prime-decomposition-cons-list-ℕ
+  leq-one-quotient-head-is-prime-decomposition-cons-list-ℕ =
+    leq-one-quotient-div-ℕ y x
+      ( div-head-is-prime-decomposition-cons-list-ℕ)
+      ( leq-one-is-prime-decomposition-list-ℕ x (cons y l) H)
+
+  is-nontrivial-divisor-head-is-prime-decomposition-cons-list-ℕ :
+    is-nontrivial-divisor-ℕ x y
+  is-nontrivial-divisor-head-is-prime-decomposition-cons-list-ℕ =
+    is-nontrivial-divisor-head-is-multiplicative-decomposition-cons-list-ℕ
+      ( x)
+      ( y)
+      ( l)
+      ( is-multiplicative-decomposition-is-prime-decomposition-list-ℕ x
+        ( cons y l)
+        ( H))
+
+  le-one-is-prime-decomposition-cons-list-ℕ :
+    le-ℕ 1 x
+  le-one-is-prime-decomposition-cons-list-ℕ =
+    concatenate-le-leq-ℕ 1 y x
+      ( le-one-head-is-prime-decomposition-cons-list-ℕ)
+      ( leq-div-ℕ
+        ( y)
+        ( x)
+        ( is-nonzero-leq-one-ℕ x
+          ( leq-one-is-prime-decomposition-list-ℕ x (cons y l) H))
+        ( div-head-is-prime-decomposition-cons-list-ℕ))
+
+  is-sorted-tail-is-prime-decomposition-cons-list-ℕ :
+    is-sorted-list ℕ-Decidable-Total-Order l
+  is-sorted-tail-is-prime-decomposition-cons-list-ℕ =
+    is-sorted-tail-is-sorted-list
+      ( ℕ-Decidable-Total-Order)
+      ( cons y l)
+      ( is-sorted-is-prime-decomposition-list-ℕ x (cons y l) H)
+
+  le-one-tail-is-prime-decomposition-cons-list-ℕ :
+    for-all-list l (le-ℕ 1)
+  le-one-tail-is-prime-decomposition-cons-list-ℕ =
+    pr2 (le-one-list-is-prime-decomposition-list-ℕ x (cons y l) H)
+
+  compute-quotient-head-is-prime-decomposition-cons-list-ℕ :
+    quotient-head-is-prime-decomposition-cons-list-ℕ ＝
+    mul-list-ℕ l
+  compute-quotient-head-is-prime-decomposition-cons-list-ℕ =
+    is-injective-right-mul-ℕ y
+      ( is-nonzero-is-prime-ℕ y
+        ( is-prime-head-is-prime-decomposition-cons-list-ℕ))
+      ( ( eq-quotient-head-is-prime-decomposition-cons-list-ℕ) ∙
+        ( inv (eq-is-prime-decomposition-list-ℕ x (cons y l) H)) ∙
+        ( commutative-mul-ℕ y (mul-list-ℕ l)))
+
+  is-multiplicative-decomposition-tail-quotient-head-is-prime-decomposition-cons-list-ℕ :
+    is-multiplicative-decomposition-list-ℕ
+      ( quotient-head-is-prime-decomposition-cons-list-ℕ)
+      ( l)
+  pr1
+    is-multiplicative-decomposition-tail-quotient-head-is-prime-decomposition-cons-list-ℕ =
+    le-one-tail-is-prime-decomposition-cons-list-ℕ
+  pr2
+    is-multiplicative-decomposition-tail-quotient-head-is-prime-decomposition-cons-list-ℕ =
+    inv compute-quotient-head-is-prime-decomposition-cons-list-ℕ
+
+  is-prime-decomposition-tail-quotient-head-is-prime-decomposition-cons-list-ℕ :
+    is-prime-decomposition-list-ℕ
+      ( quotient-head-is-prime-decomposition-cons-list-ℕ)
+      ( l)
+  is-prime-decomposition-tail-quotient-head-is-prime-decomposition-cons-list-ℕ =
+    ( is-sorted-tail-is-prime-decomposition-cons-list-ℕ ,
+      is-prime-tail-is-prime-decomposition-cons-list-ℕ ,
+      is-multiplicative-decomposition-tail-quotient-head-is-prime-decomposition-cons-list-ℕ)
 ```
 
-### The least prime divisor of a number `1 < n`
+### The type of prime decompositions of a natural number
 
 ```agda
-nat-least-prime-divisor-ℕ : (x : ℕ) → le-ℕ 1 x → ℕ
-nat-least-prime-divisor-ℕ x H = nat-least-nontrivial-divisor-ℕ x H
-
-is-prime-least-prime-divisor-ℕ :
-  (x : ℕ) (H : le-ℕ 1 x) → is-prime-ℕ (nat-least-prime-divisor-ℕ x H)
-is-prime-least-prime-divisor-ℕ x H = is-prime-least-nontrivial-divisor-ℕ x H
-
-least-prime-divisor-ℕ : (x : ℕ) → le-ℕ 1 x → Prime-ℕ
-pr1 (least-prime-divisor-ℕ x H) = nat-least-prime-divisor-ℕ x H
-pr2 (least-prime-divisor-ℕ x H) = is-prime-least-prime-divisor-ℕ x H
-
-div-least-prime-divisor-ℕ :
-  (x : ℕ) (H : le-ℕ 1 x) → div-ℕ (nat-least-prime-divisor-ℕ x H) x
-div-least-prime-divisor-ℕ x H = div-least-nontrivial-divisor-ℕ x H
-
-quotient-div-least-prime-divisor-ℕ :
-  (x : ℕ) (H : le-ℕ 1 x) → ℕ
-quotient-div-least-prime-divisor-ℕ x H =
-  quotient-div-ℕ
-    ( nat-least-prime-divisor-ℕ x H)
-    ( x)
-    ( div-least-prime-divisor-ℕ x H)
-
-leq-quotient-div-least-prime-divisor-ℕ :
-  (x : ℕ) (H : le-ℕ 1 (succ-ℕ x)) →
-  leq-ℕ (quotient-div-least-prime-divisor-ℕ (succ-ℕ x) H) x
-leq-quotient-div-least-prime-divisor-ℕ x H =
-  leq-quotient-div-is-prime-ℕ
-    ( nat-least-prime-divisor-ℕ (succ-ℕ x) H)
-    ( x)
-    ( is-prime-least-prime-divisor-ℕ (succ-ℕ x) H)
-    ( div-least-prime-divisor-ℕ (succ-ℕ x) H)
+prime-decomposition-list-ℕ :
+  (x : ℕ) → UU lzero
+prime-decomposition-list-ℕ x =
+  Σ (list ℕ) (λ l → is-prime-decomposition-list-ℕ x l)
 ```
 
-## The fundamental theorem of arithmetic (with lists)
+## The fundamental theorem of arithmetic
 
 ### Existence
 
-#### The list given by the fundamental theorem of arithmetic
+#### The list of primes in the prime decomposition of a number
 
 ```agda
-list-primes-fundamental-theorem-arithmetic-ℕ :
-  (x : ℕ) → leq-ℕ 1 x → list Prime-ℕ
-list-primes-fundamental-theorem-arithmetic-ℕ zero-ℕ ()
-list-primes-fundamental-theorem-arithmetic-ℕ (succ-ℕ x) H =
+successor-step-list-of-primes-fundamental-theorem-arithmetic-ℕ :
+  (n : ℕ) → 1 ≤-ℕ n → ((m : ℕ) → 1 ≤-ℕ m → m ≤-ℕ n → list Prime-ℕ) →
+  list Prime-ℕ
+successor-step-list-of-primes-fundamental-theorem-arithmetic-ℕ n N f =
+  cons
+    ( prime-least-prime-divisor-ℕ (succ-ℕ n) (le-succ-leq-ℕ 1 n N))
+    ( f
+      ( quotient-div-least-prime-divisor-ℕ (succ-ℕ n) (le-succ-leq-ℕ 1 n N))
+      ( leq-one-quotient-div-ℕ
+        ( nat-least-prime-divisor-ℕ (succ-ℕ n) (le-succ-leq-ℕ 1 n N))
+        ( succ-ℕ n)
+        ( div-least-prime-divisor-ℕ (succ-ℕ n) (le-succ-leq-ℕ 1 n N))
+        ( leq-succ-leq-ℕ 1 n N))
+      ( upper-bound-quotient-div-least-prime-divisor-ℕ n (le-succ-leq-ℕ 1 n N)))
+
+list-of-primes-fundamental-theorem-arithmetic-ℕ :
+  (n : ℕ) → 1 ≤-ℕ n → list Prime-ℕ
+list-of-primes-fundamental-theorem-arithmetic-ℕ =
   based-strong-ind-ℕ 1
-    ( λ _ → list Prime-ℕ)
+    ( λ n → list Prime-ℕ)
     ( nil)
-    ( λ n N f →
-      cons
-        ( least-prime-divisor-ℕ (succ-ℕ n) (le-succ-leq-ℕ 1 n N))
-        ( f
-          ( quotient-div-least-prime-divisor-ℕ (succ-ℕ n) (le-succ-leq-ℕ 1 n N))
-          ( leq-one-quotient-div-ℕ
-            ( nat-least-prime-divisor-ℕ (succ-ℕ n) (le-succ-leq-ℕ 1 n N))
-            ( succ-ℕ n)
-            ( div-least-prime-divisor-ℕ (succ-ℕ n) (le-succ-leq-ℕ 1 n N))
-            ( preserves-leq-succ-ℕ 1 n N))
-          ( leq-quotient-div-least-prime-divisor-ℕ n (le-succ-leq-ℕ 1 n N))))
-    ( succ-ℕ x)
-    ( H)
+    ( successor-step-list-of-primes-fundamental-theorem-arithmetic-ℕ)
 
 list-fundamental-theorem-arithmetic-ℕ :
-  (x : ℕ) → leq-ℕ 1 x → list ℕ
+  (x : ℕ) → 1 ≤-ℕ x → list ℕ
 list-fundamental-theorem-arithmetic-ℕ x H =
-  map-list nat-Prime-ℕ (list-primes-fundamental-theorem-arithmetic-ℕ x H)
+  map-list nat-Prime-ℕ (list-of-primes-fundamental-theorem-arithmetic-ℕ x H)
 ```
 
-#### Computational rules for the list given by the fundamental theorem of arithmetic
+#### Computation rules for the list of primes in the prime decomposition of a number
 
 ```agda
-helper-compute-list-primes-fundamental-theorem-arithmetic-succ-ℕ :
-  (x : ℕ) → (H : leq-ℕ 1 x) →
-  based-strong-ind-ℕ 1
-    ( λ _ → list Prime-ℕ)
-    ( nil)
-    ( λ n N f →
-      cons
-        ( least-prime-divisor-ℕ (succ-ℕ n) (le-succ-leq-ℕ 1 n N))
-        ( f
-          ( quotient-div-least-prime-divisor-ℕ (succ-ℕ n) (le-succ-leq-ℕ 1 n N))
-          ( leq-one-quotient-div-ℕ
-            ( nat-least-prime-divisor-ℕ (succ-ℕ n) (le-succ-leq-ℕ 1 n N))
-            ( succ-ℕ n)
-            ( div-least-prime-divisor-ℕ (succ-ℕ n) (le-succ-leq-ℕ 1 n N))
-            ( preserves-leq-succ-ℕ 1 n N))
-          ( leq-quotient-div-least-prime-divisor-ℕ n (le-succ-leq-ℕ 1 n N))))
-    ( x)
-    ( H) ＝
-  list-primes-fundamental-theorem-arithmetic-ℕ x H
-helper-compute-list-primes-fundamental-theorem-arithmetic-succ-ℕ (succ-ℕ x) H =
-  refl
-
-compute-list-primes-fundamental-theorem-arithmetic-succ-ℕ :
-  (x : ℕ) → (H : 1 ≤-ℕ x) →
-  list-primes-fundamental-theorem-arithmetic-ℕ (succ-ℕ x) star ＝
+compute-list-of-primes-fundamental-theorem-arithmetic-succ-ℕ :
+  (x : ℕ) (H : 1 ≤-ℕ x) →
+  list-of-primes-fundamental-theorem-arithmetic-ℕ (succ-ℕ x) star ＝
   cons
-    ( least-prime-divisor-ℕ (succ-ℕ x) (le-succ-leq-ℕ 1 x H))
-    ( list-primes-fundamental-theorem-arithmetic-ℕ
+    ( prime-least-prime-divisor-ℕ (succ-ℕ x) (le-succ-leq-ℕ 1 x H))
+    ( list-of-primes-fundamental-theorem-arithmetic-ℕ
       ( quotient-div-least-prime-divisor-ℕ
         ( succ-ℕ x)
         ( le-succ-leq-ℕ 1 x H))
@@ -474,41 +361,20 @@ compute-list-primes-fundamental-theorem-arithmetic-succ-ℕ :
         ( nat-least-prime-divisor-ℕ (succ-ℕ x) (le-succ-leq-ℕ 1 x H))
         ( succ-ℕ x)
         ( div-least-prime-divisor-ℕ (succ-ℕ x) (le-succ-leq-ℕ 1 x H))
-        ( preserves-leq-succ-ℕ 1 x H)))
-compute-list-primes-fundamental-theorem-arithmetic-succ-ℕ x H =
+        ( leq-succ-leq-ℕ 1 x H)))
+compute-list-of-primes-fundamental-theorem-arithmetic-succ-ℕ x H =
   compute-succ-based-strong-ind-ℕ
     ( 1)
     ( λ _ → list Prime-ℕ)
     ( nil)
-    ( λ n N f →
-      cons
-        ( least-prime-divisor-ℕ (succ-ℕ n) (le-succ-leq-ℕ 1 n N))
-        ( f
-          ( quotient-div-least-prime-divisor-ℕ (succ-ℕ n) (le-succ-leq-ℕ 1 n N))
-          ( leq-one-quotient-div-ℕ
-            ( nat-least-prime-divisor-ℕ (succ-ℕ n) (le-succ-leq-ℕ 1 n N))
-            ( succ-ℕ n)
-            ( div-least-prime-divisor-ℕ (succ-ℕ n) (le-succ-leq-ℕ 1 n N))
-            ( preserves-leq-succ-ℕ 1 n N))
-          ( leq-quotient-div-least-prime-divisor-ℕ n (le-succ-leq-ℕ 1 n N))))
+    ( successor-step-list-of-primes-fundamental-theorem-arithmetic-ℕ)
     ( x)
     ( H)
-    ( star) ∙
-  ap
-    ( cons (least-prime-divisor-ℕ (succ-ℕ x) (le-succ-leq-ℕ 1 x H)))
-    ( helper-compute-list-primes-fundamental-theorem-arithmetic-succ-ℕ
-      ( quotient-div-least-prime-divisor-ℕ
-        ( succ-ℕ x)
-        ( le-succ-leq-ℕ 1 x H))
-      ( leq-one-quotient-div-ℕ
-        ( nat-least-prime-divisor-ℕ (succ-ℕ x) (le-succ-leq-ℕ 1 x H))
-        ( succ-ℕ x)
-        ( div-least-prime-divisor-ℕ (succ-ℕ x) (le-succ-leq-ℕ 1 x H))
-        ( preserves-leq-succ-ℕ 1 x H)))
+    ( star)
 
 compute-list-fundamental-theorem-arithmetic-succ-ℕ :
-  (x : ℕ) → (H : leq-ℕ 1 x) →
-  list-fundamental-theorem-arithmetic-ℕ (succ-ℕ x) star ＝
+  (x : ℕ) (H : 1 ≤-ℕ x) →
+  list-fundamental-theorem-arithmetic-ℕ (succ-ℕ x) _ ＝
   cons
     ( nat-least-prime-divisor-ℕ (succ-ℕ x) (le-succ-leq-ℕ 1 x H))
     ( list-fundamental-theorem-arithmetic-ℕ
@@ -519,38 +385,52 @@ compute-list-fundamental-theorem-arithmetic-succ-ℕ :
         ( nat-least-prime-divisor-ℕ (succ-ℕ x) (le-succ-leq-ℕ 1 x H))
         ( succ-ℕ x)
         ( div-least-prime-divisor-ℕ (succ-ℕ x) (le-succ-leq-ℕ 1 x H))
-        ( preserves-leq-succ-ℕ 1 x H)))
+        ( leq-succ-leq-ℕ 1 x H)))
 compute-list-fundamental-theorem-arithmetic-succ-ℕ x H =
   ap
     ( map-list nat-Prime-ℕ)
-    ( compute-list-primes-fundamental-theorem-arithmetic-succ-ℕ x H)
+    ( compute-list-of-primes-fundamental-theorem-arithmetic-succ-ℕ x H)
 ```
 
-#### Proof that the list given by the fundamental theorem of arithmetic is a prime decomposition
+#### The list of primes in the prime decomposition of a number is a prime decomposition
 
 ```agda
 is-prime-list-fundamental-theorem-arithmetic-ℕ :
-  (x : ℕ) (H : leq-ℕ 1 x) →
+  (x : ℕ) (H : 1 ≤-ℕ x) →
   is-prime-list-ℕ (list-fundamental-theorem-arithmetic-ℕ x H)
 is-prime-list-fundamental-theorem-arithmetic-ℕ x H =
-  is-prime-list-primes-ℕ (list-primes-fundamental-theorem-arithmetic-ℕ x H)
+  is-prime-list-list-Prime-ℕ
+    ( list-of-primes-fundamental-theorem-arithmetic-ℕ x H)
 
-is-decomposition-list-fundamental-theorem-arithmetic-ℕ :
-  (x : ℕ) (H : leq-ℕ 1 x) →
-  is-decomposition-list-ℕ x (list-fundamental-theorem-arithmetic-ℕ x H)
-is-decomposition-list-fundamental-theorem-arithmetic-ℕ x H =
+le-one-list-fundamental-theorem-arithmetic-ℕ :
+  (x : ℕ) (H : 1 ≤-ℕ x) →
+  for-all-list (list-fundamental-theorem-arithmetic-ℕ x H) (le-ℕ 1)
+le-one-list-fundamental-theorem-arithmetic-ℕ x H =
+  map-for-all-list
+    ( list-fundamental-theorem-arithmetic-ℕ x H)
+    ( le-one-is-prime-ℕ)
+    ( is-prime-list-fundamental-theorem-arithmetic-ℕ x H)
+
+is-multiplicative-decomposition-list-fundamental-theorem-arithmetic-ℕ :
+  (x : ℕ) (H : 1 ≤-ℕ x) →
+  is-multiplicative-decomposition-list-ℕ x
+    ( list-fundamental-theorem-arithmetic-ℕ x H)
+is-multiplicative-decomposition-list-fundamental-theorem-arithmetic-ℕ =
   based-strong-ind-ℕ' 1
     ( λ n N →
-      is-decomposition-list-ℕ n (list-fundamental-theorem-arithmetic-ℕ n N))
-    ( refl)
+      is-multiplicative-decomposition-list-ℕ n
+        ( list-fundamental-theorem-arithmetic-ℕ n N))
+    ( for-all-nil-list (le-ℕ 1) , refl)
     ( λ n N f →
-      tr
-        ( λ p → is-decomposition-list-ℕ (succ-ℕ n) p)
-        ( inv (compute-list-fundamental-theorem-arithmetic-succ-ℕ n N))
-        ( ( ap
-            ( ( nat-least-prime-divisor-ℕ
-                ( succ-ℕ n)
-                ( le-succ-leq-ℕ 1 n N)) *ℕ_)
+      ( le-one-list-fundamental-theorem-arithmetic-ℕ (succ-ℕ n) star) ,
+      ( ( ap
+          ( mul-list-ℕ)
+          ( compute-list-fundamental-theorem-arithmetic-succ-ℕ n N)) ∙
+        ( ap
+          ( ( nat-least-prime-divisor-ℕ
+              ( succ-ℕ n)
+              ( le-succ-leq-ℕ 1 n N)) *ℕ_)
+          ( pr2
             ( f
               ( quotient-div-least-prime-divisor-ℕ
                 ( succ-ℕ n)
@@ -559,33 +439,30 @@ is-decomposition-list-fundamental-theorem-arithmetic-ℕ x H =
                 ( nat-least-prime-divisor-ℕ (succ-ℕ n) (le-succ-leq-ℕ 1 n N))
                 ( succ-ℕ n)
                 ( div-least-prime-divisor-ℕ (succ-ℕ n) (le-succ-leq-ℕ 1 n N))
-                ( preserves-leq-succ-ℕ 1 n N))
-              ( leq-quotient-div-least-prime-divisor-ℕ
+                ( leq-succ-leq-ℕ 1 n N))
+              ( upper-bound-quotient-div-least-prime-divisor-ℕ
                 ( n)
-                ( le-succ-leq-ℕ 1 n N)))) ∙
-          eq-quotient-div-ℕ'
-            ( nat-least-prime-divisor-ℕ
-              ( succ-ℕ n)
-              ( le-succ-leq-ℕ 1 n N))
+                ( le-succ-leq-ℕ 1 n N))))) ∙
+        ( eq-quotient-div-ℕ'
+          ( nat-least-prime-divisor-ℕ
             ( succ-ℕ n)
-            ( div-least-prime-divisor-ℕ
-              ( succ-ℕ n)
-              ( le-succ-leq-ℕ 1 n N))))
-    ( x)
-    ( H)
+            ( le-succ-leq-ℕ 1 n N))
+          ( succ-ℕ n)
+          ( div-least-prime-divisor-ℕ
+            ( succ-ℕ n)
+            ( le-succ-leq-ℕ 1 n N)))))
 
 is-list-of-nontrivial-divisors-fundamental-theorem-arithmetic-ℕ :
-  (x : ℕ) (H : leq-ℕ 1 x) →
+  (x : ℕ) (H : 1 ≤-ℕ x) →
   is-list-of-nontrivial-divisors-ℕ x (list-fundamental-theorem-arithmetic-ℕ x H)
 is-list-of-nontrivial-divisors-fundamental-theorem-arithmetic-ℕ x H =
-  is-list-of-nontrivial-divisors-is-decomposition-is-prime-list-ℕ
+  is-list-of-nontrivial-divisors-is-multiplicative-decomposition-list-ℕ
     ( x)
     ( list-fundamental-theorem-arithmetic-ℕ x H)
-    ( is-decomposition-list-fundamental-theorem-arithmetic-ℕ x H)
-    ( is-prime-list-fundamental-theorem-arithmetic-ℕ x H)
+    ( is-multiplicative-decomposition-list-fundamental-theorem-arithmetic-ℕ x H)
 
 is-least-element-list-least-prime-divisor-ℕ :
-  (x : ℕ) (H : leq-ℕ 1 x) (l : list ℕ) →
+  (x : ℕ) (H : 1 ≤-ℕ x) (l : list ℕ) →
   is-list-of-nontrivial-divisors-ℕ
     ( quotient-div-least-prime-divisor-ℕ (succ-ℕ x) (le-succ-leq-ℕ 1 x H))
     ( l) →
@@ -595,7 +472,7 @@ is-least-element-list-least-prime-divisor-ℕ :
     ( l)
 is-least-element-list-least-prime-divisor-ℕ x H nil D = raise-star
 is-least-element-list-least-prime-divisor-ℕ x H (cons y l) D =
-  is-minimal-least-nontrivial-divisor-ℕ
+  ( is-minimal-least-nontrivial-divisor-ℕ
     ( succ-ℕ x)
     ( le-succ-leq-ℕ 1 x H)
     ( y)
@@ -604,15 +481,12 @@ is-least-element-list-least-prime-divisor-ℕ x H (cons y l) D =
       ( y)
       ( quotient-div-least-prime-divisor-ℕ (succ-ℕ x) (le-succ-leq-ℕ 1 x H))
       ( succ-ℕ x)
-      ( div-quotient-div-ℕ
-        ( nat-least-prime-divisor-ℕ (succ-ℕ x) (le-succ-leq-ℕ 1 x H))
-        ( succ-ℕ x)
-        ( div-least-prime-divisor-ℕ (succ-ℕ x) (le-succ-leq-ℕ 1 x H)))
+      ( div-quotient-div-least-prime-divisor-ℕ (succ-ℕ x) (le-succ-leq-ℕ 1 x H))
       ( pr2 (pr1 D))) ,
-  is-least-element-list-least-prime-divisor-ℕ x H l (pr2 D)
+    is-least-element-list-least-prime-divisor-ℕ x H l (pr2 D))
 
 is-least-element-head-list-fundamental-theorem-arithmetic-succ-ℕ :
-  (x : ℕ) → (H : leq-ℕ 1 x) →
+  (x : ℕ) (H : 1 ≤-ℕ x) →
   is-least-element-list
     ( ℕ-Decidable-Total-Order)
     ( nat-least-prime-divisor-ℕ (succ-ℕ x) (le-succ-leq-ℕ 1 x H))
@@ -622,28 +496,24 @@ is-least-element-head-list-fundamental-theorem-arithmetic-succ-ℕ :
         ( nat-least-prime-divisor-ℕ (succ-ℕ x) (le-succ-leq-ℕ 1 x H))
         ( succ-ℕ x)
         ( div-least-prime-divisor-ℕ (succ-ℕ x) (le-succ-leq-ℕ 1 x H))
-        ( preserves-leq-succ-ℕ 1 x H)))
+        ( leq-succ-leq-ℕ 1 x H)))
 is-least-element-head-list-fundamental-theorem-arithmetic-succ-ℕ x H =
   is-least-element-list-least-prime-divisor-ℕ
     ( x)
     ( H)
     ( list-fundamental-theorem-arithmetic-ℕ
       ( quotient-div-least-prime-divisor-ℕ (succ-ℕ x) (le-succ-leq-ℕ 1 x H))
-      ( leq-one-quotient-div-ℕ
-        ( nat-least-prime-divisor-ℕ (succ-ℕ x) (le-succ-leq-ℕ 1 x H))
+      ( leq-one-quotient-div-least-prime-divisor-ℕ
         ( succ-ℕ x)
-        ( div-least-prime-divisor-ℕ (succ-ℕ x) (le-succ-leq-ℕ 1 x H))
-        ( preserves-leq-succ-ℕ 1 x H)))
+        ( le-succ-leq-ℕ 1 x H)))
     ( is-list-of-nontrivial-divisors-fundamental-theorem-arithmetic-ℕ
       ( quotient-div-least-prime-divisor-ℕ (succ-ℕ x) (le-succ-leq-ℕ 1 x H))
-      ( leq-one-quotient-div-ℕ
-        ( nat-least-prime-divisor-ℕ (succ-ℕ x) (le-succ-leq-ℕ 1 x H))
+      ( leq-one-quotient-div-least-prime-divisor-ℕ
         ( succ-ℕ x)
-        ( div-least-prime-divisor-ℕ (succ-ℕ x) (le-succ-leq-ℕ 1 x H))
-        ( preserves-leq-succ-ℕ 1 x H)))
+        ( le-succ-leq-ℕ 1 x H)))
 
 is-sorted-least-element-list-fundamental-theorem-arithmetic-ℕ :
-  (x : ℕ) → (H : leq-ℕ 1 x) →
+  (x : ℕ) (H : 1 ≤-ℕ x) →
   is-sorted-least-element-list
     ( ℕ-Decidable-Total-Order)
     ( list-fundamental-theorem-arithmetic-ℕ x H)
@@ -662,21 +532,19 @@ is-sorted-least-element-list-fundamental-theorem-arithmetic-ℕ x H =
             ( l))
         ( inv (compute-list-fundamental-theorem-arithmetic-succ-ℕ n N))
         ( is-least-element-head-list-fundamental-theorem-arithmetic-succ-ℕ n N ,
-          f
-            ( quotient-div-least-prime-divisor-ℕ
+          f ( quotient-div-least-prime-divisor-ℕ
               ( succ-ℕ n)
               ( le-succ-leq-ℕ 1 n N))
-            ( leq-one-quotient-div-ℕ
-              ( nat-least-prime-divisor-ℕ (succ-ℕ n) (le-succ-leq-ℕ 1 n N))
+            ( leq-one-quotient-div-least-prime-divisor-ℕ
               ( succ-ℕ n)
-              ( div-least-prime-divisor-ℕ (succ-ℕ n) (le-succ-leq-ℕ 1 n N))
-              ( preserves-leq-succ-ℕ 1 n N))
-            ( leq-quotient-div-least-prime-divisor-ℕ n (le-succ-leq-ℕ 1 n N))))
+              ( le-succ-leq-ℕ 1 n N))
+            ( upper-bound-quotient-div-least-prime-divisor-ℕ n
+              ( le-succ-leq-ℕ 1 n N))))
     ( x)
     ( H)
 
 is-sorted-list-fundamental-theorem-arithmetic-ℕ :
-  (x : ℕ) → (H : leq-ℕ 1 x) →
+  (x : ℕ) (H : 1 ≤-ℕ x) →
   is-sorted-list
     ( ℕ-Decidable-Total-Order)
     ( list-fundamental-theorem-arithmetic-ℕ x H)
@@ -687,134 +555,68 @@ is-sorted-list-fundamental-theorem-arithmetic-ℕ x H =
     ( is-sorted-least-element-list-fundamental-theorem-arithmetic-ℕ x H)
 
 is-prime-decomposition-list-fundamental-theorem-arithmetic-ℕ :
-  (x : ℕ) (H : leq-ℕ 1 x) →
+  (x : ℕ) (H : 1 ≤-ℕ x) →
   is-prime-decomposition-list-ℕ x (list-fundamental-theorem-arithmetic-ℕ x H)
 pr1 (is-prime-decomposition-list-fundamental-theorem-arithmetic-ℕ x H) =
   is-sorted-list-fundamental-theorem-arithmetic-ℕ x H
 pr1 (pr2 (is-prime-decomposition-list-fundamental-theorem-arithmetic-ℕ x H)) =
   is-prime-list-fundamental-theorem-arithmetic-ℕ x H
 pr2 (pr2 (is-prime-decomposition-list-fundamental-theorem-arithmetic-ℕ x H)) =
-  is-decomposition-list-fundamental-theorem-arithmetic-ℕ x H
+  is-multiplicative-decomposition-list-fundamental-theorem-arithmetic-ℕ x H
+
+prime-decomposition-fundamental-theorem-arithmetic-ℕ :
+  (x : ℕ) (H : 1 ≤-ℕ x) → prime-decomposition-list-ℕ x
+pr1 (prime-decomposition-fundamental-theorem-arithmetic-ℕ x H) =
+  list-fundamental-theorem-arithmetic-ℕ x H
+pr2 (prime-decomposition-fundamental-theorem-arithmetic-ℕ x H) =
+  is-prime-decomposition-list-fundamental-theorem-arithmetic-ℕ x H
 ```
 
 ### Uniqueness
 
-#### Definition of the type of prime decomposition of an integer
+#### The type of prime decompositions of any natural number is contractible
 
 ```agda
-prime-decomposition-list-ℕ :
-  (x : ℕ) → (leq-ℕ 1 x) → UU lzero
-prime-decomposition-list-ℕ x _ =
-  Σ (list ℕ) (λ l → is-prime-decomposition-list-ℕ x l)
-```
-
-#### `prime-decomposition-list-ℕ n` is contractible for every `n`
-
-```agda
-prime-decomposition-fundamental-theorem-arithmetic-list-ℕ :
-  (x : ℕ) (H : leq-ℕ 1 x) → prime-decomposition-list-ℕ x H
-pr1 (prime-decomposition-fundamental-theorem-arithmetic-list-ℕ x H) =
-  list-fundamental-theorem-arithmetic-ℕ x H
-pr2 (prime-decomposition-fundamental-theorem-arithmetic-list-ℕ x H) =
-  is-prime-decomposition-list-fundamental-theorem-arithmetic-ℕ x H
-
-le-one-is-nonempty-prime-decomposition-list-ℕ :
-  (x : ℕ) (H : leq-ℕ 1 x) (y : ℕ) (l : list ℕ) →
-  is-prime-decomposition-list-ℕ x (cons y l) →
-  le-ℕ 1 x
-le-one-is-nonempty-prime-decomposition-list-ℕ x H y l D =
-  concatenate-le-leq-ℕ
-    {x = 1}
-    {y = y}
-    {z = x}
-    ( le-one-is-prime-ℕ
-      ( y)
-      ( pr1 (is-prime-list-is-prime-decomposition-list-ℕ x (cons y l) D)))
-    ( leq-div-ℕ
-      ( y)
-      ( x)
-      ( is-nonzero-leq-one-ℕ x H)
-      ( mul-list-ℕ l ,
-        ( commutative-mul-ℕ (mul-list-ℕ l) y ∙
-          is-decomposition-list-is-prime-decomposition-list-ℕ x (cons y l) D)))
-
-is-in-prime-decomposition-is-nontrivial-prime-divisor-ℕ :
-  (x : ℕ) (H : leq-ℕ 1 x) (l : list ℕ) →
-  is-prime-decomposition-list-ℕ x l →
-  ( y : ℕ) →
-  div-ℕ y x →
-  is-prime-ℕ y →
-  y ∈-list l
-is-in-prime-decomposition-is-nontrivial-prime-divisor-ℕ x H nil D y d p =
+is-in-prime-decomposition-is-prime-divisor-ℕ :
+  (x : ℕ) (H : 1 ≤-ℕ x) (l : list ℕ) → is-prime-decomposition-list-ℕ x l →
+  (y : ℕ) → div-ℕ y x → is-prime-ℕ y → y ∈-list l
+is-in-prime-decomposition-is-prime-divisor-ℕ x H nil D y d p =
   ex-falso
-    ( contradiction-le-ℕ
-      ( 1)
-      ( x)
-      ( concatenate-le-leq-ℕ
-        {x = 1}
-        {y = y}
-        {z = x}
-        ( le-one-is-prime-ℕ y p)
-        ( leq-div-ℕ
-          ( y)
-          ( x)
-          ( is-nonzero-leq-one-ℕ x H)
-          ( d)))
-        ( leq-eq-ℕ
-          ( x)
-          ( 1)
-          ( inv (is-decomposition-list-is-prime-decomposition-list-ℕ x nil D))))
-is-in-prime-decomposition-is-nontrivial-prime-divisor-ℕ x H (cons z l) D y d p =
+    ( no-prime-divisors-one-ℕ y p
+      ( tr (div-ℕ y) (inv (eq-is-prime-decomposition-list-ℕ x nil D)) d))
+is-in-prime-decomposition-is-prime-divisor-ℕ x H (cons z l) D y d p =
   rec-coproduct
-    ( λ e → tr (λ w → w ∈-list (cons z l)) (inv e) (is-head z l))
+    ( λ p → tr (_∈-list cons z l) (inv p) (is-head z l))
     ( λ e →
-      is-in-tail
-        ( y)
-        ( z)
-        ( l)
-        ( is-in-prime-decomposition-is-nontrivial-prime-divisor-ℕ
-          ( quotient-div-ℕ
-            ( z)
-            ( x)
-            ( is-divisor-head-prime-decomposition-list-ℕ x z l D))
-          ( leq-one-quotient-div-ℕ
-            ( z)
-            ( x)
-            ( is-divisor-head-prime-decomposition-list-ℕ x z l D)
-            ( H))
+      is-in-tail y z l
+        ( is-in-prime-decomposition-is-prime-divisor-ℕ
+          ( quotient-head-is-prime-decomposition-cons-list-ℕ x z l D)
+          ( leq-one-quotient-head-is-prime-decomposition-cons-list-ℕ
+            x z l D)
           ( l)
-          ( ( is-sorted-tail-is-sorted-list
-              ( ℕ-Decidable-Total-Order)
-              ( cons z l)
-              ( is-sorted-list-is-prime-decomposition-list-ℕ x (cons z l) D)) ,
-            ( pr2
-              ( is-prime-list-is-prime-decomposition-list-ℕ x (cons z l) D)) ,
-            ( refl))
+          ( is-prime-decomposition-tail-quotient-head-is-prime-decomposition-cons-list-ℕ
+            x z l D)
           ( y)
-          ( div-right-factor-coprime-ℕ
-            ( y)
-            ( z)
-            ( mul-list-ℕ l)
+          ( div-right-factor-coprime-ℕ y z
+            ( quotient-head-is-prime-decomposition-cons-list-ℕ x z l D)
             ( tr
-              ( λ x → div-ℕ y x)
-              ( inv
-                ( is-decomposition-list-is-prime-decomposition-list-ℕ
-                  ( x)
-                  ( cons z l)
-                  ( D)))
+              ( div-ℕ y)
+              ( ( inv
+                  ( eq-quotient-head-is-prime-decomposition-cons-list-ℕ
+                    x z l D)) ∙
+                ( commutative-mul-ℕ _ z))
               ( d))
             ( is-relatively-prime-is-prime-ℕ
               ( y)
               ( z)
               ( p)
-              ( pr1
-                ( is-prime-list-is-prime-decomposition-list-ℕ x (cons z l) D))
+              ( is-prime-head-is-prime-decomposition-cons-list-ℕ x z l D)
               ( e)))
           ( p)))
     ( has-decidable-equality-ℕ y z)
 
 is-lower-bound-head-prime-decomposition-list-ℕ :
-  (x : ℕ) (H : leq-ℕ 1 x) (y : ℕ) (l : list ℕ) →
+  (x : ℕ) (H : 1 ≤-ℕ x) (y : ℕ) (l : list ℕ) →
   is-prime-decomposition-list-ℕ x (cons y l) →
   is-lower-bound-ℕ (is-nontrivial-divisor-ℕ x) y
 is-lower-bound-head-prime-decomposition-list-ℕ x H y l D m d =
@@ -833,8 +635,8 @@ is-lower-bound-head-prime-decomposition-list-ℕ x H y l D m d =
       ( y)
       ( nat-least-prime-divisor-ℕ m (pr1 d))
       ( l)
-      ( is-sorted-list-is-prime-decomposition-list-ℕ x (cons y l) D)
-      ( is-in-prime-decomposition-is-nontrivial-prime-divisor-ℕ
+      ( is-sorted-is-prime-decomposition-list-ℕ x (cons y l) D)
+      ( is-in-prime-decomposition-is-prime-divisor-ℕ
         ( x)
         ( H)
         ( cons y l)
@@ -850,7 +652,7 @@ is-lower-bound-head-prime-decomposition-list-ℕ x H y l D m d =
       ( refl-leq-ℕ y))
 
 eq-head-prime-decomposition-list-ℕ :
-  (x : ℕ) (H : leq-ℕ 1 x) (y z : ℕ) (p q : list ℕ) →
+  (x : ℕ) (H : 1 ≤-ℕ x) (y z : ℕ) (p q : list ℕ) →
   is-prime-decomposition-list-ℕ x (cons y p) →
   is-prime-decomposition-list-ℕ x (cons z q) →
   y ＝ z
@@ -860,14 +662,14 @@ eq-head-prime-decomposition-list-ℕ x H y z p q I J =
     ( all-elements-equal-minimal-element-ℕ
       ( is-nontrivial-divisor-ℕ-Prop x)
       ( y ,
-        is-nontrivial-divisor-head-prime-decomposition-list-ℕ x y p I ,
+        is-nontrivial-divisor-head-is-prime-decomposition-cons-list-ℕ x y p I ,
         is-lower-bound-head-prime-decomposition-list-ℕ x H y p I)
       ( z ,
-        is-nontrivial-divisor-head-prime-decomposition-list-ℕ x z q J ,
+        is-nontrivial-divisor-head-is-prime-decomposition-cons-list-ℕ x z q J ,
         is-lower-bound-head-prime-decomposition-list-ℕ x H z q J))
 
 eq-prime-decomposition-list-ℕ :
-  (x : ℕ) (H : leq-ℕ 1 x) (p q : list ℕ) →
+  (x : ℕ) (H : 1 ≤-ℕ x) (p q : list ℕ) →
   is-prime-decomposition-list-ℕ x p →
   is-prime-decomposition-list-ℕ x q →
   p ＝ q
@@ -878,21 +680,21 @@ eq-prime-decomposition-list-ℕ x H (cons y l) nil I J =
     ( contradiction-le-ℕ
       ( 1)
       ( x)
-      ( le-one-is-nonempty-prime-decomposition-list-ℕ x H y l I)
+      ( le-one-is-prime-decomposition-cons-list-ℕ x y l I)
       ( leq-eq-ℕ
         ( x)
         ( 1)
-        ( inv ( is-decomposition-list-is-prime-decomposition-list-ℕ x nil J))))
+        ( inv (eq-is-prime-decomposition-list-ℕ x nil J))))
 eq-prime-decomposition-list-ℕ x H nil (cons y l) I J =
   ex-falso
     ( contradiction-le-ℕ
       ( 1)
       ( x)
-      ( le-one-is-nonempty-prime-decomposition-list-ℕ x H y l J)
+      ( le-one-is-prime-decomposition-cons-list-ℕ x y l J)
       ( leq-eq-ℕ
         ( x)
         ( 1)
-        ( inv (is-decomposition-list-is-prime-decomposition-list-ℕ x nil I))))
+        ( inv (eq-is-prime-decomposition-list-ℕ x nil I))))
 eq-prime-decomposition-list-ℕ x H (cons y l) (cons z p) I J =
   eq-Eq-list
     ( cons y l)
@@ -902,50 +704,29 @@ eq-prime-decomposition-list-ℕ x H (cons y l) (cons z p) I J =
         ( l)
         ( p)
         ( eq-prime-decomposition-list-ℕ
-          ( quotient-div-ℕ
-            ( y)
-            ( x)
-            ( is-divisor-head-prime-decomposition-list-ℕ x y l I))
-          ( leq-one-quotient-div-ℕ
-            ( y)
-            ( x)
-            ( is-divisor-head-prime-decomposition-list-ℕ x y l I)
-            ( H))
+          ( quotient-head-is-prime-decomposition-cons-list-ℕ x y l I)
+          ( leq-one-quotient-head-is-prime-decomposition-cons-list-ℕ x y l I)
           ( l)
           ( p)
-          ( ( is-sorted-tail-is-sorted-list
-              ( ℕ-Decidable-Total-Order)
-              ( cons y l)
-              ( is-sorted-list-is-prime-decomposition-list-ℕ x (cons y l) I)) ,
-            pr2 (is-prime-list-is-prime-decomposition-list-ℕ x (cons y l) I) ,
-            refl)
-          ( ( is-sorted-tail-is-sorted-list
-              ( ℕ-Decidable-Total-Order)
-              ( cons z p)
-              ( is-sorted-list-is-prime-decomposition-list-ℕ x (cons z p) J)) ,
-            pr2 (is-prime-list-is-prime-decomposition-list-ℕ x (cons z p) J) ,
-            tr
-              ( λ y → is-decomposition-list-ℕ y p)
-              ( eq-quotient-div-eq-div-ℕ
-                ( z)
-                ( y)
-                ( x)
-                ( is-nonzero-is-prime-ℕ
-                  ( z)
-                  ( pr1
-                    ( is-prime-list-is-prime-decomposition-list-ℕ
-                      ( x)
-                      ( cons z p)
-                      ( J))))
-                ( inv (eq-head-prime-decomposition-list-ℕ x H y z l p I J))
-                ( is-divisor-head-prime-decomposition-list-ℕ x z p J)
-                ( is-divisor-head-prime-decomposition-list-ℕ x y l I))
-              ( refl)))))
+          ( is-prime-decomposition-tail-quotient-head-is-prime-decomposition-cons-list-ℕ
+             x y l I)
+          ( ( is-sorted-tail-is-prime-decomposition-cons-list-ℕ x z p J) ,
+            ( is-prime-tail-is-prime-decomposition-cons-list-ℕ x z p J) ,
+            ( le-one-tail-is-prime-decomposition-cons-list-ℕ x z p J) ,
+             ( eq-quotient-div-eq-divisor-ℕ z y x
+               ( is-nonzero-is-prime-ℕ z
+                 ( is-prime-head-is-prime-decomposition-cons-list-ℕ x z p J))
+               ( inv (eq-head-prime-decomposition-list-ℕ x H y z l p I J))
+               ( div-head-is-prime-decomposition-cons-list-ℕ x z p J)
+               ( div-head-is-prime-decomposition-cons-list-ℕ x y l I)) ∙
+             ( inv
+               ( compute-quotient-head-is-prime-decomposition-cons-list-ℕ
+                 x y l I))))))
 
 fundamental-theorem-arithmetic-list-ℕ :
-  (x : ℕ) → (H : leq-ℕ 1 x) → is-contr (prime-decomposition-list-ℕ x H)
+  (x : ℕ) → (H : 1 ≤-ℕ x) → is-contr (prime-decomposition-list-ℕ x)
 pr1 (fundamental-theorem-arithmetic-list-ℕ x H) =
-  prime-decomposition-fundamental-theorem-arithmetic-list-ℕ x H
+  prime-decomposition-fundamental-theorem-arithmetic-ℕ x H
 pr2 (fundamental-theorem-arithmetic-list-ℕ x H) d =
   eq-type-subtype
     ( is-prime-decomposition-list-ℕ-Prop x)
@@ -968,73 +749,58 @@ is-prime-list-concat-list-ℕ nil q Pp Pq = Pq
 is-prime-list-concat-list-ℕ (cons x p) q Pp Pq =
   pr1 Pp , is-prime-list-concat-list-ℕ p q (pr2 Pp) Pq
 
-all-elements-is-prime-list-ℕ :
+is-prime-is-in-list-ℕ :
   (p : list ℕ) → UU lzero
-all-elements-is-prime-list-ℕ p = (x : ℕ) → x ∈-list p → is-prime-ℕ x
+is-prime-is-in-list-ℕ p = (x : ℕ) → x ∈-list p → is-prime-ℕ x
 
-all-elements-is-prime-list-tail-ℕ :
-  (p : list ℕ) (x : ℕ) (P : all-elements-is-prime-list-ℕ (cons x p)) →
-  all-elements-is-prime-list-ℕ p
-all-elements-is-prime-list-tail-ℕ p x P y I = P y (is-in-tail y x p I)
+is-prime-is-in-list-tail-ℕ :
+  (p : list ℕ) (x : ℕ) (P : is-prime-is-in-list-ℕ (cons x p)) →
+  is-prime-is-in-list-ℕ p
+is-prime-is-in-list-tail-ℕ p x P y I = P y (is-in-tail y x p I)
 
-all-elements-is-prime-list-is-prime-list-ℕ :
-  (p : list ℕ) → is-prime-list-ℕ p → all-elements-is-prime-list-ℕ p
-all-elements-is-prime-list-is-prime-list-ℕ (cons x p) P .x (is-head .x .p) =
+is-prime-is-in-list-is-prime-list-ℕ :
+  (p : list ℕ) → is-prime-list-ℕ p → is-prime-is-in-list-ℕ p
+is-prime-is-in-list-is-prime-list-ℕ (cons x p) P .x (is-head .x .p) =
   pr1 P
-all-elements-is-prime-list-is-prime-list-ℕ
+is-prime-is-in-list-is-prime-list-ℕ
   ( cons x p)
   ( P)
   ( y)
   ( is-in-tail .y .x .p I) =
-  all-elements-is-prime-list-is-prime-list-ℕ p (pr2 P) y I
+  is-prime-is-in-list-is-prime-list-ℕ p (pr2 P) y I
 
-is-prime-list-all-elements-is-prime-list-ℕ :
-  (p : list ℕ) → all-elements-is-prime-list-ℕ p → is-prime-list-ℕ p
-is-prime-list-all-elements-is-prime-list-ℕ nil P = raise-star
-is-prime-list-all-elements-is-prime-list-ℕ (cons x p) P =
+is-prime-list-is-prime-is-in-list-ℕ :
+  (p : list ℕ) → is-prime-is-in-list-ℕ p → is-prime-list-ℕ p
+is-prime-list-is-prime-is-in-list-ℕ nil P = raise-star
+is-prime-list-is-prime-is-in-list-ℕ (cons x p) P =
   P x (is-head x p) ,
-  is-prime-list-all-elements-is-prime-list-ℕ
+  is-prime-list-is-prime-is-in-list-ℕ
     ( p)
-    ( all-elements-is-prime-list-tail-ℕ p x P)
+    ( is-prime-is-in-list-tail-ℕ p x P)
 
 is-prime-list-permute-list-ℕ :
-  (p : list ℕ) (t : Permutation (length-list p)) → is-prime-list-ℕ p →
+  (p : list ℕ) (t : permutation (length-list p)) → is-prime-list-ℕ p →
   is-prime-list-ℕ (permute-list p t)
 is-prime-list-permute-list-ℕ p t P =
-  is-prime-list-all-elements-is-prime-list-ℕ
+  is-prime-list-is-prime-is-in-list-ℕ
     ( permute-list p t)
-    ( λ x I → all-elements-is-prime-list-is-prime-list-ℕ
-      ( p)
-      ( P)
-      ( x)
-      ( is-in-list-is-in-permute-list
-        ( p)
-        ( t)
-        ( x)
-        ( I)))
-
-is-decomposition-list-concat-list-ℕ :
-  (n m : ℕ) (p q : list ℕ) →
-  is-decomposition-list-ℕ n p → is-decomposition-list-ℕ m q →
-  is-decomposition-list-ℕ (n *ℕ m) (concat-list p q)
-is-decomposition-list-concat-list-ℕ n m p q Dp Dq =
-  ( eq-mul-list-concat-list-ℕ p q ∙
-    ( ap (mul-ℕ (mul-list-ℕ p)) Dq ∙
-      ap (λ n → n *ℕ m) Dp))
+    ( λ x I →
+      is-prime-is-in-list-is-prime-list-ℕ p P x
+        ( is-in-list-is-in-permute-list p t x I))
 
 is-decomposition-list-permute-list-ℕ :
-  (n : ℕ) (p : list ℕ) (t : Permutation (length-list p)) →
-  is-decomposition-list-ℕ n p →
-  is-decomposition-list-ℕ n (permute-list p t)
+  (n : ℕ) (p : list ℕ) (t : permutation (length-list p)) →
+  is-multiplicative-decomposition-list-ℕ n p →
+  is-multiplicative-decomposition-list-ℕ n (permute-list p t)
 is-decomposition-list-permute-list-ℕ n p t D =
-  inv (invariant-permutation-mul-list-ℕ p t) ∙ D
+  {!!} -- inv (permutation-invariant-mul-list-ℕ p t) ∙ D
 
 is-prime-decomposition-list-sort-concatenation-ℕ :
-  (x y : ℕ) (H : leq-ℕ 1 x) (I : leq-ℕ 1 y) (p q : list ℕ) →
+  (x y : ℕ) (H : 1 ≤-ℕ x) (I : 1 ≤-ℕ y) (p q : list ℕ) →
   is-prime-decomposition-list-ℕ x p →
   is-prime-decomposition-list-ℕ y q →
   is-prime-decomposition-list-ℕ
-    (x *ℕ y)
+    ( x *ℕ y)
     ( insertion-sort-list
       ( ℕ-Decidable-Total-Order)
       ( concat-list p q))
@@ -1063,7 +829,7 @@ pr2
   ( pr2
     ( is-prime-decomposition-list-sort-concatenation-ℕ x y H I p q Dp Dq)) =
   tr
-    ( λ p → is-decomposition-list-ℕ (x *ℕ y) p)
+    ( λ p → is-multiplicative-decomposition-list-ℕ (x *ℕ y) p)
     ( inv
       ( eq-permute-list-permutation-insertion-sort-list
         ( ℕ-Decidable-Total-Order)
@@ -1074,19 +840,20 @@ pr2
       ( permutation-insertion-sort-list
         ( ℕ-Decidable-Total-Order)
         ( concat-list p q))
-      ( is-decomposition-list-concat-list-ℕ
+      ( is-multiplicative-decomposition-concat-list-ℕ
         ( x)
         ( y)
         ( p)
         ( q)
-        ( is-decomposition-list-is-prime-decomposition-list-ℕ x p Dp)
-        ( is-decomposition-list-is-prime-decomposition-list-ℕ y q Dq)))
+        ( is-multiplicative-decomposition-is-prime-decomposition-list-ℕ x p Dp)
+        ( is-multiplicative-decomposition-is-prime-decomposition-list-ℕ
+          y q Dq)))
 
 prime-decomposition-list-sort-concatenation-ℕ :
-  (x y : ℕ) (H : leq-ℕ 1 x) (I : leq-ℕ 1 y) (p q : list ℕ) →
+  (x y : ℕ) (H : 1 ≤-ℕ x) (I : 1 ≤-ℕ y) (p q : list ℕ) →
   is-prime-decomposition-list-ℕ x p →
   is-prime-decomposition-list-ℕ y q →
-  prime-decomposition-list-ℕ (x *ℕ y) (preserves-leq-mul-ℕ 1 x 1 y H I)
+  prime-decomposition-list-ℕ (x *ℕ y)
 pr1 (prime-decomposition-list-sort-concatenation-ℕ x y H I p q Dp Dq) =
   insertion-sort-list ℕ-Decidable-Total-Order (concat-list p q)
 pr2 (prime-decomposition-list-sort-concatenation-ℕ x y H I p q Dp Dq) =

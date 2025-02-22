@@ -43,7 +43,7 @@ type is the least reflexive relation.
 
 We include two notations for the identity type. First, we introduce the identity
 type using Martin-Löf's original notation `Id`. Then we introduce as a secondary
-option the infix notation `_＝_`.
+option the infix notation `_＝_`. The notation for equality was first used by the Welsh physician and mathematician [Robert Recorde](https://en.wikipedia.org/wiki/Robert_Recorde) in 1557. He introduced the notation on [page 237](https://archive.org/details/TheWhetstoneOfWitte/page/n237/mode/2up) of {{#cite Recorde1557}} "bicause noe.2.thynges,can be moare equalle".
 
 **Note**: The equals sign in the infix notation is not the standard equals sign
 on your keyboard, but it is the

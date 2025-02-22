@@ -9,6 +9,7 @@ module elementary-number-theory.mersenne-primes where
 ```agda
 open import elementary-number-theory.distance-natural-numbers
 open import elementary-number-theory.exponentiation-natural-numbers
+open import elementary-number-theory.mersenne-numbers
 open import elementary-number-theory.natural-numbers
 open import elementary-number-theory.prime-numbers
 
@@ -22,14 +23,28 @@ open import foundation.universe-levels
 
 ## Idea
 
-A Mersenne prime is a prime number that is one less than a power of two.
+A
+{{#concept "Mersenne prime" Agda=is-mersenne-prime-ℕ WDID=Q186875 WD="Mersenne prime"}}
+is a [prime number](elementary-number-theory.prime-numbers.md) that is one less
+than a
+[power of two](elementary-number-theory.exponentiation-natural-numbers.md).
 
-## Definition
+## Definitions
+
+### The predicate of being a Mersenne prime
 
 ```agda
-is-mersenne-prime : ℕ → UU lzero
-is-mersenne-prime n = is-prime-ℕ n × Σ ℕ (λ k → dist-ℕ (exp-ℕ 2 k) 1 ＝ n)
+is-mersenne-prime-ℕ :
+  ℕ → UU lzero
+is-mersenne-prime-ℕ n =
+  is-prime-ℕ n × is-mersenne-number-ℕ n
+```
 
-is-mersenne-prime-power : ℕ → UU lzero
-is-mersenne-prime-power k = is-prime-ℕ (dist-ℕ (exp-ℕ 2 k) 1)
+### The predicate on Mersenne numbers of being prime
+
+```agda
+is-prime-mersenne-number-ℕ :
+  ℕ → UU lzero
+is-prime-mersenne-number-ℕ k =
+  is-prime-ℕ (mersenne-number-ℕ k)
 ```

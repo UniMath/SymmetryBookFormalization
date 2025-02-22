@@ -55,7 +55,7 @@ module _
   is-permutation-vec-is-sort-vec S n = pr1 (S n)
 
   permutation-vec-is-sort-vec :
-    is-sort-vec → (n : ℕ) → vec (type-Decidable-Total-Order X) n → Permutation n
+    is-sort-vec → (n : ℕ) → vec (type-Decidable-Total-Order X) n → permutation n
   permutation-vec-is-sort-vec S n v =
     permutation-is-permutation-vec n f (is-permutation-vec-is-sort-vec S n) v
 

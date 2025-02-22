@@ -111,6 +111,13 @@ module _
     inv-equiv right-unit-law-product-is-contr
 
 module _
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (H : A → is-contr B)
+  where
+
+  right-unit-law-product-is-contr' : A × B ≃ A
+  right-unit-law-product-is-contr' = right-unit-law-Σ-is-contr H
+
+module _
   {l1 l2 : Level} {A : UU l1} {B : UU l2} (is-contr-A : is-contr A)
   where
 
@@ -132,6 +139,14 @@ module _
   equiv-pr2-product-is-contr : (A × B) ≃ B
   pr1 equiv-pr2-product-is-contr = pr2
   pr2 equiv-pr2-product-is-contr = is-equiv-pr2-product-is-contr
+
+module _
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (H : B → is-contr A)
+  where
+
+  left-unit-law-product-is-contr' : A × B ≃ B
+  left-unit-law-product-is-contr' =
+    right-unit-law-product-is-contr' H ∘e commutative-product
 ```
 
 ### Adding redundant properties

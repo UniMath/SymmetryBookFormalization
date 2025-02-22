@@ -172,7 +172,7 @@ is-nonpositive-neg-is-nonnegative-ℤ {inr (inl x)} H = H
 is-nonpositive-neg-is-nonnegative-ℤ {inr (inr x)} H = H
 
 neg-nonnegative-ℤ : nonnegative-ℤ → nonpositive-ℤ
-neg-nonnegative-ℤ (x , H) = neg-ℤ x , is-nonpositive-neg-is-nonnegative-ℤ H
+neg-nonnegative-ℤ (x , H) = (neg-ℤ x , is-nonpositive-neg-is-nonnegative-ℤ H)
 ```
 
 #### The negative of a nonpositive integer is nonnegative

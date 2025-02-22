@@ -39,6 +39,8 @@ open import lists.concatenation-lists
 open import lists.lists
 
 open import ring-theory.semirings
+
+open import structured-types.magmas
 ```
 
 </details>
@@ -83,6 +85,9 @@ module _
 
   additive-monoid-Ring : Monoid l
   additive-monoid-Ring = monoid-Ab ab-Ring
+
+  additive-unital-magma-Ring : Unital-Magma l
+  additive-unital-magma-Ring = unital-magma-Monoid additive-monoid-Ring
 
   additive-semigroup-Ring : Semigroup l
   additive-semigroup-Ring = semigroup-Ab ab-Ring

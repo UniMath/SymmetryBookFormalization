@@ -10,6 +10,7 @@ module elementary-number-theory.integer-fractions where
 open import elementary-number-theory.greatest-common-divisor-integers
 open import elementary-number-theory.integers
 open import elementary-number-theory.multiplication-integers
+open import elementary-number-theory.natural-numbers
 open import elementary-number-theory.nonzero-integers
 open import elementary-number-theory.positive-and-negative-integers
 open import elementary-number-theory.positive-integers
@@ -64,6 +65,10 @@ denominator-fraction-ℤ x = pr1 (positive-denominator-fraction-ℤ x)
 is-positive-denominator-fraction-ℤ :
   (x : fraction-ℤ) → is-positive-ℤ (denominator-fraction-ℤ x)
 is-positive-denominator-fraction-ℤ x = pr2 (positive-denominator-fraction-ℤ x)
+
+nat-denominator-fraction-ℤ : fraction-ℤ → ℕ
+nat-denominator-fraction-ℤ x =
+  nat-positive-ℤ (positive-denominator-fraction-ℤ x)
 ```
 
 ### Inclusion of the integers
@@ -129,12 +134,35 @@ fraction-ℤ-Set : Set lzero
 fraction-ℤ-Set = fraction-ℤ , is-set-fraction-ℤ
 ```
 
+### The standard equivalence relation on integer fractions
+
+Two integer fractions `a/b` and `c/d` are said to be equivalent if they satisfy
+the equation
+
+```text
+  ad ＝ cb.
+```
+
+This relation is obviously reflexive and symmetric. To see that it is
+transitive, suppose that `a/b ~ c/d` and that `c/d ~ e/f`. Since `d` is
+positive, we have the implication
+
+```text
+  (af)d ＝ (eb)d → af ＝ eb.
+```
+
+Therefore it suffices to show that `(af)d ＝ (eb)d`. To see this, we calculate
+
+```text
+  (af)d ＝ (ad)f ＝ (cb)f ＝ (cf)b ＝ (ed)b ＝ (eb)d.
+```
+
 ```agda
 sim-fraction-ℤ-Prop : fraction-ℤ → fraction-ℤ → Prop lzero
 sim-fraction-ℤ-Prop x y =
   Id-Prop ℤ-Set
-    ((numerator-fraction-ℤ x) *ℤ (denominator-fraction-ℤ y))
-    ((numerator-fraction-ℤ y) *ℤ (denominator-fraction-ℤ x))
+    ( numerator-fraction-ℤ x *ℤ denominator-fraction-ℤ y)
+    ( numerator-fraction-ℤ y *ℤ denominator-fraction-ℤ x)
 
 sim-fraction-ℤ : fraction-ℤ → fraction-ℤ → UU lzero
 sim-fraction-ℤ x y = type-Prop (sim-fraction-ℤ-Prop x y)
@@ -150,54 +178,11 @@ symmetric-sim-fraction-ℤ x y r = inv r
 
 abstract
   transitive-sim-fraction-ℤ : is-transitive sim-fraction-ℤ
-  transitive-sim-fraction-ℤ x y z s r =
-    is-injective-right-mul-ℤ
-      ( denominator-fraction-ℤ y)
+  transitive-sim-fraction-ℤ (a , b , pb) y@(c , d , pd) (e , f , pf) s r =
+    is-injective-right-mul-ℤ d
       ( is-nonzero-denominator-fraction-ℤ y)
-      ( ( associative-mul-ℤ
-          ( numerator-fraction-ℤ x)
-          ( denominator-fraction-ℤ z)
-          ( denominator-fraction-ℤ y)) ∙
-        ( ap
-          ( (numerator-fraction-ℤ x) *ℤ_)
-          ( commutative-mul-ℤ
-            ( denominator-fraction-ℤ z)
-            ( denominator-fraction-ℤ y))) ∙
-        ( inv
-          ( associative-mul-ℤ
-            ( numerator-fraction-ℤ x)
-            ( denominator-fraction-ℤ y)
-            ( denominator-fraction-ℤ z))) ∙
-        ( ap ( _*ℤ (denominator-fraction-ℤ z)) r) ∙
-        ( associative-mul-ℤ
-          ( numerator-fraction-ℤ y)
-          ( denominator-fraction-ℤ x)
-          ( denominator-fraction-ℤ z)) ∙
-        ( ap
-          ( (numerator-fraction-ℤ y) *ℤ_)
-          ( commutative-mul-ℤ
-            ( denominator-fraction-ℤ x)
-            ( denominator-fraction-ℤ z))) ∙
-        ( inv
-          ( associative-mul-ℤ
-            ( numerator-fraction-ℤ y)
-            ( denominator-fraction-ℤ z)
-            ( denominator-fraction-ℤ x))) ∙
-        ( ap (_*ℤ (denominator-fraction-ℤ x)) s) ∙
-        ( associative-mul-ℤ
-          ( numerator-fraction-ℤ z)
-          ( denominator-fraction-ℤ y)
-          ( denominator-fraction-ℤ x)) ∙
-        ( ap
-          ( (numerator-fraction-ℤ z) *ℤ_)
-          ( commutative-mul-ℤ
-            ( denominator-fraction-ℤ y)
-            ( denominator-fraction-ℤ x))) ∙
-        ( inv
-          ( associative-mul-ℤ
-            ( numerator-fraction-ℤ z)
-            ( denominator-fraction-ℤ x)
-            ( denominator-fraction-ℤ y))))
+      ( right-swap-mul-ℤ a f d ∙ ap (_*ℤ f) r ∙
+        right-swap-mul-ℤ c b f ∙ ap (_*ℤ b) s ∙ right-swap-mul-ℤ e d b)
 
 equivalence-relation-sim-fraction-ℤ : equivalence-relation lzero fraction-ℤ
 pr1 equivalence-relation-sim-fraction-ℤ = sim-fraction-ℤ-Prop

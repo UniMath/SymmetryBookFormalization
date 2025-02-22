@@ -57,7 +57,7 @@ module _
   (n : ℕ) (i j : Fin n) (neq : i ≠ j)
   where
 
-  transposition-Fin : Permutation n
+  transposition-Fin : permutation n
   transposition-Fin = standard-transposition (has-decidable-equality-Fin n) neq
 
   map-transposition-Fin : Fin n → Fin n
@@ -109,7 +109,7 @@ module _
     refl
   is-involution-map-swap-two-last-elements-transposition-Fin (inr star) = refl
 
-  swap-two-last-elements-transposition-Fin : Permutation (succ-ℕ (succ-ℕ n))
+  swap-two-last-elements-transposition-Fin : permutation (succ-ℕ (succ-ℕ n))
   pr1 swap-two-last-elements-transposition-Fin =
     map-swap-two-last-elements-transposition-Fin
   pr2 swap-two-last-elements-transposition-Fin =
@@ -197,7 +197,7 @@ We show that this definiton is an instance of the previous one.
 ```agda
 adjacent-transposition-Fin :
   (n : ℕ) → (k : Fin n) →
-  Permutation (succ-ℕ n)
+  permutation (succ-ℕ n)
 adjacent-transposition-Fin (succ-ℕ n) (inl x) =
   equiv-coproduct (adjacent-transposition-Fin n x) id-equiv
 adjacent-transposition-Fin (succ-ℕ n) (inr x) =
@@ -567,7 +567,7 @@ list-adjacent-transpositions-transposition-Fin
   ( inl (inr star)) = cons (inr star) nil
 
 permutation-list-adjacent-transpositions :
-  (n : ℕ) → list (Fin n) → Permutation (succ-ℕ n)
+  (n : ℕ) → list (Fin n) → permutation (succ-ℕ n)
 permutation-list-adjacent-transpositions n nil = id-equiv
 permutation-list-adjacent-transpositions n (cons x l) =
   adjacent-transposition-Fin n x ∘e

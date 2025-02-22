@@ -22,6 +22,7 @@ open import elementary-number-theory.inequality-integers
 open import elementary-number-theory.inequality-natural-numbers
 open import elementary-number-theory.integers
 open import elementary-number-theory.lower-bounds-natural-numbers
+open import elementary-number-theory.minimal-structured-natural-numbers
 open import elementary-number-theory.modular-arithmetic
 open import elementary-number-theory.multiplication-integers
 open import elementary-number-theory.multiplication-natural-numbers
@@ -799,13 +800,14 @@ is-inhabited-pos-distance-between-multiples (succ-ℕ x) y = pair (succ-ℕ x)
 
 minimal-pos-distance-between-multiples :
   (x y : ℕ) → minimal-element-ℕ (pos-distance-between-multiples x y)
-minimal-pos-distance-between-multiples x y = well-ordering-principle-ℕ
-  (pos-distance-between-multiples x y)
-  (λ z → is-decidable-function-type
-    (is-decidable-neg (is-decidable-is-zero-ℕ (x +ℕ y)))
-    (is-decidable-product (is-decidable-neg (is-decidable-is-zero-ℕ z))
-      (is-decidable-is-distance-between-multiples-ℕ x y z)))
-  (is-inhabited-pos-distance-between-multiples x y)
+minimal-pos-distance-between-multiples x y =
+  well-ordering-principle-ℕ
+    ( pos-distance-between-multiples x y)
+    ( λ z → is-decidable-function-type
+      ( is-decidable-neg (is-decidable-is-zero-ℕ (x +ℕ y)))
+      ( is-decidable-product (is-decidable-neg (is-decidable-is-zero-ℕ z))
+        ( is-decidable-is-distance-between-multiples-ℕ x y z)))
+    ( pr2 (is-inhabited-pos-distance-between-multiples x y))
 
 minimal-positive-distance : (x y : ℕ) → ℕ
 minimal-positive-distance x y = pr1 (minimal-pos-distance-between-multiples x y)
@@ -1368,7 +1370,7 @@ remainder-min-dist-succ-x-is-distance x y =
     coeff-nonnegative : leq-ℤ one-ℤ ((int-ℕ q) *ℤ (int-ℕ s))
     coeff-nonnegative = tr (leq-ℤ one-ℤ)
       (inv (mul-int-ℕ q s)) (leq-int-ℕ 1 (q *ℕ s)
-        (leq-succ-le-ℕ 0 (q *ℕ s) (le-is-nonzero-ℕ (q *ℕ s)
+        (leq-succ-le-ℕ 0 (q *ℕ s) (le-zero-is-nonzero-ℕ (q *ℕ s)
           (is-nonzero-mul-ℕ q s quotient-min-dist-succ-x-nonzero
             min-dist-succ-x-coeff-nonzero))))
 

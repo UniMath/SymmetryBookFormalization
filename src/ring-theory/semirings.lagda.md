@@ -24,6 +24,8 @@ open import foundation.universe-levels
 open import group-theory.commutative-monoids
 open import group-theory.monoids
 open import group-theory.semigroups
+
+open import structured-types.magmas
 ```
 
 </details>
@@ -80,6 +82,10 @@ module _
   additive-monoid-Semiring : Monoid l
   additive-monoid-Semiring =
     monoid-Commutative-Monoid additive-commutative-monoid-Semiring
+
+  additive-unital-magma-Semiring : Unital-Magma l
+  additive-unital-magma-Semiring =
+    unital-magma-Monoid additive-monoid-Semiring
 
   additive-semigroup-Semiring : Semigroup l
   additive-semigroup-Semiring =

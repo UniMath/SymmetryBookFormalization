@@ -169,10 +169,10 @@ module _
   where
 
   abstract
-    preserves-leq-rational-fraction-ℤ :
+    preserves-order-rational-fraction-ℤ :
       leq-fraction-ℤ p q → leq-ℚ (rational-fraction-ℤ p) (rational-fraction-ℤ q)
-    preserves-leq-rational-fraction-ℤ =
-      preserves-leq-sim-fraction-ℤ
+    preserves-order-rational-fraction-ℤ =
+      leq-sim-fraction-ℤ
         ( p)
         ( q)
         ( reduce-fraction-ℤ p)
@@ -317,11 +317,11 @@ module _
   preserves-leq-right-add-ℚ : leq-ℚ x y → leq-ℚ (z +ℚ x) (z +ℚ y)
   preserves-leq-right-add-ℚ = backward-implication iff-translate-left-leq-ℚ
 
-  reflects-leq-left-add-ℚ : leq-ℚ (x +ℚ z) (y +ℚ z) → leq-ℚ x y
-  reflects-leq-left-add-ℚ = forward-implication iff-translate-right-leq-ℚ
+  reflects-order-left-add-ℚ : leq-ℚ (x +ℚ z) (y +ℚ z) → leq-ℚ x y
+  reflects-order-left-add-ℚ = forward-implication iff-translate-right-leq-ℚ
 
-  reflects-leq-right-add-ℚ : leq-ℚ (z +ℚ x) (z +ℚ y) → leq-ℚ x y
-  reflects-leq-right-add-ℚ = forward-implication iff-translate-left-leq-ℚ
+  reflects-order-right-add-ℚ : leq-ℚ (z +ℚ x) (z +ℚ y) → leq-ℚ x y
+  reflects-order-right-add-ℚ = forward-implication iff-translate-left-leq-ℚ
 ```
 
 ### Addition on the rational numbers preserves inequality

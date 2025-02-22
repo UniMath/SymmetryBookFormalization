@@ -11,6 +11,7 @@ open import elementary-number-theory.divisibility-natural-numbers
 open import elementary-number-theory.equality-natural-numbers
 open import elementary-number-theory.fibonacci-sequence
 open import elementary-number-theory.inequality-natural-numbers
+open import elementary-number-theory.minimal-structured-natural-numbers
 open import elementary-number-theory.modular-arithmetic-standard-finite-types
 open import elementary-number-theory.natural-numbers
 open import elementary-number-theory.pisano-periods
@@ -34,7 +35,7 @@ The {{#concept "cofibonacci sequence" Agda=cofibonacci}} is the unique function
 `G : ℕ → ℕ` satisfying the property that
 
 ```text
-  div-ℕ (G m) n ↔ div-ℕ m (Fibonacci-ℕ n).
+  div-ℕ (G m) n ↔ div-ℕ m (fibonacci-ℕ n).
 ```
 
 The sequence starts
@@ -51,16 +52,16 @@ The sequence starts
 ```agda
 is-multiple-of-cofibonacci : (m x : ℕ) → UU lzero
 is-multiple-of-cofibonacci m x =
-  is-nonzero-ℕ m → is-nonzero-ℕ x × div-ℕ m (Fibonacci-ℕ x)
+  is-nonzero-ℕ m → is-nonzero-ℕ x × div-ℕ m (fibonacci-ℕ x)
 
 is-decidable-is-multiple-of-cofibonacci :
   (m x : ℕ) → is-decidable (is-multiple-of-cofibonacci m x)
 is-decidable-is-multiple-of-cofibonacci m x =
   is-decidable-function-type
-    ( is-decidable-is-nonzero-ℕ m)
+    ( is-decidable-zero-is-nonzero-ℕ m)
     ( is-decidable-product
-      ( is-decidable-is-nonzero-ℕ x)
-      ( is-decidable-div-ℕ m (Fibonacci-ℕ x)))
+      ( is-decidable-zero-is-nonzero-ℕ x)
+      ( is-decidable-div-ℕ m (fibonacci-ℕ x)))
 
 cofibonacci-multiple : (m : ℕ) → Σ ℕ (is-multiple-of-cofibonacci m)
 cofibonacci-multiple zero-ℕ = pair zero-ℕ (λ f → (ex-falso (f refl)))
@@ -79,7 +80,7 @@ least-multiple-of-cofibonacci m =
   well-ordering-principle-ℕ
     ( is-multiple-of-cofibonacci m)
     ( is-decidable-is-multiple-of-cofibonacci m)
-    ( cofibonacci-multiple m)
+    ( pr2 (cofibonacci-multiple m))
 
 cofibonacci : ℕ → ℕ
 cofibonacci m = pr1 (least-multiple-of-cofibonacci m)
@@ -112,12 +113,12 @@ is-zero-cofibonacci-zero-ℕ =
 
 ```agda
 forward-is-left-adjoint-cofibonacci :
-  (m n : ℕ) → div-ℕ (cofibonacci m) n → div-ℕ m (Fibonacci-ℕ n)
+  (m n : ℕ) → div-ℕ (cofibonacci m) n → div-ℕ m (fibonacci-ℕ n)
 forward-is-left-adjoint-cofibonacci zero-ℕ n H =
   tr
     ( div-ℕ zero-ℕ)
     ( ap
-      ( Fibonacci-ℕ)
+      ( fibonacci-ℕ)
       ( inv
         ( is-zero-div-zero-ℕ n
           ( tr (λ t → div-ℕ t n) is-zero-cofibonacci-zero-ℕ H))))
@@ -125,7 +126,7 @@ forward-is-left-adjoint-cofibonacci zero-ℕ n H =
 forward-is-left-adjoint-cofibonacci (succ-ℕ m) zero-ℕ H =
   div-zero-ℕ (succ-ℕ m)
 forward-is-left-adjoint-cofibonacci (succ-ℕ m) (succ-ℕ n) H =
-  div-Fibonacci-div-ℕ
+  div-fibonacci-div-ℕ
     ( succ-ℕ m)
     ( cofibonacci (succ-ℕ m))
     ( succ-ℕ n)
@@ -137,11 +138,11 @@ forward-is-left-adjoint-cofibonacci (succ-ℕ m) (succ-ℕ n) H =
 
 {-
 converse-is-left-adjoint-cofibonacci :
-  (m n : ℕ) → div-ℕ m (Fibonacci-ℕ n) → div-ℕ (cofibonacci m) n
+  (m n : ℕ) → div-ℕ m (fibonacci-ℕ n) → div-ℕ (cofibonacci m) n
 converse-is-left-adjoint-cofibonacci m n H = {!!}
 
 is-left-adjoint-cofibonacci :
-  (m n : ℕ) → div-ℕ (cofibonacci m) n ↔ div-ℕ m (Fibonacci-ℕ n)
+  (m n : ℕ) → div-ℕ (cofibonacci m) n ↔ div-ℕ m (fibonacci-ℕ n)
 is-left-adjoint-cofibonacci m n = {!!}
 -}
 ```

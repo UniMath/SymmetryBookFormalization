@@ -53,5 +53,7 @@ jacobi-symbol a (succ-ℕ (succ-ℕ n)) =
     ( mul-ℤ)
     ( map-list
       ( swap-Π legendre-symbol a)
-      ( list-primes-fundamental-theorem-arithmetic-ℕ (succ-ℕ (succ-ℕ n)) star))
+      ( list-of-primes-fundamental-theorem-arithmetic-ℕ
+        ( succ-ℕ (succ-ℕ n))
+        ( star)))
 ```

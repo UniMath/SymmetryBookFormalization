@@ -84,10 +84,10 @@ module _
   map-strictly-inflationary-map-Strict-Preorder =
     pr1 f
 
-  is-inflationary-strictly-inflationary-map-Strict-Preorder :
+  is-strictly-inflationary-strictly-inflationary-map-Strict-Preorder :
     is-strictly-inflationary-map-Strict-Preorder P
       ( map-strictly-inflationary-map-Strict-Preorder)
-  is-inflationary-strictly-inflationary-map-Strict-Preorder =
+  is-strictly-inflationary-strictly-inflationary-map-Strict-Preorder =
     pr2 f
 ```
 

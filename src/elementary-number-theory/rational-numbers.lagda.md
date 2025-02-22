@@ -311,6 +311,13 @@ pr1 reflecting-map-sim-fraction = rational-fraction-ℤ
 pr2 reflecting-map-sim-fraction {x} {y} H = eq-ℚ-sim-fraction-ℤ x y H
 ```
 
+## See also
+
+- [Farey fractions](elementary-number-theory.farey-fractions.md) encode the type
+  of rational numbers between $0$ and $1$ by a mutual recursive construction.
+- [Unbounded Farey fractions](elementary-number-theory.unbounded-farey-fractions.md)
+  encode the type of all rational numbers by a mutal recursive construction.
+
 ## References
 
 {{#bibliography}}

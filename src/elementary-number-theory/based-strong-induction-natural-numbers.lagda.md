@@ -101,7 +101,7 @@ succ-based-strong-ind-ℕ :
   ((x : ℕ) → leq-ℕ k x → based-□-≤-ℕ k P x → P (succ-ℕ x)) →
   (n : ℕ) → leq-ℕ k n → based-□-≤-ℕ k P n → based-□-≤-ℕ k P (succ-ℕ n)
 succ-based-strong-ind-ℕ k P pS n N f m M H =
-  cases-succ-based-strong-ind-ℕ k P pS n N f m M (cases-leq-succ-ℕ H)
+  cases-succ-based-strong-ind-ℕ k P pS n N f m M (decide-leq-succ-ℕ m n H)
 
 cases-htpy-succ-based-strong-ind-ℕ :
   {l : Level} (k : ℕ) (P : ℕ → UU l)
@@ -122,7 +122,7 @@ htpy-succ-based-strong-ind-ℕ :
   (m : ℕ) (M : k ≤-ℕ m) (H : leq-ℕ m (succ-ℕ n)) (K : leq-ℕ m n) →
   succ-based-strong-ind-ℕ k P pS n N f m M H ＝ f m M K
 htpy-succ-based-strong-ind-ℕ k P pS n N f m M H =
-  cases-htpy-succ-based-strong-ind-ℕ k P pS n N f m M (cases-leq-succ-ℕ H)
+  cases-htpy-succ-based-strong-ind-ℕ k P pS n N f m M (decide-leq-succ-ℕ m n H)
 
 cases-eq-succ-based-strong-ind-ℕ :
   {l : Level} (k : ℕ) (P : ℕ → UU l)
@@ -144,7 +144,8 @@ eq-succ-based-strong-ind-ℕ :
   (H : leq-ℕ (succ-ℕ n) (succ-ℕ n)) →
   succ-based-strong-ind-ℕ k P pS n N f (succ-ℕ n) M H ＝ pS n N f
 eq-succ-based-strong-ind-ℕ k P pS n N f M H =
-  cases-eq-succ-based-strong-ind-ℕ k P pS n N f M (cases-leq-succ-ℕ H)
+  cases-eq-succ-based-strong-ind-ℕ k P pS n N f M
+    ( decide-leq-succ-ℕ (succ-ℕ n) n H)
 ```
 
 ### The inductive step in the proof of based strong induction
@@ -353,7 +354,7 @@ eq-inductive-step-compute-succ-based-strong-ind-ℕ k P p0 pS n N m M =
       cases-eq-inductive-step-compute-succ-based-strong-ind-ℕ
         k P p0 pS i I' I m M
         ( J)
-        ( cases-leq-succ-ℕ J)
+        ( decide-leq-succ-ℕ m i J)
         ( α))
     ( n)
     ( N)
@@ -412,7 +413,7 @@ based-strong-ind-ℕ' :
   (p0 : P k (refl-leq-ℕ k)) →
   (pS : (x : ℕ) → (H : k ≤-ℕ x) →
     based-□-≤-ℕ' k P x →
-    P (succ-ℕ x) (preserves-leq-succ-ℕ k x H))
+    P (succ-ℕ x) (leq-succ-leq-ℕ k x H))
   (n : ℕ) → (H : k ≤-ℕ n) → P n H
 based-strong-ind-ℕ' {l} k P p0 pS n H =
   based-strong-ind-ℕ
@@ -425,10 +426,10 @@ based-strong-ind-ℕ' {l} k P p0 pS n H =
       ( p0))
     ( λ x H p →
       apply-dependent-universal-property-contr
-        ( preserves-leq-succ-ℕ k x H)
+        ( leq-succ-leq-ℕ k x H)
         ( is-proof-irrelevant-is-prop
           ( is-prop-leq-ℕ k (succ-ℕ x))
-          ( preserves-leq-succ-ℕ k x H))
+          ( leq-succ-leq-ℕ k x H))
         ( P (succ-ℕ x))
         ( pS x H ( compute-base-□-≤-ℕ' k P x p)))
     ( n)

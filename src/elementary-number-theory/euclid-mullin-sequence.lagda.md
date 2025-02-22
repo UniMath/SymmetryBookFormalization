@@ -7,8 +7,8 @@ module elementary-number-theory.euclid-mullin-sequence where
 <details><summary>Imports</summary>
 
 ```agda
-open import elementary-number-theory.fundamental-theorem-of-arithmetic
 open import elementary-number-theory.natural-numbers
+open import elementary-number-theory.nontrivial-divisors-natural-numbers
 open import elementary-number-theory.products-of-natural-numbers
 open import elementary-number-theory.strict-inequality-natural-numbers
 open import elementary-number-theory.strong-induction-natural-numbers

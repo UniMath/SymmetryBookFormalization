@@ -31,7 +31,9 @@ open import foundation.unit-type
 The {{#concept "absolute value" Disambiguation="of an integer" Agda=abs-ℤ}} of
 an integer is the natural number with the same distance from `0`.
 
-## Definition
+## Definitions
+
+### The absolute value of an integer
 
 ```agda
 abs-ℤ : ℤ → ℕ
@@ -92,7 +94,7 @@ predecessor-law-abs-ℤ (inr (inl star)) =
 predecessor-law-abs-ℤ (inr (inr zero-ℕ)) =
   star
 predecessor-law-abs-ℤ (inr (inr (succ-ℕ x))) =
-  preserves-leq-succ-ℕ x (succ-ℕ x) (succ-leq-ℕ x)
+  leq-succ-leq-ℕ x (succ-ℕ x) (succ-leq-ℕ x)
 ```
 
 ### `|x + 1| ≤ |x| + 1`
@@ -103,7 +105,7 @@ successor-law-abs-ℤ :
 successor-law-abs-ℤ (inl zero-ℕ) =
   star
 successor-law-abs-ℤ (inl (succ-ℕ x)) =
-  preserves-leq-succ-ℕ x (succ-ℕ x) (succ-leq-ℕ x)
+  leq-succ-leq-ℕ x (succ-ℕ x) (succ-leq-ℕ x)
 successor-law-abs-ℤ (inr (inl star)) =
   refl-leq-ℕ zero-ℕ
 successor-law-abs-ℤ (inr (inr x)) =
@@ -178,36 +180,36 @@ is-nonzero-abs-ℤ :
 is-nonzero-abs-ℤ (inr (inr x)) H = is-nonzero-succ-ℕ x
 ```
 
-### The absolute value function is multiplicative
+### The absolute value distributes over multiplication
 
 ```agda
-multiplicative-abs-ℤ' :
-  (x y : ℤ) → abs-ℤ (explicit-mul-ℤ x y) ＝ (abs-ℤ x) *ℕ (abs-ℤ y)
-multiplicative-abs-ℤ' (inl x) (inl y) =
+distributive-abs-mul-ℤ' :
+  (x y : ℤ) → abs-ℤ (explicit-mul-ℤ x y) ＝ abs-ℤ x *ℕ abs-ℤ y
+distributive-abs-mul-ℤ' (inl x) (inl y) =
   abs-int-ℕ _
-multiplicative-abs-ℤ' (inl x) (inr (inl star)) =
+distributive-abs-mul-ℤ' (inl x) (inr (inl star)) =
   inv (right-zero-law-mul-ℕ x)
-multiplicative-abs-ℤ' (inl x) (inr (inr y)) =
+distributive-abs-mul-ℤ' (inl x) (inr (inr y)) =
   ( abs-neg-ℤ (inl ((x *ℕ (succ-ℕ y)) +ℕ y))) ∙
   ( abs-int-ℕ ((succ-ℕ x) *ℕ (succ-ℕ y)))
-multiplicative-abs-ℤ' (inr (inl star)) (inl y) =
+distributive-abs-mul-ℤ' (inr (inl star)) (inl y) =
   refl
-multiplicative-abs-ℤ' (inr (inr x)) (inl y) =
+distributive-abs-mul-ℤ' (inr (inr x)) (inl y) =
   ( abs-neg-ℤ (inl ((x *ℕ (succ-ℕ y)) +ℕ y))) ∙
   ( abs-int-ℕ (succ-ℕ ((x *ℕ (succ-ℕ y)) +ℕ y)))
-multiplicative-abs-ℤ' (inr (inl star)) (inr (inl star)) =
+distributive-abs-mul-ℤ' (inr (inl star)) (inr (inl star)) =
   refl
-multiplicative-abs-ℤ' (inr (inl star)) (inr (inr x)) =
+distributive-abs-mul-ℤ' (inr (inl star)) (inr (inr x)) =
   refl
-multiplicative-abs-ℤ' (inr (inr x)) (inr (inl star)) =
+distributive-abs-mul-ℤ' (inr (inr x)) (inr (inl star)) =
   inv (right-zero-law-mul-ℕ (succ-ℕ x))
-multiplicative-abs-ℤ' (inr (inr x)) (inr (inr y)) =
+distributive-abs-mul-ℤ' (inr (inr x)) (inr (inr y)) =
   abs-int-ℕ _
 
-multiplicative-abs-ℤ :
-  (x y : ℤ) → abs-ℤ (x *ℤ y) ＝ (abs-ℤ x) *ℕ (abs-ℤ y)
-multiplicative-abs-ℤ x y =
-  ap abs-ℤ (compute-mul-ℤ x y) ∙ multiplicative-abs-ℤ' x y
+distributive-abs-mul-ℤ :
+  (x y : ℤ) → abs-ℤ (x *ℤ y) ＝ abs-ℤ x *ℕ abs-ℤ y
+distributive-abs-mul-ℤ x y =
+  ap abs-ℤ (compute-mul-ℤ x y) ∙ distributive-abs-mul-ℤ' x y
 ```
 
 ### `|(-x)y| ＝ |xy|`

@@ -1,8 +1,10 @@
-# Formalization of results from the literature
+# Formalization of results from the
 
-> This page is currently under construction. To see what's happening behind the
-> scenes, see the associated GitHub issue
-> [#1055](https://github.com/UniMath/agda-unimath/issues/1055).
+On this page we highlight some publications that have been formalized in
+agda-unimath. We are still working on giving a more complete overview of the
+papers we have formalized. To what's happening behind the scenes, see the
+associated GitHub issue
+[#1055](https://github.com/UniMath/agda-unimath/issues/1055).
 
 ## Modules in the literature namespace
 
