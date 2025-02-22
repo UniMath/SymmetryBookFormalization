@@ -164,3 +164,7 @@ module _
     eq-htpy (λ f → eq-htpy (λ x → iterate-mul-ℕ k l f x))
   pr2 (pr2 iterative-action-Monoid) = refl
 ```
+
+## External links
+
+- [Function iteration](https://www.wikidata.org/wiki/Q5254619) on Wikidata

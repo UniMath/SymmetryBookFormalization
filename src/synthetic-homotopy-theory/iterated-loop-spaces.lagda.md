@@ -22,11 +22,11 @@ open import synthetic-homotopy-theory.loop-spaces
 
 ## Idea
 
-An **iterated loop space** `Ωⁿ A` is the
-[pointed type](structured-types.pointed-types.md) obtained by `n` times
-[iterating](foundation.iterating-functions.md) the
-[loop space](synthetic-homotopy-theory.loop-spaces.md) functor
-`Ω : Pointed-Type → Pointed-Type`.
+The
+{{#concept "iterated loop space" Disambiguation="of a pointed type" Agda=iterated-loop-space}}
+`ΩⁿA` of a [pointed type](structured-types.pointed-types.md) `A` is obtained by
+[iteratively](foundation.iterating-functions.md) applying the
+[loop space](synthetic-homotopy-theory.loop-spaces.md) operation `Ω` to `A`.
 
 ## Definitions
 
@@ -39,6 +39,13 @@ module _
 
   iterated-loop-space : ℕ → Pointed-Type l → Pointed-Type l
   iterated-loop-space n = iterate n Ω
+
+  type-iterated-loop-space : ℕ → Pointed-Type l → UU l
+  type-iterated-loop-space n A = type-Pointed-Type (iterated-loop-space n A)
+
+  point-iterated-loop-space :
+    (n : ℕ) (A : Pointed-Type l) → type-iterated-loop-space n A
+  point-iterated-loop-space n A = point-Pointed-Type (iterated-loop-space n A)
 ```
 
 ### Iterated loop spaces of H-spaces
@@ -58,3 +65,8 @@ module _
 
 - [Double loop spaces](synthetic-homotopy-theory.double-loop-spaces.md)
 - [Triple loop spaces](synthetic-homotopy-theory.triple-loop-spaces.md)
+
+## External links
+
+- [Loop space](https://www.wikidata.org/wiki/Q2066070) on Wikidata
+- [Function iteration](https://www.wikidata.org/wiki/Q5254619) on Wikidata
