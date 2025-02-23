@@ -29,6 +29,7 @@ open import foundation.functoriality-dependent-pair-types
 open import foundation.identity-types
 open import foundation.logical-equivalences
 open import foundation.negation
+open import foundation.powersets
 open import foundation.propositional-truncations
 open import foundation.propositions
 open import foundation.sets
@@ -371,7 +372,7 @@ module _
 
 ```agda
 module _
-  {l : Level} (x y : ℝ l)
+  {l1 l2 : Level} (x : ℝ l1) (y : ℝ l2)
   where
 
   subset-lower-cut-upper-cut-ℝ :
@@ -393,25 +394,42 @@ module _
       ( λ q → map-tot-exists (λ p → tot (λ _ K → K ∘ H p)))
 
 module _
+  {l1 l2 : Level} (x : ℝ l1) (y : ℝ l2)
+  where
+
+  sim-lower-cut-sim-upper-cut-ℝ :
+    sim-subtype (upper-cut-ℝ x) (upper-cut-ℝ y) →
+    sim-subtype (lower-cut-ℝ x) (lower-cut-ℝ y)
+  pr1 (sim-lower-cut-sim-upper-cut-ℝ (_ , uy⊆ux)) =
+    subset-lower-cut-upper-cut-ℝ x y uy⊆ux
+  pr2 (sim-lower-cut-sim-upper-cut-ℝ (ux⊆uy , _)) =
+    subset-lower-cut-upper-cut-ℝ y x ux⊆uy
+
+  sim-upper-cut-sim-lower-cut-ℝ :
+    sim-subtype (lower-cut-ℝ x) (lower-cut-ℝ y) →
+    sim-subtype (upper-cut-ℝ x) (upper-cut-ℝ y)
+  pr1 (sim-upper-cut-sim-lower-cut-ℝ (_ , ly⊆lx)) =
+    subset-upper-cut-lower-cut-ℝ y x ly⊆lx
+  pr2 (sim-upper-cut-sim-lower-cut-ℝ (lx⊆ly , _)) =
+    subset-upper-cut-lower-cut-ℝ x y lx⊆ly
+
+module _
   {l : Level} (x y : ℝ l)
   where
 
   eq-lower-cut-eq-upper-cut-ℝ :
     upper-cut-ℝ x ＝ upper-cut-ℝ y → lower-cut-ℝ x ＝ lower-cut-ℝ y
   eq-lower-cut-eq-upper-cut-ℝ H =
-    antisymmetric-leq-subtype
+    eq-sim-subtype
       ( lower-cut-ℝ x)
       ( lower-cut-ℝ y)
-      ( subset-lower-cut-upper-cut-ℝ x y
-        ( pr2 ∘ has-same-elements-eq-subtype
-          ( upper-cut-ℝ x)
-          ( upper-cut-ℝ y)
-          ( H)))
-      ( subset-lower-cut-upper-cut-ℝ y x
-        ( pr1 ∘ has-same-elements-eq-subtype
-          ( upper-cut-ℝ x)
-          ( upper-cut-ℝ y)
-          ( H)))
+      ( sim-lower-cut-sim-upper-cut-ℝ
+        ( x)
+        ( y)
+        ( tr
+          ( sim-subtype (upper-cut-ℝ x))
+          ( H)
+          ( refl-sim-subtype (upper-cut-ℝ x))))
 
   eq-lower-real-eq-upper-real-ℝ :
     upper-real-ℝ x ＝ upper-real-ℝ y → lower-real-ℝ x ＝ lower-real-ℝ y

@@ -155,7 +155,7 @@ module _
     minkowski-mul-Commutative-Monoid M A B ＝
     minkowski-mul-Commutative-Monoid M B A
   commutative-minkowski-mul-Commutative-Monoid =
-    antisymmetric-sim-subtype
+    eq-sim-subtype
       ( minkowski-mul-Commutative-Monoid M A B)
       ( minkowski-mul-Commutative-Monoid M B A)
       ( commutative-minkowski-mul-leq-Commutative-Monoid M A B ,

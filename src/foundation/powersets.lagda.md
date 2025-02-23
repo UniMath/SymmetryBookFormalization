@@ -217,6 +217,20 @@ module _
   refl-sim-subtype = refl-sim-Large-Poset (powerset-Large-Poset A)
 ```
 
+#### Similarity is symmetric
+
+```agda
+module _
+  {l1 : Level} {A : UU l1}
+  where
+
+  symmetric-sim-subtype :
+    {l2 l3 : Level} →
+    (P : subtype l2 A) (Q : subtype l3 A) →
+    sim-subtype P Q → sim-subtype Q P
+  symmetric-sim-subtype = symmetric-sim-Large-Poset (powerset-Large-Poset A)
+```
+
 #### Similarity is transitive
 
 ```agda
@@ -234,12 +248,12 @@ module _
 #### Similarity is antisymmetric at the same universe level
 
 ```agda
-  antisymmetric-sim-subtype :
+  eq-sim-subtype :
     {l2 : Level} →
     (P Q : subtype l2 A) →
     sim-subtype P Q →
     P ＝ Q
-  antisymmetric-sim-subtype = eq-sim-Large-Poset (powerset-Large-Poset A)
+  eq-sim-subtype = eq-sim-Large-Poset (powerset-Large-Poset A)
 ```
 
 ## See also

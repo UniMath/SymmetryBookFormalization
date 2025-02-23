@@ -148,8 +148,7 @@ module _
 
   eq-sim-cut-lower-ℝ : sim-subtype (cut-lower-ℝ x) (cut-lower-ℝ y) → x ＝ y
   eq-sim-cut-lower-ℝ =
-    eq-eq-cut-lower-ℝ ∘
-    antisymmetric-sim-subtype (cut-lower-ℝ x) (cut-lower-ℝ y)
+    eq-eq-cut-lower-ℝ ∘ eq-sim-subtype (cut-lower-ℝ x) (cut-lower-ℝ y)
 ```
 
 ## See also

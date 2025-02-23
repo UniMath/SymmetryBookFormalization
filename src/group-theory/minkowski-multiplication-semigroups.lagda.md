@@ -123,7 +123,7 @@ module _
     minkowski-mul-Semigroup G (minkowski-mul-Semigroup G A B) C ＝
     minkowski-mul-Semigroup G A (minkowski-mul-Semigroup G B C)
   associative-minkowski-mul-Semigroup =
-    antisymmetric-sim-subtype
+    eq-sim-subtype
       ( minkowski-mul-Semigroup G (minkowski-mul-Semigroup G A B) C)
       ( minkowski-mul-Semigroup G A (minkowski-mul-Semigroup G B C))
       ( sim-associative-minkowski-mul-Semigroup)

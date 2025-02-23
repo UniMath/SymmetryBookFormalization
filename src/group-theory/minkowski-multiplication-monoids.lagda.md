@@ -132,12 +132,12 @@ module _
     is-unital (minkowski-mul-Monoid {l} {l} {l} M)
   pr1 is-unital-minkowski-mul-Monoid = is-unit-Monoid-Prop M
   pr1 (pr2 is-unital-minkowski-mul-Monoid) A =
-    antisymmetric-sim-subtype
+    eq-sim-subtype
       ( minkowski-mul-Monoid M (is-unit-Monoid-Prop M) A)
       ( A)
       ( left-unit-law-minkowski-mul-Monoid M A)
   pr2 (pr2 is-unital-minkowski-mul-Monoid) A =
-    antisymmetric-sim-subtype
+    eq-sim-subtype
       ( minkowski-mul-Monoid M A (is-unit-Monoid-Prop M))
       ( A)
       ( right-unit-law-minkowski-mul-Monoid M A)

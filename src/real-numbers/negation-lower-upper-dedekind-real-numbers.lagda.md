@@ -157,7 +157,7 @@ abstract
     eq-eq-cut-lower-ℝ
       ( neg-upper-ℝ (neg-lower-ℝ x))
       ( x)
-      ( antisymmetric-sim-subtype
+      ( eq-sim-subtype
         ( cut-neg-upper-ℝ (neg-lower-ℝ x))
         ( cut-lower-ℝ x)
         ( (λ p → tr (is-in-cut-lower-ℝ x) (neg-neg-ℚ p)) ,
@@ -169,7 +169,7 @@ abstract
     eq-eq-cut-upper-ℝ
       ( neg-lower-ℝ (neg-upper-ℝ x))
       ( x)
-      ( antisymmetric-sim-subtype
+      ( eq-sim-subtype
         ( cut-neg-lower-ℝ (neg-upper-ℝ x))
         ( cut-upper-ℝ x)
         ( (λ p → tr (is-in-cut-upper-ℝ x) (neg-neg-ℚ p)) ,
@@ -197,7 +197,7 @@ neg-lower-real-ℚ q =
   eq-eq-cut-upper-ℝ
     ( neg-lower-ℝ (lower-real-ℚ q))
     ( upper-real-ℚ (neg-ℚ q))
-    ( antisymmetric-sim-subtype
+    ( eq-sim-subtype
       ( cut-neg-lower-ℝ (lower-real-ℚ q))
       ( cut-upper-real-ℚ (neg-ℚ q))
       ( (λ p -p<q →
@@ -215,7 +215,7 @@ neg-upper-real-ℚ q =
   eq-eq-cut-lower-ℝ
     ( neg-upper-ℝ (upper-real-ℚ q))
     ( lower-real-ℚ (neg-ℚ q))
-    ( antisymmetric-sim-subtype
+    ( eq-sim-subtype
       ( cut-neg-upper-ℝ (upper-real-ℚ q))
       ( cut-lower-real-ℚ (neg-ℚ q))
       ( (λ p q<-p →

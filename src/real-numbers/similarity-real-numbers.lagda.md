@@ -24,8 +24,6 @@ open import order-theory.large-posets
 open import order-theory.similarity-of-elements-large-posets
 
 open import real-numbers.dedekind-real-numbers
-open import real-numbers.inequality-real-numbers
-open import real-numbers.rational-real-numbers
 ```
 
 </details>
@@ -42,11 +40,16 @@ differing universe levels.
 ## Definition
 
 ```agda
-sim-prop-ℝ : {l1 l2 : Level} → ℝ l1 → ℝ l2 → Prop (l1 ⊔ l2)
-sim-prop-ℝ = sim-prop-Large-Poset ℝ-Large-Poset
+opaque
+  sim-prop-ℝ : {l1 l2 : Level} → ℝ l1 → ℝ l2 → Prop (l1 ⊔ l2)
+  sim-prop-ℝ x y = sim-prop-subtype (lower-cut-ℝ x) (lower-cut-ℝ y)
 
-sim-ℝ : {l1 l2 : Level} → ℝ l1 → ℝ l2 → UU (l1 ⊔ l2)
-sim-ℝ x y = type-Prop (sim-prop-ℝ x y)
+  sim-ℝ : {l1 l2 : Level} → ℝ l1 → ℝ l2 → UU (l1 ⊔ l2)
+  sim-ℝ x y = type-Prop (sim-prop-ℝ x y)
+
+infix 6 _~ℝ_
+_~ℝ_ : {l1 l2 : Level} → ℝ l1 → ℝ l2 → UU (l1 ⊔ l2)
+_~ℝ_ = sim-ℝ
 ```
 
 ## Properties
@@ -58,9 +61,12 @@ module _
   {l1 l2 : Level} (x : ℝ l1) (y : ℝ l2)
   where
 
-  sim-lower-cut-iff-sim-ℝ :
-    sim-subtype (lower-cut-ℝ x) (lower-cut-ℝ y) ↔ sim-ℝ x y
-  sim-lower-cut-iff-sim-ℝ = id-iff
+  opaque
+    unfolding sim-ℝ
+
+    sim-lower-cut-iff-sim-ℝ :
+      sim-subtype (lower-cut-ℝ x) (lower-cut-ℝ y) ↔ (x ~ℝ y)
+    sim-lower-cut-iff-sim-ℝ = id-iff
 ```
 
 ### Similarity in the real numbers is equivalent to similarity of upper cuts
@@ -70,64 +76,91 @@ module _
   {l1 l2 : Level} (x : ℝ l1) (y : ℝ l2)
   where
 
-  sim-upper-cut-iff-sim-ℝ :
-    sim-subtype (upper-cut-ℝ x) (upper-cut-ℝ y) ↔ sim-ℝ x y
-  pr1 (pr1 sim-upper-cut-iff-sim-ℝ (ux⊆uy , uy⊆ux)) =
-    backward-implication (leq-iff-ℝ' x y) uy⊆ux
-  pr2 (pr1 sim-upper-cut-iff-sim-ℝ (ux⊆uy , uy⊆ux)) =
-    backward-implication (leq-iff-ℝ' y x) ux⊆uy
-  pr1 (pr2 sim-upper-cut-iff-sim-ℝ (lx⊆ly , ly⊆lx)) =
-    forward-implication (leq-iff-ℝ' y x) ly⊆lx
-  pr2 (pr2 sim-upper-cut-iff-sim-ℝ (lx⊆ly , ly⊆lx)) =
-    forward-implication (leq-iff-ℝ' x y) lx⊆ly
+  opaque
+    unfolding sim-ℝ
+
+    sim-upper-cut-iff-sim-ℝ :
+      sim-subtype (upper-cut-ℝ x) (upper-cut-ℝ y) ↔ (x ~ℝ y)
+    pr1 sim-upper-cut-iff-sim-ℝ = sim-lower-cut-sim-upper-cut-ℝ x y
+    pr2 sim-upper-cut-iff-sim-ℝ = sim-upper-cut-sim-lower-cut-ℝ x y
 ```
 
 ### Reflexivity
 
 ```agda
-refl-sim-ℝ : {l : Level} → (x : ℝ l) → sim-ℝ x x
-refl-sim-ℝ = refl-sim-Large-Poset ℝ-Large-Poset
+opaque
+  unfolding sim-ℝ
+
+  refl-sim-ℝ : {l : Level} → (x : ℝ l) → x ~ℝ x
+  refl-sim-ℝ x = refl-sim-subtype (lower-cut-ℝ x)
+
+  sim-eq-ℝ : {l : Level} → {x y : ℝ l} → x ＝ y → x ~ℝ y
+  sim-eq-ℝ {_} {x} {y} x=y = tr (sim-ℝ x) x=y (refl-sim-ℝ x)
+```
+
+### Symmetry
+
+```agda
+opaque
+  unfolding sim-ℝ
+
+  symmetric-sim-ℝ :
+    {l1 l2 : Level} → {x : ℝ l1} {y : ℝ l2} → x ~ℝ y → y ~ℝ x
+  symmetric-sim-ℝ {x = x} {y = y} =
+    symmetric-sim-subtype (lower-cut-ℝ x) (lower-cut-ℝ y)
 ```
 
 ### Transitivity
 
 ```agda
-transitive-sim-ℝ :
-  {l1 l2 l3 : Level} →
-  (x : ℝ l1) →
-  (y : ℝ l2) →
-  (z : ℝ l3) →
-  sim-ℝ y z →
-  sim-ℝ x y →
-  sim-ℝ x z
-transitive-sim-ℝ = transitive-sim-Large-Poset ℝ-Large-Poset
+opaque
+  unfolding sim-ℝ
+
+  transitive-sim-ℝ :
+    {l1 l2 l3 : Level} →
+    (x : ℝ l1) (y : ℝ l2) (z : ℝ l3) →
+    y ~ℝ z → x ~ℝ y → x ~ℝ z
+  transitive-sim-ℝ x y z =
+    transitive-sim-subtype (lower-cut-ℝ x) (lower-cut-ℝ y) (lower-cut-ℝ z)
 ```
 
 ### Similar real numbers in the same universe are equal
 
 ```agda
-eq-sim-ℝ : {l : Level} → (x y : ℝ l) → sim-ℝ x y → x ＝ y
-eq-sim-ℝ = eq-sim-Large-Poset ℝ-Large-Poset
+opaque
+
+  unfolding sim-ℝ
+
+  eq-sim-ℝ : {l : Level} → {x y : ℝ l} → x ~ℝ y → x ＝ y
+  eq-sim-ℝ {x = x} {y = y} H = eq-eq-lower-cut-ℝ x y (eq-sim-subtype _ _ H)
 ```
 
-### A rational real is similar to the canonical projection of its rational
+### Similarity reasoning
+
+Similarities between real numbers can be constructed by similarity reasoning in
+the following way:
+
+```text
+similarity-reasoning-ℝ
+  x ~ℝ y by sim-1
+    ~ℝ z by sim-2
+```
 
 ```agda
-sim-rational-ℝ :
-  {l : Level} →
-  (x : Rational-ℝ l) →
-  sim-ℝ (real-rational-ℝ x) (real-ℚ (rational-rational-ℝ x))
-pr1 (sim-rational-ℝ (x , q , q∉lx , q∉ux)) p p∈lx =
-  trichotomy-le-ℚ
-    ( p)
-    ( q)
-    ( id)
-    ( λ p=q → ex-falso (q∉lx (tr (is-in-lower-cut-ℝ x) p=q p∈lx)))
-    ( λ q<p → ex-falso (q∉lx (le-lower-cut-ℝ x q p q<p p∈lx)))
-pr2 (sim-rational-ℝ (x , q , q∉lx , q∉ux)) p p<q =
-  elim-disjunction
-    ( lower-cut-ℝ x p)
-    ( id)
-    ( ex-falso ∘ q∉ux)
-    ( is-located-lower-upper-cut-ℝ x p q p<q)
+infixl 1 similarity-reasoning-ℝ_
+infixl 0 step-similarity-reasoning-ℝ
+
+opaque
+  unfolding sim-ℝ
+
+  similarity-reasoning-ℝ_ :
+    {l : Level} → (x : ℝ l) → sim-ℝ x x
+  similarity-reasoning-ℝ x = refl-sim-ℝ x
+
+  step-similarity-reasoning-ℝ :
+    {l1 l2 : Level} {x : ℝ l1} {y : ℝ l2} →
+    sim-ℝ x y → {l3 : Level} → (u : ℝ l3) → sim-ℝ y u → sim-ℝ x u
+  step-similarity-reasoning-ℝ {x = x} {y = y} p u q = transitive-sim-ℝ x y u q p
+
+  syntax step-similarity-reasoning-ℝ p u q = p ~ℝ u by q
 ```
