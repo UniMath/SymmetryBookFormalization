@@ -18,6 +18,7 @@ open import foundation.complements-subtypes
 open import foundation.conjunction
 open import foundation.coproduct-types
 open import foundation.dependent-pair-types
+open import foundation.disjoint-subtypes
 open import foundation.disjunction
 open import foundation.embeddings
 open import foundation.empty-types
@@ -90,7 +91,7 @@ module _
 
   is-disjoint-prop-lower-upper-ℝ : Prop (l1 ⊔ l2)
   is-disjoint-prop-lower-upper-ℝ =
-    ∀' ℚ (λ q → ¬' (cut-lower-ℝ lx q ∧ cut-upper-ℝ uy q))
+    disjoint-subtype-Prop (cut-lower-ℝ lx) (cut-upper-ℝ uy)
 
   is-disjoint-lower-upper-ℝ : UU (l1 ⊔ l2)
   is-disjoint-lower-upper-ℝ = type-Prop is-disjoint-prop-lower-upper-ℝ
@@ -169,7 +170,7 @@ module _
     exists ℚ (λ q → (le-ℚ-Prop q r) ∧ (upper-cut-ℝ q))
   is-rounded-upper-cut-ℝ = is-rounded-cut-upper-ℝ upper-real-ℝ
 
-  is-disjoint-cut-ℝ : (q : ℚ) → ¬ (is-in-lower-cut-ℝ q × is-in-upper-cut-ℝ q)
+  is-disjoint-cut-ℝ : disjoint-subtype lower-cut-ℝ upper-cut-ℝ
   is-disjoint-cut-ℝ = pr1 (pr2 (pr2 x))
 
   is-located-lower-upper-cut-ℝ :

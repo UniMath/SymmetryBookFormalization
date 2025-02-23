@@ -17,6 +17,7 @@ open import foundation.cartesian-product-types
 open import foundation.conjunction
 open import foundation.coproduct-types
 open import foundation.dependent-pair-types
+open import foundation.disjoint-subtypes
 open import foundation.disjunction
 open import foundation.empty-types
 open import foundation.existential-quantification
@@ -68,8 +69,7 @@ module _
   upper-cut-neg-ℝ = cut-upper-ℝ upper-real-neg-ℝ
 
   is-disjoint-cut-neg-ℝ :
-    (q : ℚ) →
-    ¬ (is-in-subtype lower-cut-neg-ℝ q × is-in-subtype upper-cut-neg-ℝ q)
+    disjoint-subtype lower-cut-neg-ℝ upper-cut-neg-ℝ
   is-disjoint-cut-neg-ℝ q (in-lower-neg , in-upper-neg) =
     is-disjoint-cut-ℝ x (neg-ℚ q) (in-upper-neg , in-lower-neg)
 
