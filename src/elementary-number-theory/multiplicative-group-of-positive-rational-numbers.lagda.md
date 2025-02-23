@@ -9,11 +9,18 @@ module elementary-number-theory.multiplicative-group-of-positive-rational-number
 <details><summary>Imports</summary>
 
 ```agda
+open import elementary-number-theory.multiplication-integers
 open import elementary-number-theory.multiplication-rational-numbers
 open import elementary-number-theory.multiplicative-monoid-of-rational-numbers
+open import elementary-number-theory.natural-numbers
+open import elementary-number-theory.nonzero-natural-numbers
 open import elementary-number-theory.positive-rational-numbers
 open import elementary-number-theory.rational-numbers
+open import elementary-number-theory.strict-inequality-integers
+open import elementary-number-theory.strict-inequality-natural-numbers
+open import elementary-number-theory.strict-inequality-rational-numbers
 
+open import foundation.binary-transport
 open import foundation.cartesian-product-types
 open import foundation.dependent-pair-types
 open import foundation.identity-types
@@ -82,4 +89,28 @@ right-inverse-law-mul-ℚ⁺ = right-inverse-law-mul-Group group-mul-ℚ⁺
 abelian-group-mul-ℚ⁺ : Ab lzero
 pr1 abelian-group-mul-ℚ⁺ = group-mul-ℚ⁺
 pr2 abelian-group-mul-ℚ⁺ = commutative-mul-ℚ⁺
+```
+
+### Reciprocals of nonzero natural numbers
+
+```agda
+positive-reciprocal-rational-ℕ⁺ : ℕ⁺ → ℚ⁺
+positive-reciprocal-rational-ℕ⁺ n = inv-ℚ⁺ (positive-rational-ℕ⁺ n)
+```
+
+### If `m < n`, the reciprocal of `n` is less than the reciprocal of `n`
+
+```agda
+abstract
+  le-reciprocal-rational-ℕ⁺ :
+    (m n : ℕ⁺) → le-ℕ⁺ m n →
+    le-ℚ⁺
+      ( positive-reciprocal-rational-ℕ⁺ n)
+      ( positive-reciprocal-rational-ℕ⁺ m)
+  le-reciprocal-rational-ℕ⁺ (m , pos-m) (n , pos-n) m<n =
+    binary-tr
+      ( le-ℤ)
+      ( left-unit-law-mul-ℤ _)
+      ( left-unit-law-mul-ℤ _)
+      ( le-natural-le-ℤ m n m<n)
 ```
