@@ -11,6 +11,7 @@ open import foundation.action-on-identifications-functions
 open import foundation.dependent-pair-types
 open import foundation.diagonal-maps-of-types
 open import foundation.raising-universe-levels
+open import foundation.singleton-induction
 open import foundation.universe-levels
 
 open import foundation-core.constant-maps
@@ -105,6 +106,14 @@ abstract
   is-contr-raise-unit : {l1 : Level} → is-contr (raise-unit l1)
   is-contr-raise-unit {l1} =
     is-contr-equiv' unit (compute-raise l1 unit) is-contr-unit
+```
+
+### The unit type satisfies singleton induction
+
+```agda
+abstract
+  is-singleton-unit : {l : Level} → is-singleton l unit star
+  is-singleton-unit B = ind-unit , λ b → refl
 ```
 
 ### Any contractible type is equivalent to the unit type
