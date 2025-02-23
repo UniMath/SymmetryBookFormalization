@@ -15,6 +15,7 @@ open import real-numbers.lower-dedekind-real-numbers public
 open import real-numbers.metric-space-of-real-numbers public
 open import real-numbers.negation-lower-upper-dedekind-real-numbers public
 open import real-numbers.negation-real-numbers public
+open import real-numbers.raising-universe-levels-real-numbers public
 open import real-numbers.rational-lower-dedekind-real-numbers public
 open import real-numbers.rational-real-numbers public
 open import real-numbers.rational-upper-dedekind-real-numbers public
