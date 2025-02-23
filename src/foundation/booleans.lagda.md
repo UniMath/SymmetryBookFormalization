@@ -7,6 +7,7 @@ module foundation.booleans where
 <details><summary>Imports</summary>
 
 ```agda
+open import foundation.contractible-types
 open import foundation.decidable-equality
 open import foundation.decidable-types
 open import foundation.dependent-pair-types
@@ -341,4 +342,20 @@ abstract
   is-not-equiv-const-bool :
     (b : bool) → ¬ (is-equiv (const bool b))
   is-not-equiv-const-bool b e = no-section-const-bool b (section-is-equiv e)
+```
+
+### The type of booleans is not contractible
+
+```agda
+abstract
+  is-not-contractible-bool : ¬ (is-contr bool)
+  is-not-contractible-bool (b , eq) = no-section-const-bool b (id , eq)
+```
+
+### The type of booleans is not equivalent to the unit type
+
+```agda
+abstract
+  is-not-unit-bool : ¬ (bool ≃ unit)
+  is-not-unit-bool e = is-not-contractible-bool (is-contr-equiv-unit e)
 ```

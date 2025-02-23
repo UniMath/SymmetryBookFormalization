@@ -110,6 +110,15 @@ no-embedding-ℕ-Fin k e =
     ( leq-emb-Fin (succ-ℕ k) k (comp-emb e (emb-nat-Fin (succ-ℕ k))))
 ```
 
+#### There is no equivalence `ℕ ≃ Fin k`
+
+```agda
+no-equiv-ℕ-Fin :
+  (k : ℕ) → ¬ (ℕ ≃ Fin k)
+no-equiv-ℕ-Fin k e =
+  no-embedding-ℕ-Fin k (emb-equiv e)
+```
+
 #### For any `f : Fin k → Fin l`, where `l < k`, we construct a pair of distinct elements of `Fin k` on which `f` assumes the same value
 
 ```agda

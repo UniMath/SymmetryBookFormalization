@@ -11,6 +11,7 @@ open import foundation.action-on-identifications-functions
 open import foundation.dependent-pair-types
 open import foundation.equality-cartesian-product-types
 open import foundation.morphisms-arrows
+open import foundation.sections
 open import foundation.universe-levels
 
 open import foundation-core.cartesian-product-types
@@ -254,7 +255,7 @@ module _
   pr2 compute-fiber-map-product = is-equiv-map-compute-fiber-map-product
 ```
 
-### If `map-product f g : A × B → C × D` is an equivalence, then we have `D → is-equiv f` and `C → is-equiv g`
+### `map-product f g : A × B → C × D` is an equivalence if and only if we have `D → is-equiv f` and `C → is-equiv g`
 
 ```agda
 module _
@@ -291,6 +292,35 @@ module _
             ( map-compute-fiber-map-product f g (c , y))
             ( is-equiv-map-compute-fiber-map-product f g (c , y))
             ( is-contr-map-is-equiv is-equiv-fg (c , y))))
+
+  map-inv-map-product' : (D → is-equiv f) → (C → is-equiv g) → C × D → A × B
+  pr1 (map-inv-map-product' F G (c , d)) = map-inv-is-equiv (F d) c
+  pr2 (map-inv-map-product' F G (c , d)) = map-inv-is-equiv (G c) d
+
+  abstract
+    is-section-map-inv-map-product' :
+      (F : D → is-equiv f) (G : C → is-equiv g) →
+      is-section (map-product f g) (map-inv-map-product' F G)
+    is-section-map-inv-map-product' F G (c , d) =
+      eq-pair
+        ( is-section-map-inv-is-equiv (F d) c)
+        ( is-section-map-inv-is-equiv (G c) d)
+
+    is-retraction-map-inv-map-product' :
+      (F : D → is-equiv f) (G : C → is-equiv g) →
+      is-retraction (map-product f g) (map-inv-map-product' F G)
+    is-retraction-map-inv-map-product' F G (a , b) =
+      eq-pair
+        ( is-retraction-map-inv-is-equiv (F (g b)) a)
+        ( is-retraction-map-inv-is-equiv (G (f a)) b)
+
+  is-equiv-map-product' :
+    (D → is-equiv f) → (C → is-equiv g) → is-equiv (map-product f g)
+  is-equiv-map-product' F G =
+    is-equiv-is-invertible
+      ( map-inv-map-product' F G)
+      ( is-section-map-inv-map-product' F G)
+      ( is-retraction-map-inv-map-product' F G)
 ```
 
 ### The functorial action of products on arrows
