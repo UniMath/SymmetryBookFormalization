@@ -20,6 +20,7 @@ open import elementary-number-theory.additive-group-of-rational-numbers public
 open import elementary-number-theory.archimedean-property-integer-fractions public
 open import elementary-number-theory.archimedean-property-integers public
 open import elementary-number-theory.archimedean-property-natural-numbers public
+open import elementary-number-theory.archimedean-property-positive-rational-numbers public
 open import elementary-number-theory.archimedean-property-rational-numbers public
 open import elementary-number-theory.arithmetic-functions public
 open import elementary-number-theory.based-induction-natural-numbers public

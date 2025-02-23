@@ -10,6 +10,7 @@ module elementary-number-theory.positive-integers where
 open import elementary-number-theory.integers
 open import elementary-number-theory.natural-numbers
 open import elementary-number-theory.nonzero-integers
+open import elementary-number-theory.nonzero-natural-numbers
 
 open import foundation.action-on-identifications-functions
 open import foundation.coproduct-types
@@ -74,6 +75,9 @@ subtype-positive-ℤ x = (is-positive-ℤ x , is-prop-is-positive-ℤ x)
 
 positive-ℤ : UU lzero
 positive-ℤ = type-subtype subtype-positive-ℤ
+
+ℤ⁺ : UU lzero
+ℤ⁺ = positive-ℤ
 
 is-positive-eq-ℤ : {x y : ℤ} → x ＝ y → is-positive-ℤ x → is-positive-ℤ y
 is-positive-eq-ℤ = tr is-positive-ℤ
@@ -149,6 +153,9 @@ is-positive-int-is-nonzero-ℕ :
   (x : ℕ) → is-nonzero-ℕ x → is-positive-ℤ (int-ℕ x)
 is-positive-int-is-nonzero-ℕ zero-ℕ H = ex-falso (H refl)
 is-positive-int-is-nonzero-ℕ (succ-ℕ x) H = star
+
+positive-int-ℕ⁺ : ℕ⁺ → positive-ℤ
+positive-int-ℕ⁺ (n , n≠0) = int-ℕ n , is-positive-int-is-nonzero-ℕ n n≠0
 ```
 
 ### The canonical equivalence between natural numbers and positive integers
